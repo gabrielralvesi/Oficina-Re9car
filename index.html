@@ -190,34 +190,60 @@
             opacity: 0.3;
         }
 
-        /* Gráficos */
-        .charts-grid {
+        /* Alert Cards */
+        .alert-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
             margin-bottom: 25px;
         }
 
-        .chart-card {
+        .alert-card {
             background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .chart-card h3 {
-            color: var(--secondary);
-            margin-bottom: 15px;
-            font-size: 15px;
+            border-left: 4px solid;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
         }
 
-        canvas {
-            max-height: 250px;
-            max-width: 100%;
+        .alert-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .alert-card.danger {
+            border-left-color: var(--danger);
+        }
+
+        .alert-card.success {
+            border-left-color: var(--success);
+        }
+
+        .alert-info h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .alert-info p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .alert-info small {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .alert-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         /* Formulários */
@@ -296,8 +322,13 @@
             color: white;
         }
 
-        .btn-danger {
-            background: var(--danger);
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
             color: white;
         }
 
@@ -305,11 +336,6 @@
             background: transparent;
             border: 2px solid var(--border);
             color: var(--gray);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
         }
 
         .btn-sm {
@@ -353,6 +379,7 @@
         .action-buttons {
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
 
         .btn-icon {
@@ -376,6 +403,11 @@
 
         .btn-view {
             background: var(--info);
+            color: white;
+        }
+
+        .btn-notify {
+            background: var(--success);
             color: white;
         }
 
@@ -454,7 +486,7 @@
             background: white;
             border-radius: 12px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -572,13 +604,38 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--light);
+            padding: 5px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         /* Responsividade */
         @media (max-width: 768px) {
             body { padding: 8px; }
             .header { flex-direction: column; text-align: center; }
             .user-info { justify-content: center; }
             .stats-grid { grid-template-columns: 1fr; }
-            .charts-grid { grid-template-columns: 1fr; }
+            .alert-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -617,17 +674,18 @@
             <div class="nav-item" onclick="showSection('clientes', this)">
                 <i class="fas fa-users"></i> Clientes
             </div>
+            <div class="nav-item" onclick="showSection('manutencoes', this)">
+                <i class="fas fa-tools"></i> Manutenções
+            </div>
             <div class="nav-item" onclick="showSection('funcionarios', this)">
                 <i class="fas fa-user-tie"></i> Funcionários
             </div>
             <div class="nav-item" onclick="showSection('estoque', this)">
                 <i class="fas fa-boxes"></i> Estoque
             </div>
-            <div class="nav-item" onclick="showSection('servicos', this)">
-                <i class="fas fa-tools"></i> OS
-            </div>
-            <div class="nav-item" onclick="showSection('relatorios', this)">
-                <i class="fas fa-file-alt"></i> Relatórios
+            <div class="nav-item" onclick="showSection('notificacoes', this)">
+                <i class="fas fa-bell"></i> Notificações
+                <span class="badge badge-danger" id="notificacaoCount">0</span>
             </div>
         </div>
 
@@ -671,15 +729,113 @@
                 clientes: [],
                 funcionarios: [],
                 estoque: [],
-                vales: []
+                vales: [],
+                manutencoes: [],
+                notificacoes: []
             }
         };
+
+        // Tabela de manutenções preventivas
+        const MANUTENCOES_PREVENTIVAS = [
+            { 
+                id: 1,
+                nome: 'Troca de Óleo e Filtro',
+                kmIntervalo: 5000,
+                mesesIntervalo: 6,
+                descricao: 'Trocar óleo do motor e filtro de óleo',
+                alertaKm: 300,
+                alertaDias: 15
+            },
+            { 
+                id: 2,
+                nome: 'Revisão dos Freios',
+                kmIntervalo: 10000,
+                mesesIntervalo: 12,
+                descricao: 'Verificar pastilhas, discos e fluído de freio',
+                alertaKm: 500,
+                alertaDias: 20
+            },
+            { 
+                id: 3,
+                nome: 'Alinhamento e Balanceamento',
+                kmIntervalo: 10000,
+                mesesIntervalo: 6,
+                descricao: 'Alinhar direção e balancear rodas',
+                alertaKm: 400,
+                alertaDias: 15
+            },
+            { 
+                id: 4,
+                nome: 'Troca de Filtro de Ar',
+                kmIntervalo: 10000,
+                mesesIntervalo: 12,
+                descricao: 'Trocar filtro de ar do motor',
+                alertaKm: 500,
+                alertaDias: 20
+            },
+            { 
+                id: 5,
+                nome: 'Troca de Filtro de Combustível',
+                kmIntervalo: 20000,
+                mesesIntervalo: 24,
+                descricao: 'Trocar filtro de combustível',
+                alertaKm: 1000,
+                alertaDias: 30
+            },
+            { 
+                id: 6,
+                nome: 'Troca de Velas',
+                kmIntervalo: 30000,
+                mesesIntervalo: 36,
+                descricao: 'Trocar velas de ignição',
+                alertaKm: 1500,
+                alertaDias: 45
+            },
+            { 
+                id: 7,
+                nome: 'Troca de Correia Dentada',
+                kmIntervalo: 60000,
+                mesesIntervalo: 48,
+                descricao: 'Trocar correia dentada e tensores',
+                alertaKm: 3000,
+                alertaDias: 60
+            },
+            { 
+                id: 8,
+                nome: 'Troca de Fluído de Arrefecimento',
+                kmIntervalo: 40000,
+                mesesIntervalo: 24,
+                descricao: 'Trocar fluído de arrefecimento',
+                alertaKm: 2000,
+                alertaDias: 30
+            },
+            { 
+                id: 9,
+                nome: 'Revisão da Suspensão',
+                kmIntervalo: 20000,
+                mesesIntervalo: 12,
+                descricao: 'Verificar amortecedores, molas e buchas',
+                alertaKm: 1000,
+                alertaDias: 20
+            },
+            { 
+                id: 10,
+                nome: 'Troca de Pneus',
+                kmIntervalo: 50000,
+                mesesIntervalo: 60,
+                descricao: 'Substituir pneus (rodízio recomendado a cada 10000km)',
+                alertaKm: 2000,
+                alertaDias: 45
+            }
+        ];
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            verificarNotificacoes();
+            setInterval(verificarNotificacoes, 3600000); // Verificar a cada hora
             renderSection('dashboard');
         });
 
@@ -741,14 +897,35 @@
                     App.data = {
                         caixa: [
                             { id: 1, tipo: 'entrada', descricao: 'Troca de Óleo', valor: 150.00, data: '2024-01-15' },
-                            { id: 2, tipo: 'entrada', descricao: 'Alinhamento', valor: 120.00, data: '2024-01-15' },
-                            { id: 3, tipo: 'saida', descricao: 'Compra de Peças', valor: 350.00, data: '2024-01-14' },
-                            { id: 4, tipo: 'entrada', descricao: 'Revisão Completa', valor: 450.00, data: '2024-01-14' }
+                            { id: 2, tipo: 'entrada', descricao: 'Alinhamento', valor: 120.00, data: '2024-01-15' }
                         ],
                         clientes: [
-                            { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', veiculo: 'Gol 2020', placa: 'ABC-1234' },
-                            { id: 2, nome: 'Maria Santos', telefone: '(11) 98888-8888', veiculo: 'Onix 2022', placa: 'XYZ-5678' },
-                            { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 97777-7777', veiculo: 'Fiesta 2019', placa: 'DEF-9012' }
+                            { 
+                                id: 1, 
+                                nome: 'João Silva', 
+                                telefone: '(11) 99999-9999', 
+                                email: 'joao@email.com',
+                                documento: '123.456.789-00',
+                                tipo: 'CPF',
+                                endereco: 'Rua A, 123 - São Paulo',
+                                veiculo: 'Gol 2020', 
+                                placa: 'ABC-1234',
+                                kmAtual: 45230,
+                                dataEntrada: '2024-01-10'
+                            },
+                            { 
+                                id: 2, 
+                                nome: 'Maria Santos', 
+                                telefone: '(11) 98888-8888',
+                                email: 'maria@email.com',
+                                documento: '12.345.678/0001-90',
+                                tipo: 'CNPJ',
+                                endereco: 'Av B, 456 - São Paulo',
+                                veiculo: 'Onix 2022', 
+                                placa: 'XYZ-5678',
+                                kmAtual: 15320,
+                                dataEntrada: '2024-01-12'
+                            }
                         ],
                         funcionarios: [
                             { id: 1, nome: 'Carlos Mecânico', cargo: 'Mecânico', salario: 2500.00, telefone: '(11) 96666-6666' },
@@ -756,12 +933,24 @@
                         ],
                         estoque: [
                             { id: 1, produto: 'Óleo 5W30', quantidade: 45, preco: 25.00, fornecedor: 'Petrobras' },
-                            { id: 2, produto: 'Filtro de Óleo', quantidade: 28, preco: 15.00, fornecedor: 'Fram' },
-                            { id: 3, produto: 'Pastilha de Freio', quantidade: 8, preco: 80.00, fornecedor: 'Textar' }
+                            { id: 2, produto: 'Filtro de Óleo', quantidade: 28, preco: 15.00, fornecedor: 'Fram' }
                         ],
-                        vales: [
-                            { id: 1, funcionario: 'Carlos Mecânico', tipo: 'entrada', valor: 100.00, data: '2024-01-15' }
-                        ]
+                        vales: [],
+                        manutencoes: [
+                            {
+                                id: 1,
+                                clienteId: 1,
+                                clienteNome: 'João Silva',
+                                veiculo: 'Gol 2020',
+                                placa: 'ABC-1234',
+                                data: '2024-01-10',
+                                kmAtual: 45230,
+                                servicos: [
+                                    { id: 1, nome: 'Troca de Óleo', kmProximo: 50230, dataProxima: '2024-07-10' }
+                                ]
+                            }
+                        ],
+                        notificacoes: []
                     };
                 }
             } catch (e) {
@@ -792,10 +981,10 @@
                 dashboard: renderDashboard,
                 caixa: renderCaixa,
                 clientes: renderClientes,
+                manutencoes: renderManutencoes,
                 funcionarios: renderFuncionarios,
                 estoque: renderEstoque,
-                servicos: () => '<h2>📋 Ordens de Serviço</h2><p>Em desenvolvimento...</p>',
-                relatorios: () => '<h2>📊 Relatórios</h2><p>Em desenvolvimento...</p>'
+                notificacoes: renderNotificacoes
             };
             
             content.innerHTML = sections[section] ? sections[section]() : '<p>Seção não encontrada</p>';
@@ -805,11 +994,77 @@
             }
         }
 
+        // Verificar Notificações
+        function verificarNotificacoes() {
+            App.data.notificacoes = [];
+            const hoje = new Date();
+            
+            App.data.clientes.forEach(cliente => {
+                // Verificar manutenções por quilometragem
+                const ultimaManutencao = App.data.manutencoes
+                    .filter(m => m.clienteId === cliente.id)
+                    .sort((a, b) => new Date(b.data) - new Date(a.data))[0];
+                
+                if (ultimaManutencao) {
+                    const kmPercorrido = cliente.kmAtual - ultimaManutencao.kmAtual;
+                    
+                    MANUTENCOES_PREVENTIVAS.forEach(manutencao => {
+                        const kmRestante = manutencao.kmIntervalo - kmPercorrido;
+                        
+                        if (kmRestante <= manutencao.alertaKm && kmRestante > 0) {
+                            App.data.notificacoes.push({
+                                id: Date.now() + Math.random(),
+                                clienteId: cliente.id,
+                                clienteNome: cliente.nome,
+                                veiculo: cliente.veiculo,
+                                placa: cliente.placa,
+                                tipo: 'km',
+                                manutencao: manutencao.nome,
+                                kmRestante,
+                                diasRestante: null,
+                                mensagem: `${cliente.nome} - ${manutencao.nome} em ${kmRestante}km`,
+                                prioridade: kmRestante <= 100 ? 'alta' : 'media'
+                            });
+                        }
+                    });
+                }
+                
+                // Verificar por tempo
+                const dataUltima = new Date(ultimaManutencao?.data || cliente.dataEntrada);
+                const diasPassados = Math.floor((hoje - dataUltima) / (1000 * 60 * 60 * 24));
+                
+                MANUTENCOES_PREVENTIVAS.forEach(manutencao => {
+                    const diasRestante = manutencao.mesesIntervalo * 30 - diasPassados;
+                    
+                    if (diasRestante <= manutencao.alertaDias && diasRestante > 0) {
+                        App.data.notificacoes.push({
+                            id: Date.now() + Math.random(),
+                            clienteId: cliente.id,
+                            clienteNome: cliente.nome,
+                            veiculo: cliente.veiculo,
+                            placa: cliente.placa,
+                            tipo: 'tempo',
+                            manutencao: manutencao.nome,
+                            kmRestante: null,
+                            diasRestante,
+                            mensagem: `${cliente.nome} - ${manutencao.nome} em ${diasRestante} dias`,
+                            prioridade: diasRestante <= 7 ? 'alta' : 'media'
+                        });
+                    }
+                });
+            });
+            
+            // Atualizar contador
+            document.getElementById('notificacaoCount').textContent = App.data.notificacoes.length;
+        }
+
         // Dashboard
         function renderDashboard() {
             const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0);
             const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0);
             const saldo = entradas - saidas;
+            
+            const notificacoesAlta = App.data.notificacoes.filter(n => n.prioridade === 'alta').length;
             
             return `
                 <div class="stats-grid">
@@ -829,50 +1084,69 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-info">
-                            <h3>Funcionários</h3>
-                            <div class="value">${App.data.funcionarios.length}</div>
+                            <h3>Notificações</h3>
+                            <div class="value">${App.data.notificacoes.length}</div>
                         </div>
-                        <i class="fas fa-user-tie stat-icon"></i>
+                        <i class="fas fa-bell stat-icon"></i>
                     </div>
                     <div class="stat-card">
                         <div class="stat-info">
-                            <h3>Estoque Baixo</h3>
-                            <div class="value">${App.data.estoque.filter(i => i.quantidade < 10).length}</div>
+                            <h3>Urgentes</h3>
+                            <div class="value">${notificacoesAlta}</div>
                         </div>
                         <i class="fas fa-exclamation-triangle stat-icon"></i>
                     </div>
                 </div>
 
+                ${App.data.notificacoes.length > 0 ? `
+                    <div class="alert-grid">
+                        <h3 style="grid-column: 1/-1; margin-bottom: 10px;">🔔 Alertas de Manutenção</h3>
+                        ${App.data.notificacoes.slice(0, 3).map(notif => `
+                            <div class="alert-card ${notif.prioridade === 'alta' ? 'danger' : 'warning'}">
+                                <div class="alert-info">
+                                    <h4>${notif.clienteNome} - ${notif.veiculo}</h4>
+                                    <p>${notif.manutencao}</p>
+                                    <small>${notif.tipo === 'km' ? `📏 ${notif.kmRestante}km restantes` : `⏰ ${notif.diasRestante} dias restantes`}</small>
+                                </div>
+                                <span class="alert-badge">${notif.prioridade === 'alta' ? 'URGENTE' : 'AVISO'}</span>
+                            </div>
+                        `).join('')}
+                        ${App.data.notificacoes.length > 3 ? '<p style="text-align: center; color: var(--gray);">...</p>' : ''}
+                    </div>
+                ` : ''}
+
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <h3><i class="fas fa-chart-bar"></i> Fluxo de Caixa (Últimos 7 dias)</h3>
+                        <h3><i class="fas fa-chart-bar"></i> Fluxo de Caixa</h3>
                         <canvas id="fluxoCaixaChart"></canvas>
                     </div>
                     <div class="chart-card">
-                        <h3><i class="fas fa-chart-pie"></i> Despesas por Categoria</h3>
-                        <canvas id="despesasChart"></canvas>
+                        <h3><i class="fas fa-chart-pie"></i> Manutenções por Tipo</h3>
+                        <canvas id="manutencoesChart"></canvas>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">📌 Últimas Movimentações</h3>
+                    <h3 style="margin-bottom: 15px;">📋 Últimas Manutenções</h3>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <th>Data</th>
-                                    <th>Tipo</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
+                                    <th>Cliente</th>
+                                    <th>Veículo</th>
+                                    <th>Serviço</th>
+                                    <th>KM</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${App.data.caixa.slice(0, 5).map(item => `
+                                ${App.data.manutencoes.slice(0, 5).map(item => `
                                     <tr>
                                         <td>${item.data}</td>
-                                        <td><span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${item.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span></td>
-                                        <td>${item.descricao}</td>
-                                        <td>R$ ${item.valor.toFixed(2)}</td>
+                                        <td>${item.clienteNome}</td>
+                                        <td>${item.veiculo} (${item.placa})</td>
+                                        <td>${item.servicos.map(s => s.nome).join(', ')}</td>
+                                        <td>${item.kmAtual} km</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -883,6 +1157,7 @@
         }
 
         function initCharts() {
+            // Gráfico de Fluxo de Caixa
             const ctxFluxo = document.getElementById('fluxoCaixaChart')?.getContext('2d');
             if (ctxFluxo) {
                 new Chart(ctxFluxo, {
@@ -911,14 +1186,22 @@
                 });
             }
 
-            const ctxDespesas = document.getElementById('despesasChart')?.getContext('2d');
-            if (ctxDespesas) {
-                new Chart(ctxDespesas, {
+            // Gráfico de Manutenções
+            const ctxManut = document.getElementById('manutencoesChart')?.getContext('2d');
+            if (ctxManut) {
+                const manutencaoCount = {};
+                App.data.manutencoes.forEach(m => {
+                    m.servicos.forEach(s => {
+                        manutencaoCount[s.nome] = (manutencaoCount[s.nome] || 0) + 1;
+                    });
+                });
+
+                new Chart(ctxManut, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Peças', 'Mão de Obra', 'Impostos', 'Aluguel', 'Outros'],
+                        labels: Object.keys(manutencaoCount).length ? Object.keys(manutencaoCount) : ['Troca de Óleo', 'Freios', 'Alinhamento'],
                         datasets: [{
-                            data: [35, 25, 20, 15, 5],
+                            data: Object.values(manutencaoCount).length ? Object.values(manutencaoCount) : [5, 3, 2],
                             backgroundColor: ['#e63946', '#f39c12', '#2ecc71', '#3498db', '#9b59b6']
                         }]
                     },
@@ -931,8 +1214,707 @@
             }
         }
 
+        // Clientes
+        function renderClientes() {
+            return `
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubSecao('cadastro')">📝 Cadastro</div>
+                    <div class="tab" onclick="mostrarSubSecao('lista')">📋 Lista de Clientes</div>
+                    <div class="tab" onclick="mostrarSubSecao('historico')">📊 Histórico</div>
+                </div>
+
+                <div id="subSecaoCliente">
+                    ${renderCadastroCliente()}
+                </div>
+            `;
+        }
+
+        function mostrarSubSecao(secao) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const subSecao = document.getElementById('subSecaoCliente');
+            
+            if (secao === 'cadastro') {
+                subSecao.innerHTML = renderCadastroCliente();
+            } else if (secao === 'lista') {
+                subSecao.innerHTML = renderListaClientes();
+            } else if (secao === 'historico') {
+                subSecao.innerHTML = renderHistoricoClientes();
+            }
+        }
+
+        function renderCadastroCliente() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 15px;">👤 Novo Cliente</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tipo*</label>
+                            <select id="tipoCliente">
+                                <option value="CPF">Pessoa Física (CPF)</option>
+                                <option value="CNPJ">Pessoa Jurídica (CNPJ)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome/Razão Social*</label>
+                            <input type="text" id="nomeCliente" placeholder="Nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label>CPF/CNPJ*</label>
+                            <input type="text" id="docCliente" placeholder="000.000.000-00">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone*</label>
+                            <input type="text" id="telCliente" placeholder="(11) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="emailCliente" placeholder="cliente@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Endereço*</label>
+                            <input type="text" id="endCliente" placeholder="Rua, número, bairro">
+                        </div>
+                        <div class="form-group">
+                            <label>Veículo*</label>
+                            <input type="text" id="veicCliente" placeholder="Ex: Gol 2020">
+                        </div>
+                        <div class="form-group">
+                            <label>Placa*</label>
+                            <input type="text" id="placaCliente" placeholder="ABC-1234">
+                        </div>
+                        <div class="form-group">
+                            <label>KM Atual*</label>
+                            <input type="number" id="kmCliente" placeholder="45000">
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Entrada</label>
+                            <input type="date" id="dataEntradaCliente" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="cadastrarCliente()">
+                        <i class="fas fa-save"></i> Cadastrar Cliente
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderListaClientes() {
+            return `
+                <div class="filter-group" style="margin-bottom: 15px;">
+                    <input type="text" id="buscaCliente" placeholder="🔍 Buscar por nome, placa ou documento..." onkeyup="buscarClientes()" style="width: 100%; padding: 10px;">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Documento</th>
+                                <th>Telefone</th>
+                                <th>Veículo</th>
+                                <th>Placa</th>
+                                <th>KM Atual</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaClientes">
+                            ${App.data.clientes.map(item => `
+                                <tr>
+                                    <td>${item.nome}</td>
+                                    <td>${item.documento}</td>
+                                    <td>${item.telefone}</td>
+                                    <td>${item.veiculo}</td>
+                                    <td>${item.placa}</td>
+                                    <td>${item.kmAtual} km</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-icon btn-view" onclick="verCliente(${item.id})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderHistoricoClientes() {
+            return `
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <select id="clienteHistorico" onchange="carregarHistoricoCliente()" style="width: 100%; padding: 10px;">
+                        <option value="">Selecione um cliente</option>
+                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome} - ${c.veiculo} (${c.placa})</option>`).join('')}
+                    </select>
+                </div>
+                <div id="historicoCliente"></div>
+            `;
+        }
+
+        function carregarHistoricoCliente() {
+            const clienteId = document.getElementById('clienteHistorico').value;
+            if (!clienteId) return;
+            
+            const cliente = App.data.clientes.find(c => c.id == clienteId);
+            const manutencoes = App.data.manutencoes.filter(m => m.clienteId == clienteId).sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            let html = `
+                <div class="form-section">
+                    <h4>📊 Histórico de ${cliente.nome}</h4>
+                    <p><strong>Veículo:</strong> ${cliente.veiculo} - ${cliente.placa}</p>
+                    <p><strong>KM Atual:</strong> ${cliente.kmAtual} km</p>
+                    <p><strong>Documento:</strong> ${cliente.documento}</p>
+                    <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                    
+                    <h5 style="margin: 20px 0 10px;">Próximas Manutenções</h5>
+            `;
+            
+            if (manutencoes.length > 0) {
+                const ultima = manutencoes[0];
+                const kmPercorrido = cliente.kmAtual - ultima.kmAtual;
+                
+                MANUTENCOES_PREVENTIVAS.forEach(m => {
+                    const kmRestante = m.kmIntervalo - kmPercorrido;
+                    const diasUltima = Math.floor((new Date() - new Date(ultima.data)) / (1000 * 60 * 60 * 24));
+                    const diasRestante = m.mesesIntervalo * 30 - diasUltima;
+                    
+                    if (kmRestante > 0 || diasRestante > 0) {
+                        html += `
+                            <div class="alert-card ${kmRestante <= 500 ? 'warning' : 'success'}" style="margin-bottom: 10px;">
+                                <div>
+                                    <strong>${m.nome}</strong><br>
+                                    <small>
+                                        ${kmRestante > 0 ? `📏 ${kmRestante} km restantes` : ''}
+                                        ${kmRestante > 0 && diasRestante > 0 ? ' | ' : ''}
+                                        ${diasRestante > 0 ? `⏰ ${diasRestante} dias restantes` : ''}
+                                    </small>
+                                </div>
+                                <button class="btn btn-sm btn-primary" onclick="agendarManutencao(${cliente.id}, ${m.id})">
+                                    Agendar
+                                </button>
+                            </div>
+                        `;
+                    }
+                });
+            }
+            
+            html += `
+                    <h5 style="margin: 20px 0 10px;">Manutenções Realizadas</h5>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>KM</th>
+                                    <th>Serviços</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            if (manutencoes.length > 0) {
+                manutencoes.forEach(m => {
+                    html += `
+                        <tr>
+                            <td>${m.data}</td>
+                            <td>${m.kmAtual} km</td>
+                            <td>${m.servicos.map(s => s.nome).join(', ')}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                html += '<tr><td colspan="3" style="text-align: center;">Nenhuma manutenção registrada</td></tr>';
+            }
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('historicoCliente').innerHTML = html;
+        }
+
+        function cadastrarCliente() {
+            const tipo = document.getElementById('tipoCliente').value;
+            const nome = document.getElementById('nomeCliente').value;
+            const doc = document.getElementById('docCliente').value;
+            const tel = document.getElementById('telCliente').value;
+            const email = document.getElementById('emailCliente').value;
+            const end = document.getElementById('endCliente').value;
+            const veic = document.getElementById('veicCliente').value;
+            const placa = document.getElementById('placaCliente').value;
+            const km = parseInt(document.getElementById('kmCliente').value);
+            const dataEntrada = document.getElementById('dataEntradaCliente').value;
+
+            if (!nome || !doc || !tel || !end || !veic || !placa || !km) {
+                showToast('Preencha todos os campos obrigatórios!', 'warning');
+                return;
+            }
+
+            const novo = {
+                id: Date.now(),
+                tipo,
+                nome,
+                documento: doc,
+                telefone: tel,
+                email,
+                endereco: end,
+                veiculo: veic,
+                placa: placa.toUpperCase(),
+                kmAtual: km,
+                dataEntrada
+            };
+
+            App.data.clientes.push(novo);
+            saveData();
+            
+            showToast('Cliente cadastrado com sucesso!', 'success');
+            
+            // Limpar campos
+            document.getElementById('nomeCliente').value = '';
+            document.getElementById('docCliente').value = '';
+            document.getElementById('telCliente').value = '';
+            document.getElementById('emailCliente').value = '';
+            document.getElementById('endCliente').value = '';
+            document.getElementById('veicCliente').value = '';
+            document.getElementById('placaCliente').value = '';
+            document.getElementById('kmCliente').value = '';
+        }
+
+        function buscarClientes() {
+            const termo = document.getElementById('buscaCliente').value.toLowerCase();
+            
+            if (!termo) {
+                document.getElementById('tabelaClientes').innerHTML = App.data.clientes.map(item => `
+                    <tr>
+                        <td>${item.nome}</td>
+                        <td>${item.documento}</td>
+                        <td>${item.telefone}</td>
+                        <td>${item.veiculo}</td>
+                        <td>${item.placa}</td>
+                        <td>${item.kmAtual} km</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="verCliente(${item.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                return;
+            }
+
+            const filtrados = App.data.clientes.filter(c => 
+                c.nome.toLowerCase().includes(termo) ||
+                c.telefone.includes(termo) ||
+                c.placa.toLowerCase().includes(termo) ||
+                c.documento.includes(termo)
+            );
+
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.documento}</td>
+                    <td>${item.telefone}</td>
+                    <td>${item.veiculo}</td>
+                    <td>${item.placa}</td>
+                    <td>${item.kmAtual} km</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-view" onclick="verCliente(${item.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function verCliente(id) {
+            const cliente = App.data.clientes.find(c => c.id === id);
+            const manutencoes = App.data.manutencoes.filter(m => m.clienteId === id);
+            
+            let html = `
+                <div style="padding: 10px;">
+                    <h3>${cliente.nome}</h3>
+                    <p><strong>Documento:</strong> ${cliente.documento}</p>
+                    <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                    <p><strong>Email:</strong> ${cliente.email || '-'}</p>
+                    <p><strong>Endereço:</strong> ${cliente.endereco}</p>
+                    <p><strong>Veículo:</strong> ${cliente.veiculo} - ${cliente.placa}</p>
+                    <p><strong>KM Atual:</strong> ${cliente.kmAtual} km</p>
+                    <p><strong>Data Entrada:</strong> ${cliente.dataEntrada}</p>
+                    
+                    <h4 style="margin-top: 15px;">Manutenções Realizadas: ${manutencoes.length}</h4>
+                </div>
+            `;
+            
+            openModal('Detalhes do Cliente', html, () => {});
+        }
+
+        function editarCliente(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function excluirCliente(id) {
+            if (confirm('Excluir este cliente?')) {
+                App.data.clientes = App.data.clientes.filter(item => item.id !== id);
+                App.data.manutencoes = App.data.manutencoes.filter(m => m.clienteId !== id);
+                saveData();
+                document.getElementById('tabelaClientes').innerHTML = App.data.clientes.map(item => `
+                    <tr>
+                        <td>${item.nome}</td>
+                        <td>${item.documento}</td>
+                        <td>${item.telefone}</td>
+                        <td>${item.veiculo}</td>
+                        <td>${item.placa}</td>
+                        <td>${item.kmAtual} km</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="verCliente(${item.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                showToast('Cliente excluído!', 'success');
+            }
+        }
+
+        // Manutenções
+        function renderManutencoes() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 15px;">🔧 Registrar Nova Manutenção</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Cliente*</label>
+                            <select id="clienteManutencao" onchange="carregarDadosCliente()">
+                                <option value="">Selecione</option>
+                                ${App.data.clientes.map(c => `<option value="${c.id}" data-km="${c.kmAtual}" data-veiculo="${c.veiculo}" data-placa="${c.placa}">${c.nome} - ${c.veiculo}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>KM Atual*</label>
+                            <input type="number" id="kmManutencao" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Data*</label>
+                            <input type="date" id="dataManutencao" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 15px 0;">Serviços Realizados</h4>
+                    <div id="servicosManutencao">
+                        ${MANUTENCOES_PREVENTIVAS.map(m => `
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" value="${m.id}" onchange="toggleServico(${m.id})">
+                                <span>${m.nome}</span>
+                                <small style="color: var(--gray);">(a cada ${m.kmIntervalo}km ou ${m.mesesIntervalo} meses)</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="registrarManutencao()" style="margin-top: 15px;">
+                        <i class="fas fa-save"></i> Registrar Manutenção
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>KM</th>
+                                <th>Serviços</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.manutencoes.map(item => `
+                                <tr>
+                                    <td>${item.data}</td>
+                                    <td>${item.clienteNome}</td>
+                                    <td>${item.veiculo} (${item.placa})</td>
+                                    <td>${item.kmAtual} km</td>
+                                    <td>${item.servicos.map(s => s.nome).join(', ')}</td>
+                                    <td>
+                                        <button class="btn-icon btn-delete" onclick="excluirManutencao(${item.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function carregarDadosCliente() {
+            const select = document.getElementById('clienteManutencao');
+            const option = select.options[select.selectedIndex];
+            const km = option.dataset.km;
+            document.getElementById('kmManutencao').value = km;
+        }
+
+        function toggleServico(id) {
+            if (!window.servicosSelecionados) window.servicosSelecionados = [];
+            
+            const checkbox = event.currentTarget;
+            if (checkbox.checked) {
+                window.servicosSelecionados.push(id);
+            } else {
+                window.servicosSelecionados = window.servicosSelecionados.filter(s => s !== id);
+            }
+        }
+
+        function registrarManutencao() {
+            const clienteId = document.getElementById('clienteManutencao').value;
+            const km = parseInt(document.getElementById('kmManutencao').value);
+            const data = document.getElementById('dataManutencao').value;
+            
+            if (!clienteId || !km || !data || !window.servicosSelecionados?.length) {
+                showToast('Selecione um cliente, a KM e pelo menos um serviço!', 'warning');
+                return;
+            }
+            
+            const cliente = App.data.clientes.find(c => c.id == clienteId);
+            const servicos = window.servicosSelecionados.map(id => {
+                const m = MANUTENCOES_PREVENTIVAS.find(m => m.id === id);
+                const dataProxima = new Date(data);
+                dataProxima.setMonth(dataProxima.getMonth() + m.mesesIntervalo);
+                
+                return {
+                    id: m.id,
+                    nome: m.nome,
+                    kmProximo: km + m.kmIntervalo,
+                    dataProxima: dataProxima.toISOString().split('T')[0]
+                };
+            });
+            
+            const novaManutencao = {
+                id: Date.now(),
+                clienteId: parseInt(clienteId),
+                clienteNome: cliente.nome,
+                veiculo: cliente.veiculo,
+                placa: cliente.placa,
+                data,
+                kmAtual: km,
+                servicos
+            };
+            
+            App.data.manutencoes.push(novaManutencao);
+            
+            // Atualizar KM do cliente
+            cliente.kmAtual = km;
+            
+            saveData();
+            window.servicosSelecionados = [];
+            
+            showToast('Manutenção registrada com sucesso!', 'success');
+            verificarNotificacoes();
+            renderSection('manutencoes');
+        }
+
+        function excluirManutencao(id) {
+            if (confirm('Excluir esta manutenção?')) {
+                App.data.manutencoes = App.data.manutencoes.filter(m => m.id !== id);
+                saveData();
+                renderSection('manutencoes');
+                showToast('Manutenção excluída!', 'success');
+            }
+        }
+
+        // Notificações
+        function renderNotificacoes() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 15px;">🔔 Notificações de Manutenção</h3>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Filtrar por</label>
+                            <select id="filtroNotificacao" onchange="filtrarNotificacoes()">
+                                <option value="todas">Todas</option>
+                                <option value="alta">Prioridade Alta</option>
+                                <option value="media">Prioridade Média</option>
+                                <option value="km">Por Quilometragem</option>
+                                <option value="tempo">Por Tempo</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="enviarNotificacoes()">
+                            <i class="fas fa-paper-plane"></i> Enviar Lembretes
+                        </button>
+                    </div>
+                    
+                    <div id="listaNotificacoes">
+                        ${renderListaNotificacoes()}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderListaNotificacoes() {
+            if (App.data.notificacoes.length === 0) {
+                return '<p style="text-align: center; color: var(--gray);">Nenhuma notificação no momento</p>';
+            }
+            
+            return `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Prioridade</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>Manutenção</th>
+                                <th>Prazo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.notificacoes.map(notif => `
+                                <tr>
+                                    <td>
+                                        <span class="badge ${notif.prioridade === 'alta' ? 'badge-danger' : 'badge-warning'}">
+                                            ${notif.prioridade === 'alta' ? 'URGENTE' : 'AVISO'}
+                                        </span>
+                                    </td>
+                                    <td>${notif.clienteNome}</td>
+                                    <td>${notif.veiculo} (${notif.placa})</td>
+                                    <td>${notif.manutencao}</td>
+                                    <td>
+                                        ${notif.tipo === 'km' 
+                                            ? `<span class="badge badge-info">${notif.kmRestante} km</span>` 
+                                            : `<span class="badge badge-info">${notif.diasRestante} dias</span>`}
+                                    </td>
+                                    <td>
+                                        <button class="btn-icon btn-notify" onclick="enviarNotificacao(${notif.id})">
+                                            <i class="fas fa-bell"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function filtrarNotificacoes() {
+            const filtro = document.getElementById('filtroNotificacao').value;
+            
+            let notificacoes = [...App.data.notificacoes];
+            
+            if (filtro === 'alta') {
+                notificacoes = notificacoes.filter(n => n.prioridade === 'alta');
+            } else if (filtro === 'media') {
+                notificacoes = notificacoes.filter(n => n.prioridade === 'media');
+            } else if (filtro === 'km') {
+                notificacoes = notificacoes.filter(n => n.tipo === 'km');
+            } else if (filtro === 'tempo') {
+                notificacoes = notificacoes.filter(n => n.tipo === 'tempo');
+            }
+            
+            if (notificacoes.length === 0) {
+                document.getElementById('listaNotificacoes').innerHTML = '<p style="text-align: center; color: var(--gray);">Nenhuma notificação encontrada</p>';
+                return;
+            }
+            
+            document.getElementById('listaNotificacoes').innerHTML = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Prioridade</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>Manutenção</th>
+                                <th>Prazo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${notificacoes.map(notif => `
+                                <tr>
+                                    <td>
+                                        <span class="badge ${notif.prioridade === 'alta' ? 'badge-danger' : 'badge-warning'}">
+                                            ${notif.prioridade === 'alta' ? 'URGENTE' : 'AVISO'}
+                                        </span>
+                                    </td>
+                                    <td>${notif.clienteNome}</td>
+                                    <td>${notif.veiculo} (${notif.placa})</td>
+                                    <td>${notif.manutencao}</td>
+                                    <td>
+                                        ${notif.tipo === 'km' 
+                                            ? `<span class="badge badge-info">${notif.kmRestante} km</span>` 
+                                            : `<span class="badge badge-info">${notif.diasRestante} dias</span>`}
+                                    </td>
+                                    <td>
+                                        <button class="btn-icon btn-notify" onclick="enviarNotificacao(${notif.id})">
+                                            <i class="fas fa-bell"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function enviarNotificacao(id) {
+            const notif = App.data.notificacoes.find(n => n.id === id);
+            if (notif) {
+                showToast(`Lembrete enviado para ${notif.clienteNome}`, 'success');
+            }
+        }
+
+        function enviarNotificacoes() {
+            showToast(`${App.data.notificacoes.length} lembretes enviados!`, 'success');
+        }
+
         // Caixa
         function renderCaixa() {
+            const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0);
+            const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0);
+            
             return `
                 <div class="form-section">
                     <h3 style="margin-bottom: 15px;">💰 Novo Registro</h3>
@@ -1014,17 +1996,17 @@
                         <tfoot>
                             <tr style="background: var(--light); font-weight: bold;">
                                 <td colspan="3">Total Entradas:</td>
-                                <td>R$ ${App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0).toFixed(2)}</td>
+                                <td>R$ ${entradas.toFixed(2)}</td>
                                 <td></td>
                             </tr>
                             <tr style="background: var(--light); font-weight: bold;">
                                 <td colspan="3">Total Saídas:</td>
-                                <td>R$ ${App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0).toFixed(2)}</td>
+                                <td>R$ ${saidas.toFixed(2)}</td>
                                 <td></td>
                             </tr>
                             <tr style="background: var(--secondary); color: white; font-weight: bold;">
                                 <td colspan="3">Saldo:</td>
-                                <td>R$ ${(App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0) - App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0)).toFixed(2)}</td>
+                                <td>R$ ${(entradas - saidas).toFixed(2)}</td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -1055,23 +2037,7 @@
             App.data.caixa.unshift(novo);
             saveData();
             
-            document.getElementById('tabelaCaixa').innerHTML = App.data.caixa.map(item => `
-                <tr>
-                    <td>${item.data}</td>
-                    <td><span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${item.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span></td>
-                    <td>${item.descricao}</td>
-                    <td>R$ ${item.valor.toFixed(2)}</td>
-                    <td>
-                        <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            document.getElementById('descCaixa').value = '';
-            document.getElementById('valorCaixa').value = '';
-            
+            renderSection('caixa');
             showToast('Registro adicionado!', 'success');
         }
 
@@ -1079,19 +2045,7 @@
             if (confirm('Excluir este registro?')) {
                 App.data.caixa = App.data.caixa.filter(item => item.id !== id);
                 saveData();
-                document.getElementById('tabelaCaixa').innerHTML = App.data.caixa.map(item => `
-                    <tr>
-                        <td>${item.data}</td>
-                        <td><span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${item.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span></td>
-                        <td>${item.descricao}</td>
-                        <td>R$ ${item.valor.toFixed(2)}</td>
-                        <td>
-                            <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
+                renderSection('caixa');
                 showToast('Registro excluído!', 'success');
             }
         }
@@ -1125,175 +2079,6 @@
                     <td>R$ ${item.valor.toFixed(2)}</td>
                     <td>
                         <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Clientes
-        function renderClientes() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">👤 Novo Cliente</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nome*</label>
-                            <input type="text" id="nomeCliente" placeholder="Nome completo">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefone*</label>
-                            <input type="text" id="telCliente" placeholder="(11) 99999-9999">
-                        </div>
-                        <div class="form-group">
-                            <label>Veículo</label>
-                            <input type="text" id="veicCliente" placeholder="Ex: Gol 2020">
-                        </div>
-                        <div class="form-group">
-                            <label>Placa</label>
-                            <input type="text" id="placaCliente" placeholder="ABC-1234">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="cadastrarCliente()">
-                        <i class="fas fa-save"></i> Cadastrar
-                    </button>
-                </div>
-
-                <div class="filter-group" style="margin-bottom: 15px;">
-                    <input type="text" id="buscaCliente" placeholder="🔍 Buscar cliente..." onkeyup="buscarClientes()" style="width: 100%; padding: 10px;">
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>Veículo</th>
-                                <th>Placa</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaClientes">
-                            ${App.data.clientes.map(item => `
-                                <tr>
-                                    <td>${item.nome}</td>
-                                    <td>${item.telefone}</td>
-                                    <td>${item.veiculo || '-'}</td>
-                                    <td>${item.placa || '-'}</td>
-                                    <td>
-                                        <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function cadastrarCliente() {
-            const nome = document.getElementById('nomeCliente').value;
-            const tel = document.getElementById('telCliente').value;
-            const veic = document.getElementById('veicCliente').value;
-            const placa = document.getElementById('placaCliente').value;
-
-            if (!nome || !tel) {
-                showToast('Nome e telefone são obrigatórios!', 'warning');
-                return;
-            }
-
-            const novo = {
-                id: Date.now(),
-                nome,
-                telefone: tel,
-                veiculo: veic,
-                placa
-            };
-
-            App.data.clientes.push(novo);
-            saveData();
-            
-            document.getElementById('tabelaClientes').innerHTML = App.data.clientes.map(item => `
-                <tr>
-                    <td>${item.nome}</td>
-                    <td>${item.telefone}</td>
-                    <td>${item.veiculo || '-'}</td>
-                    <td>${item.placa || '-'}</td>
-                    <td>
-                        <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            document.getElementById('nomeCliente').value = '';
-            document.getElementById('telCliente').value = '';
-            document.getElementById('veicCliente').value = '';
-            document.getElementById('placaCliente').value = '';
-            
-            showToast('Cliente cadastrado!', 'success');
-        }
-
-        function excluirCliente(id) {
-            if (confirm('Excluir este cliente?')) {
-                App.data.clientes = App.data.clientes.filter(item => item.id !== id);
-                saveData();
-                document.getElementById('tabelaClientes').innerHTML = App.data.clientes.map(item => `
-                    <tr>
-                        <td>${item.nome}</td>
-                        <td>${item.telefone}</td>
-                        <td>${item.veiculo || '-'}</td>
-                        <td>${item.placa || '-'}</td>
-                        <td>
-                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-                showToast('Cliente excluído!', 'success');
-            }
-        }
-
-        function buscarClientes() {
-            const termo = document.getElementById('buscaCliente').value.toLowerCase();
-            
-            if (!termo) {
-                document.getElementById('tabelaClientes').innerHTML = App.data.clientes.map(item => `
-                    <tr>
-                        <td>${item.nome}</td>
-                        <td>${item.telefone}</td>
-                        <td>${item.veiculo || '-'}</td>
-                        <td>${item.placa || '-'}</td>
-                        <td>
-                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-                return;
-            }
-
-            const filtrados = App.data.clientes.filter(c => 
-                c.nome.toLowerCase().includes(termo) ||
-                c.telefone.includes(termo) ||
-                (c.placa && c.placa.toLowerCase().includes(termo))
-            );
-
-            document.getElementById('tabelaClientes').innerHTML = filtrados.map(item => `
-                <tr>
-                    <td>${item.nome}</td>
-                    <td>${item.telefone}</td>
-                    <td>${item.veiculo || '-'}</td>
-                    <td>${item.placa || '-'}</td>
-                    <td>
-                        <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
