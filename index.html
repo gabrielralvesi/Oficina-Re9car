@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RenoveCar Pro - Sistema Automotivo Profissional</title>
+    <title>RenoveCar Pro - Sistema Automotivo Completo</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Supabase (Backend como serviço) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #e63946;
             --primary-dark: #c1121f;
@@ -28,7 +26,6 @@
             --warning: #f39c12;
             --danger: #e74c3c;
             --info: #3498db;
-            --dark: #1a1a1a;
             --light: #f8f9fa;
             --gray: #6c757d;
             --border: #dee2e6;
@@ -40,7 +37,7 @@
             min-height: 100vh;
         }
 
-        /* Login Screen */
+        /* Login */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -56,12 +53,6 @@
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-header {
@@ -78,104 +69,19 @@
         .login-header h1 {
             color: var(--secondary);
             font-size: 28px;
-            margin-bottom: 5px;
         }
 
-        .login-header p {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .login-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: var(--light);
-            padding: 5px;
-            border-radius: 10px;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .login-tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .login-form {
-            display: none;
-        }
-
-        .login-form.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--secondary);
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
-        }
-
-        .login-footer {
+        .login-demo {
             text-align: center;
             margin-top: 20px;
-            color: var(--gray);
+            padding: 15px;
+            background: var(--light);
+            border-radius: 8px;
             font-size: 13px;
         }
 
-        .login-footer a {
+        .login-demo strong {
             color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
         }
 
         /* Dashboard */
@@ -188,18 +94,18 @@
 
         .dashboard.active {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.5s;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
-            padding: 20px 25px;
+            padding: 20px;
             border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
@@ -210,21 +116,9 @@
 
         .logo h1 {
             font-size: 24px;
-            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .logo i {
-            font-size: 30px;
-        }
-
-        .logo span {
-            font-size: 12px;
-            font-weight: 400;
-            opacity: 0.9;
-            margin-left: 8px;
         }
 
         .user-info {
@@ -243,19 +137,11 @@
             gap: 8px;
         }
 
-        .plan-badge {
-            background: var(--success);
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
         .date-time {
-            font-size: 13px;
             background: rgba(0,0,0,0.2);
             padding: 8px 15px;
             border-radius: 30px;
+            font-size: 13px;
         }
 
         .nav-menu {
@@ -265,7 +151,7 @@
             gap: 5px;
             border-bottom: 1px solid var(--border);
             overflow-x: auto;
-            white-space: nowrap;
+            flex-wrap: wrap;
         }
 
         .nav-item {
@@ -278,11 +164,6 @@
             align-items: center;
             gap: 8px;
             border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .nav-item i {
-            font-size: 16px;
         }
 
         .nav-item:hover {
@@ -294,15 +175,18 @@
             border-bottom-color: var(--primary);
         }
 
+        .nav-item .badge {
+            margin-left: 5px;
+        }
+
         .content {
             background: white;
             padding: 25px;
             border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             min-height: 500px;
         }
 
-        /* Stats Cards */
+        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -311,7 +195,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            background: var(--secondary);
             color: white;
             padding: 18px;
             border-radius: 12px;
@@ -344,128 +228,50 @@
             opacity: 0.3;
         }
 
-        /* Plan Cards */
-        .plans-grid {
+        /* Alert Cards */
+        .alert-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .plan-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            border: 2px solid var(--border);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .plan-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .plan-card.popular {
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: 20px;
-            right: -30px;
-            background: var(--primary);
-            color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .plan-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-
-        .plan-icon i {
-            font-size: 40px;
-            color: var(--primary);
-        }
-
-        .plan-name {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 10px;
-        }
-
-        .plan-price {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .plan-price small {
-            font-size: 14px;
-            color: var(--gray);
-            font-weight: 400;
-        }
-
-        .plan-features {
-            list-style: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
             margin-bottom: 25px;
         }
 
-        .plan-features li {
-            padding: 8px 0;
-            color: var(--gray);
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .plan-features li i {
-            color: var(--success);
-            margin-right: 8px;
-        }
-
-        .btn-plan {
-            width: 100%;
-            padding: 12px;
-            border: none;
+        .alert-card {
+            background: white;
+            border-left: 4px solid;
+            padding: 15px;
             border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn-plan.basic {
-            background: var(--gray);
-            color: white;
+        .alert-card.warning {
+            border-left-color: var(--warning);
         }
 
-        .btn-plan.pro {
+        .alert-card.danger {
+            border-left-color: var(--danger);
+        }
+
+        .alert-info h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .alert-info p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .alert-badge {
             background: var(--primary);
             color: white;
-        }
-
-        .btn-plan.business {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-plan:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         /* Charts */
@@ -477,11 +283,86 @@
         }
 
         .chart-card {
-            background: white;
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 18px;
         }
+
+        /* Forms */
+        .form-section {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Search */
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn-action {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0 2px;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-action.success { background: var(--success); }
+        .btn-action.danger { background: var(--danger); }
+        .btn-action.info { background: var(--info); }
+        .btn-action.warning { background: var(--warning); }
+        .btn-action.primary { background: var(--primary); }
+        .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
 
         /* Tables */
         .table-container {
@@ -494,7 +375,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
+            min-width: 800px;
         }
 
         th {
@@ -523,105 +404,24 @@
             font-weight: 600;
         }
 
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
 
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        /* Forms */
-        .form-section {
-            background: var(--light);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 0;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--secondary);
-            font-size: 13px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
+        /* Serviços */
+        .servico-linha {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            background: white;
             padding: 10px;
-            border: 2px solid var(--border);
             border-radius: 8px;
-            font-size: 13px;
-            transition: all 0.3s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        /* Buttons */
-        .btn-action {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            margin: 0 2px;
-            transition: all 0.3s;
-        }
-
-        .btn-action.success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-action.danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-action.info {
-            background: var(--info);
-            color: white;
-        }
-
-        .btn-action.warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-action:hover {
-            opacity: 0.8;
-            transform: translateY(-2px);
-        }
+        .servico-descricao { flex: 3; }
+        .servico-valor { flex: 1; }
 
         /* Modal */
         .modal {
@@ -639,14 +439,13 @@
 
         .modal.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background: white;
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -656,7 +455,6 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
         .modal-body {
@@ -669,6 +467,13 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
         }
 
         /* Toast */
@@ -688,7 +493,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.3s;
             border-left: 4px solid;
         }
 
@@ -733,11 +538,52 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--light);
+            padding: 5px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: var(--gray);
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Progress */
+        progress {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: var(--light);
+            border-radius: 10px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: var(--primary);
+            border-radius: 10px;
+        }
+
         @media (max-width: 768px) {
             .charts-grid { grid-template-columns: 1fr; }
-            .plans-grid { grid-template-columns: 1fr; }
-            .plan-card.popular { transform: scale(1); }
+            .nav-menu { flex-direction: column; }
+            .nav-item { border-bottom: none; }
         }
     </style>
 </head>
@@ -748,126 +594,61 @@
             <div class="login-header">
                 <i class="fas fa-car"></i>
                 <h1>RenoveCar Pro</h1>
-                <p>Sistema profissional de gestão automotiva</p>
             </div>
 
-            <div class="login-tabs">
-                <div class="login-tab active" onclick="switchLoginTab('login')">Login</div>
-                <div class="login-tab" onclick="switchLoginTab('register')">Registro</div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" value="admin@renovecar.com">
             </div>
-
-            <!-- Login Form -->
-            <div class="login-form active" id="loginForm">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••">
-                </div>
-                <button class="btn" onclick="handleLogin()">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-                <div class="login-footer">
-                    <a href="#" onclick="resetPassword()">Esqueceu a senha?</a>
-                </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="loginPassword" value="123456">
             </div>
+            <button class="btn" onclick="handleLogin()">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
 
-            <!-- Register Form -->
-            <div class="login-form" id="registerForm">
-                <div class="form-group">
-                    <label>Nome da Empresa</label>
-                    <input type="text" id="regEmpresa" placeholder="RenoveCar Centro Automotivo">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="regEmail" placeholder="contato@renovecar.com">
-                </div>
-                <div class="form-group">
-                    <label>Telefone</label>
-                    <input type="text" id="regTelefone" placeholder="(11) 99999-9999">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="regPassword" placeholder="••••••••">
-                </div>
-                <div class="form-group">
-                    <label>Confirmar Senha</label>
-                    <input type="password" id="regConfirmPassword" placeholder="••••••••">
-                </div>
-                <button class="btn" onclick="handleRegister()">
-                    <i class="fas fa-user-plus"></i> Criar Conta
-                </button>
-                <div class="login-footer">
-                    Ao registrar, você aceita nossos <a href="#">Termos de Uso</a>
-                </div>
+            <div class="login-demo">
+                <strong>🔑 Dados para teste:</strong><br>
+                Email: admin@renovecar.com<br>
+                Senha: 123456
             </div>
         </div>
     </div>
 
     <!-- Dashboard -->
     <div class="dashboard" id="dashboard">
-        <!-- Header -->
         <div class="header">
             <div class="logo">
                 <h1>
                     <i class="fas fa-car"></i>
                     RenoveCar Pro
-                    <span id="empresaNome">Centro Automotivo</span>
                 </h1>
             </div>
             <div class="user-info">
                 <div class="user-badge">
                     <i class="fas fa-user-circle"></i>
-                    <span id="userEmail">carregando...</span>
-                </div>
-                <div class="plan-badge" id="userPlan">
-                    <i class="fas fa-crown"></i> Plano Básico
+                    <span id="userName">Admin</span>
                 </div>
                 <div class="date-time" id="currentDateTime"></div>
-                <button class="btn-action info" onclick="showPlans()">
-                    <i class="fas fa-arrow-up"></i> Upgrade
-                </button>
                 <button class="btn-action danger" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Menu -->
         <div class="nav-menu">
-            <div class="nav-item active" onclick="showSection('dashboard', this)">
-                <i class="fas fa-chart-pie"></i> Dashboard
-            </div>
-            <div class="nav-item" onclick="showSection('os', this)">
-                <i class="fas fa-clipboard-list"></i> OS
-            </div>
-            <div class="nav-item" onclick="showSection('clientes', this)">
-                <i class="fas fa-users"></i> Clientes
-            </div>
-            <div class="nav-item" onclick="showSection('veiculos', this)">
-                <i class="fas fa-car"></i> Veículos
-            </div>
-            <div class="nav-item" onclick="showSection('agenda', this)">
-                <i class="fas fa-calendar"></i> Agenda
-            </div>
-            <div class="nav-item" onclick="showSection('financeiro', this)">
-                <i class="fas fa-cash-register"></i> Financeiro
-            </div>
-            <div class="nav-item" onclick="showSection('relatorios', this)">
-                <i class="fas fa-file-alt"></i> Relatórios
-            </div>
-            <div class="nav-item" onclick="showSection('config', this)">
-                <i class="fas fa-cog"></i> Config
-            </div>
-            <div class="nav-item" onclick="showSection('planos', this)">
-                <i class="fas fa-crown"></i> Planos
-                <span class="badge badge-danger" id="planAlert" style="display: none;">!</span>
-            </div>
+            <div class="nav-item active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
+            <div class="nav-item" onclick="showSection('os', this)">🔧 OS <span class="badge badge-warning" id="osCount"></span></div>
+            <div class="nav-item" onclick="showSection('clientes', this)">👥 Clientes <span class="badge badge-info" id="clientesCount"></span></div>
+            <div class="nav-item" onclick="showSection('veiculos', this)">🚗 Veículos <span class="badge badge-info" id="veiculosCount"></span></div>
+            <div class="nav-item" onclick="showSection('agenda', this)">📅 Agenda</div>
+            <div class="nav-item" onclick="showSection('financeiro', this)">💰 Financeiro</div>
+            <div class="nav-item" onclick="showSection('relatorios', this)">📊 Relatórios</div>
+            <div class="nav-item" onclick="showSection('alertas', this)">⚠️ Alertas <span class="badge badge-danger" id="alertasCount">0</span></div>
+            <div class="nav-item" onclick="showSection('config', this)">⚙️ Config</div>
         </div>
 
-        <!-- Conteúdo Principal -->
         <div class="content" id="mainContent"></div>
     </div>
 
@@ -886,7 +667,7 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toast -->
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Loading -->
@@ -895,155 +676,223 @@
     </div>
 
     <script>
-        // ==================== CONFIGURAÇÃO SUPABASE ====================
-        const SUPABASE_URL = 'https://seu-projeto.supabase.co'; // Substituir pelo seu URL
-        const SUPABASE_KEY = 'sua-chave'; // Substituir pela sua chave
-        
-        // Inicializar Supabase (modo demonstração se não configurado)
-        let supabase;
-        try {
-            supabase = supabaseClient 
-                ? supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY)
-                : null;
-        } catch (e) {
-            console.warn('Supabase não configurado, usando localStorage');
-        }
-
-        // ==================== ESTADO GLOBAL ====================
+        // Estado da aplicação
         const App = {
             user: null,
-            empresa: null,
-            plano: 'basico',
-            usage: {
-                os: 0,
-                clientes: 0,
-                veiculos: 0
-            },
-            limits: {
-                basico: { os: 50, clientes: 100, veiculos: 50, preco: 97 },
-                profissional: { os: 500, clientes: 1000, veiculos: 200, preco: 197 },
-                empresarial: { os: 999999, clientes: 999999, veiculos: 999999, preco: 497 }
-            },
+            editId: null,
+            editType: null,
+            alertas: [],
             data: {
                 os: [],
                 clientes: [],
                 veiculos: [],
                 agenda: [],
                 financeiro: []
-            },
-            charts: {}
+            }
         };
 
-        // ==================== INICIALIZAÇÃO ====================
+        // Dados iniciais
+        const dadosIniciais = {
+            os: [
+                { 
+                    id: 1, 
+                    numero: 'OS-001', 
+                    clienteId: 1, 
+                    clienteNome: 'João Silva', 
+                    veiculoId: 1,
+                    veiculo: 'Gol 2020',
+                    placa: 'ABC-1234',
+                    km: 45230,
+                    data: '2024-01-15', 
+                    status: 'concluido', 
+                    servicos: [
+                        { desc: 'Troca de Óleo', valor: 150 },
+                        { desc: 'Alinhamento', valor: 120 }
+                    ],
+                    valor: 270,
+                    observacoes: 'Cliente solicitou revisão'
+                },
+                { 
+                    id: 2, 
+                    numero: 'OS-002', 
+                    clienteId: 2, 
+                    clienteNome: 'Maria Santos', 
+                    veiculoId: 2,
+                    veiculo: 'Onix 2022',
+                    placa: 'XYZ-5678',
+                    km: 15320,
+                    data: '2024-01-16', 
+                    status: 'andamento', 
+                    servicos: [
+                        { desc: 'Revisão Freios', valor: 180 }
+                    ],
+                    valor: 180,
+                    observacoes: 'Aguardando peças'
+                },
+                { 
+                    id: 3, 
+                    numero: 'OS-003', 
+                    clienteId: 3, 
+                    clienteNome: 'Pedro Oliveira', 
+                    veiculoId: 3,
+                    veiculo: 'Fiesta 2019',
+                    placa: 'DEF-9012',
+                    km: 67890,
+                    data: '2024-01-14', 
+                    status: 'concluido', 
+                    servicos: [
+                        { desc: 'Troca de Óleo', valor: 150 },
+                        { desc: 'Filtros', valor: 80 },
+                        { desc: 'Alinhamento', valor: 120 }
+                    ],
+                    valor: 350,
+                    observacoes: ''
+                }
+            ],
+            clientes: [
+                { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', email: 'joao@email.com', endereco: 'Rua A, 123', cpf: '123.456.789-00' },
+                { id: 2, nome: 'Maria Santos', telefone: '(11) 98888-8888', email: 'maria@email.com', endereco: 'Av B, 456', cpf: '987.654.321-00' },
+                { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 97777-7777', email: 'pedro@email.com', endereco: 'Rua C, 789', cpf: '456.789.123-00' }
+            ],
+            veiculos: [
+                { id: 1, clienteId: 1, clienteNome: 'João Silva', modelo: 'Gol 2020', placa: 'ABC-1234', km: 45230, cor: 'Prata', ano: 2020 },
+                { id: 2, clienteId: 2, clienteNome: 'Maria Santos', modelo: 'Onix 2022', placa: 'XYZ-5678', km: 15320, cor: 'Branco', ano: 2022 },
+                { id: 3, clienteId: 3, clienteNome: 'Pedro Oliveira', modelo: 'Fiesta 2019', placa: 'DEF-9012', km: 67890, cor: 'Preto', ano: 2019 },
+                { id: 4, clienteId: 1, clienteNome: 'João Silva', modelo: 'Saveiro 2021', placa: 'GHI-3456', km: 25600, cor: 'Vermelho', ano: 2021 }
+            ],
+            agenda: [
+                { id: 1, clienteId: 1, clienteNome: 'João Silva', data: '2024-01-20', hora: '09:00', servico: 'Revisão Geral', status: 'agendado' },
+                { id: 2, clienteId: 2, clienteNome: 'Maria Santos', data: '2024-01-20', hora: '14:00', servico: 'Troca de Óleo', status: 'confirmado' },
+                { id: 3, clienteId: 3, clienteNome: 'Pedro Oliveira', data: '2024-01-21', hora: '10:30', servico: 'Alinhamento', status: 'agendado' }
+            ],
+            financeiro: [
+                { id: 1, tipo: 'entrada', descricao: 'OS-001 - João Silva', valor: 270, data: '2024-01-15', categoria: 'Serviços' },
+                { id: 2, tipo: 'entrada', descricao: 'OS-003 - Pedro Oliveira', valor: 350, data: '2024-01-14', categoria: 'Serviços' },
+                { id: 3, tipo: 'saida', descricao: 'Compra de Óleos', valor: 450, data: '2024-01-13', categoria: 'Estoque' },
+                { id: 4, tipo: 'saida', descricao: 'Conta de Luz', valor: 320, data: '2024-01-10', categoria: 'Despesas' }
+            ]
+        };
+
+        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            carregarDados();
             checkSession();
         });
 
-        // ==================== UTILITÁRIOS ====================
+        // Utilitários
         const showLoading = () => document.getElementById('loading').classList.add('active');
         const hideLoading = () => document.getElementById('loading').classList.remove('active');
 
         const showToast = (message, type = 'info') => {
-            const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
-            container.appendChild(toast);
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+            toast.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
+            document.getElementById('toastContainer').appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         };
 
         const updateDateTime = () => {
+            const now = new Date();
             document.getElementById('currentDateTime').textContent = 
-                new Date().toLocaleDateString('pt-BR', { 
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         };
 
-        // ==================== AUTENTICAÇÃO ====================
-        const switchLoginTab = (tab) => {
-            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+        const updateCounters = () => {
+            document.getElementById('osCount').textContent = App.data.os.filter(o => o.status === 'andamento').length;
+            document.getElementById('clientesCount').textContent = App.data.clientes.length;
+            document.getElementById('veiculosCount').textContent = App.data.veiculos.length;
+            document.getElementById('alertasCount').textContent = App.alertas.length;
+        };
+
+        // Persistência
+        const carregarDados = () => {
+            try {
+                const saved = localStorage.getItem('renovecar_completo');
+                if (saved) {
+                    App.data = JSON.parse(saved);
+                } else {
+                    App.data = dadosIniciais;
+                }
+                gerarAlertas();
+                updateCounters();
+            } catch (e) {
+                App.data = dadosIniciais;
+            }
+        };
+
+        const salvarDados = () => {
+            localStorage.setItem('renovecar_completo', JSON.stringify(App.data));
+            gerarAlertas();
+            updateCounters();
+        };
+
+        // Alertas automáticos
+        const gerarAlertas = () => {
+            App.alertas = [];
+            const hoje = new Date();
             
-            if (tab === 'login') {
-                document.querySelectorAll('.login-tab')[0].classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                document.querySelectorAll('.login-tab')[1].classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-            }
+            // Alertas de revisão por KM
+            App.data.veiculos.forEach(v => {
+                const ultimaOS = App.data.os
+                    .filter(o => o.veiculoId === v.id && o.status === 'concluido')
+                    .sort((a,b) => new Date(b.data) - new Date(a.data))[0];
+                
+                if (ultimaOS) {
+                    const kmPercorrido = v.km - ultimaOS.km;
+                    if (kmPercorrido > 5000) {
+                        App.alertas.push({
+                            tipo: 'km',
+                            veiculo: `${v.modelo} - ${v.placa}`,
+                            cliente: v.clienteNome,
+                            mensagem: `Veículo rodou ${kmPercorrido}km desde última revisão`,
+                            prioridade: kmPercorrido > 7000 ? 'alta' : 'media'
+                        });
+                    }
+                }
+            });
+
+            // Alertas de agendamentos para hoje
+            const hojeStr = hoje.toISOString().split('T')[0];
+            App.data.agenda.filter(a => a.data === hojeStr && a.status === 'agendado').forEach(a => {
+                App.alertas.push({
+                    tipo: 'agenda',
+                    cliente: a.clienteNome,
+                    mensagem: `Agendamento hoje às ${a.hora}: ${a.servico}`,
+                    prioridade: 'alta'
+                });
+            });
+
+            // Alertas de contas a pagar
+            App.data.financeiro.filter(f => f.tipo === 'saida' && new Date(f.data) < hoje).forEach(f => {
+                App.alertas.push({
+                    tipo: 'financeiro',
+                    mensagem: `Conta em atraso: ${f.descricao} - R$ ${f.valor}`,
+                    prioridade: 'alta'
+                });
+            });
         };
 
-        const handleLogin = async () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                showToast('Preencha todos os campos', 'warning');
-                return;
-            }
-
+        // Login
+        const handleLogin = () => {
             showLoading();
-
-            try {
-                // Simular login (substituir por Supabase quando configurado)
-                await new Promise(r => setTimeout(r, 1000));
-                
-                // Dados mockados
-                App.user = { email, nome: email.split('@')[0] };
-                App.empresa = 'RenoveCar Centro Automotivo';
-                App.plano = 'basico';
-                
-                loadUserData();
-                
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').classList.add('active');
-                
-                showToast(`Bem-vindo, ${App.user.nome}!`, 'success');
-                renderSection('dashboard');
-                
-            } catch (error) {
-                showToast('Erro ao fazer login', 'error');
-            } finally {
+            setTimeout(() => {
+                const email = document.getElementById('loginEmail').value;
+                if (email) {
+                    App.user = { email, nome: 'Admin' };
+                    document.getElementById('userName').textContent = App.user.nome;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    
+                    localStorage.setItem('renovecar_session', JSON.stringify({ user: App.user }));
+                    
+                    showToast(`Bem-vindo, ${App.user.nome}!`, 'success');
+                    renderSection('dashboard');
+                }
                 hideLoading();
-            }
-        };
-
-        const handleRegister = async () => {
-            const empresa = document.getElementById('regEmpresa').value;
-            const email = document.getElementById('regEmail').value;
-            const telefone = document.getElementById('regTelefone').value;
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirmPassword').value;
-
-            if (!empresa || !email || !telefone || !password) {
-                showToast('Preencha todos os campos', 'warning');
-                return;
-            }
-
-            if (password !== confirm) {
-                showToast('As senhas não conferem', 'warning');
-                return;
-            }
-
-            showLoading();
-
-            try {
-                await new Promise(r => setTimeout(r, 1500));
-                
-                showToast('Conta criada com sucesso! Faça login.', 'success');
-                switchLoginTab('login');
-                
-            } catch (error) {
-                showToast('Erro ao criar conta', 'error');
-            } finally {
-                hideLoading();
-            }
+            }, 500);
         };
 
         const checkSession = () => {
@@ -1052,14 +901,9 @@
                 try {
                     const session = JSON.parse(saved);
                     App.user = session.user;
-                    App.empresa = session.empresa;
-                    App.plano = session.plano;
-                    
-                    loadUserData();
-                    
+                    document.getElementById('userName').textContent = App.user.nome;
                     document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
-                    
                     renderSection('dashboard');
                 } catch (e) {
                     localStorage.removeItem('renovecar_session');
@@ -1068,7 +912,7 @@
         };
 
         const logout = () => {
-            if (confirm('Deseja realmente sair?')) {
+            if (confirm('Deseja sair do sistema?')) {
                 localStorage.removeItem('renovecar_session');
                 App.user = null;
                 document.getElementById('dashboard').classList.remove('active');
@@ -1077,128 +921,21 @@
             }
         };
 
-        const resetPassword = () => {
-            showToast('Função de recuperação em breve', 'info');
-        };
-
-        // ==================== CARREGAR DADOS ====================
-        const loadUserData = () => {
-            document.getElementById('userEmail').textContent = App.user.email;
-            document.getElementById('empresaNome').textContent = App.empresa;
-            document.getElementById('userPlan').innerHTML = `<i class="fas fa-crown"></i> Plano ${App.plano.charAt(0).toUpperCase() + App.plano.slice(1)}`;
-            
-            // Carregar dados do localStorage
-            try {
-                const saved = localStorage.getItem(`renovecar_${App.user.email}`);
-                if (saved) {
-                    App.data = JSON.parse(saved);
-                } else {
-                    // Dados iniciais
-                    App.data = {
-                        os: [],
-                        clientes: [
-                            { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', email: 'joao@email.com' }
-                        ],
-                        veiculos: [
-                            { id: 1, clienteId: 1, modelo: 'Gol 2020', placa: 'ABC-1234', km: 45230 }
-                        ],
-                        agenda: [],
-                        financeiro: []
-                    };
-                }
-                
-                // Atualizar uso
-                App.usage.os = App.data.os.length;
-                App.usage.clientes = App.data.clientes.length;
-                App.usage.veiculos = App.data.veiculos.length;
-                
-                // Verificar limites
-                checkLimits();
-                
-            } catch (e) {
-                console.error('Erro ao carregar dados:', e);
-            }
-        };
-
-        const saveUserData = () => {
-            if (App.user) {
-                localStorage.setItem(`renovecar_${App.user.email}`, JSON.stringify(App.data));
-                localStorage.setItem('renovecar_session', JSON.stringify({
-                    user: App.user,
-                    empresa: App.empresa,
-                    plano: App.plano
-                }));
-            }
-        };
-
-        // ==================== PLANOS E LIMITES ====================
-        const checkLimits = () => {
-            const limits = App.limits[App.plano];
-            const nearLimit = [];
-            
-            if (App.usage.os >= limits.os * 0.8) nearLimit.push('OS');
-            if (App.usage.clientes >= limits.clientes * 0.8) nearLimit.push('clientes');
-            if (App.usage.veiculos >= limits.veiculos * 0.8) nearLimit.push('veículos');
-            
-            if (nearLimit.length > 0) {
-                document.getElementById('planAlert').style.display = 'inline';
-                showToast(`Limite próximo: ${nearLimit.join(', ')}. Faça upgrade!`, 'warning');
-            }
-        };
-
-        const canAdd = (type) => {
-            const limits = App.limits[App.plano];
-            return App.usage[type] < limits[type];
-        };
-
-        const showPlans = () => {
-            showSection('planos', document.querySelectorAll('.nav-item')[9]);
-        };
-
-        const upgradePlan = (plan) => {
-            const limits = App.limits[plan];
-            
-            openModal(
-                `Confirmar upgrade para Plano ${plan.charAt(0).toUpperCase() + plan.slice(1)}`,
-                `
-                    <p><strong>Plano:</strong> ${plan}</p>
-                    <p><strong>Preço:</strong> R$ ${limits.preco}/mês</p>
-                    <p><strong>Inclui:</strong></p>
-                    <ul>
-                        <li>Até ${limits.os} OS/mês</li>
-                        <li>Até ${limits.clientes} clientes</li>
-                        <li>Até ${limits.veiculos} veículos</li>
-                    </ul>
-                    <p>Deseja continuar com o upgrade?</p>
-                `,
-                () => {
-                    App.plano = plan;
-                    document.getElementById('userPlan').innerHTML = `<i class="fas fa-crown"></i> Plano ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
-                    document.getElementById('planAlert').style.display = 'none';
-                    saveUserData();
-                    closeModal();
-                    showToast(`Upgrade para ${plan} realizado!`, 'success');
-                    renderSection('planos');
-                }
-            );
-        };
-
-        // ==================== NAVEGAÇÃO ====================
+        // Navegação
         const showSection = (section, element) => {
-            if (element) {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                element.classList.add('active');
-            }
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            element.classList.add('active');
             
             showLoading();
             setTimeout(() => {
-                document.getElementById('mainContent').innerHTML = renderSection(section);
+                document.getElementById('mainContent').innerHTML = getSectionContent(section);
                 if (section === 'dashboard') setTimeout(initCharts, 100);
+                if (section === 'os' && document.getElementById('servicosContainer')) renderServicos();
                 hideLoading();
             }, 300);
         };
 
-        const renderSection = (section) => {
+        const getSectionContent = (section) => {
             const sections = {
                 dashboard: renderDashboard,
                 os: renderOS,
@@ -1207,64 +944,72 @@
                 agenda: renderAgenda,
                 financeiro: renderFinanceiro,
                 relatorios: renderRelatorios,
-                config: renderConfig,
-                planos: renderPlanos
+                alertas: renderAlertas,
+                config: renderConfig
             };
-            
-            return sections[section] ? sections[section]() : '<p>Seção em construção</p>';
+            return sections[section] ? sections[section]() : '<p>Seção não encontrada</p>';
         };
 
         // ==================== DASHBOARD ====================
         const renderDashboard = () => {
             const mes = new Date().getMonth();
-            const faturamento = App.data.financeiro
-                .filter(f => f.tipo === 'entrada' && new Date(f.data).getMonth() === mes)
-                .reduce((s,i) => s + i.valor, 0);
-            
-            const osMes = App.data.os.filter(o => new Date(o.data).getMonth() === mes).length;
+            const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada' && new Date(f.data).getMonth() === mes).reduce((s, f) => s + f.valor, 0);
+            const saidas = App.data.financeiro.filter(f => f.tipo === 'saida' && new Date(f.data).getMonth() === mes).reduce((s, f) => s + f.valor, 0);
             
             return `
                 <div class="stats-grid">
-                    <div class="stat-card" onclick="showSection('financeiro')">
+                    <div class="stat-card" onclick="showSection('financeiro', document.querySelectorAll('.nav-item')[5])">
                         <div>
                             <h3>Faturamento Mês</h3>
-                            <div class="value">R$ ${faturamento.toFixed(2)}</div>
+                            <div class="value">R$ ${entradas.toFixed(2)}</div>
                         </div>
                         <i class="fas fa-chart-line stat-icon"></i>
                     </div>
-                    <div class="stat-card" onclick="showSection('os')">
+                    <div class="stat-card" onclick="showSection('os', document.querySelectorAll('.nav-item')[1])">
                         <div>
                             <h3>OS Mês</h3>
-                            <div class="value">${osMes}</div>
-                            <small>Limite: ${App.usage.os}/${App.limits[App.plano].os}</small>
+                            <div class="value">${App.data.os.filter(o => new Date(o.data).getMonth() === mes).length}</div>
                         </div>
                         <i class="fas fa-clipboard-list stat-icon"></i>
                     </div>
-                    <div class="stat-card" onclick="showSection('clientes')">
+                    <div class="stat-card" onclick="showSection('clientes', document.querySelectorAll('.nav-item')[2])">
                         <div>
                             <h3>Clientes</h3>
                             <div class="value">${App.data.clientes.length}</div>
-                            <small>Limite: ${App.usage.clientes}/${App.limits[App.plano].clientes}</small>
                         </div>
                         <i class="fas fa-users stat-icon"></i>
                     </div>
-                    <div class="stat-card" onclick="showSection('veiculos')">
+                    <div class="stat-card" onclick="showSection('veiculos', document.querySelectorAll('.nav-item')[3])">
                         <div>
                             <h3>Veículos</h3>
                             <div class="value">${App.data.veiculos.length}</div>
-                            <small>Limite: ${App.usage.veiculos}/${App.limits[App.plano].veiculos}</small>
                         </div>
                         <i class="fas fa-car stat-icon"></i>
                     </div>
                 </div>
 
+                ${App.alertas.filter(a => a.prioridade === 'alta').length > 0 ? `
+                    <div class="alert-grid">
+                        <h3 style="grid-column: 1/-1;">🔔 Alertas Urgentes</h3>
+                        ${App.alertas.filter(a => a.prioridade === 'alta').slice(0, 3).map(a => `
+                            <div class="alert-card danger">
+                                <div>
+                                    <h4>${a.cliente || 'Sistema'}</h4>
+                                    <p>${a.mensagem}</p>
+                                </div>
+                                <span class="alert-badge">!</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <h3>📊 Faturamento Últimos 7 Dias</h3>
+                        <h3>📊 Faturamento</h3>
                         <canvas id="faturamentoChart"></canvas>
                     </div>
                     <div class="chart-card">
-                        <h3>🥧 Serviços mais Realizados</h3>
+                        <h3>🥧 Serviços</h3>
                         <canvas id="servicosChart"></canvas>
                     </div>
                 </div>
@@ -1281,10 +1026,11 @@
                                     <th>Data</th>
                                     <th>Valor</th>
                                     <th>Status</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${App.data.os.slice(0,5).map(o => `
+                                ${App.data.os.slice(0, 5).map(o => `
                                     <tr>
                                         <td>${o.numero}</td>
                                         <td>${o.clienteNome}</td>
@@ -1292,6 +1038,9 @@
                                         <td>${o.data}</td>
                                         <td>R$ ${o.valor}</td>
                                         <td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
+                                        <td>
+                                            <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
+                                        </td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -1299,56 +1048,43 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 20px; text-align: center;">
-                    <button class="btn-action info" onclick="gerarRelatorioPDF()">
-                        <i class="fas fa-file-pdf"></i> Exportar Dashboard PDF
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button class="btn-action primary" onclick="gerarBackup()">
+                        <i class="fas fa-download"></i> Backup
                     </button>
-                    <button class="btn-action success" onclick="backupDados()">
-                        <i class="fas fa-database"></i> Backup Agendado
+                    <button class="btn-action warning" onclick="showSection('relatorios', document.querySelectorAll('.nav-item')[6])">
+                        <i class="fas fa-file-pdf"></i> Relatórios
                     </button>
                 </div>
             `;
         };
 
         const initCharts = () => {
-            // Destruir gráficos existentes
-            if (App.charts.faturamento) App.charts.faturamento.destroy();
-            if (App.charts.servicos) App.charts.servicos.destroy();
-
-            // Gráfico de faturamento
             const ctx1 = document.getElementById('faturamentoChart')?.getContext('2d');
             if (ctx1) {
-                const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-                const valores = [1200, 1900, 1500, 1800, 2100, 1600, 1400];
-                
-                App.charts.faturamento = new Chart(ctx1, {
+                new Chart(ctx1, {
                     type: 'line',
                     data: {
-                        labels: dias,
+                        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
                         datasets: [{
                             label: 'Faturamento',
-                            data: valores,
+                            data: [1200, 1900, 1500, 1800, 2100, 1600, 1400],
                             borderColor: '#2ecc71',
                             backgroundColor: 'rgba(46,204,113,0.1)',
                             tension: 0.4
                         }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
                     }
                 });
             }
 
-            // Gráfico de serviços
             const ctx2 = document.getElementById('servicosChart')?.getContext('2d');
             if (ctx2) {
-                App.charts.servicos = new Chart(ctx2, {
+                new Chart(ctx2, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Troca de Óleo', 'Freios', 'Alinhamento', 'Suspensão', 'Motor'],
+                        labels: ['Troca de Óleo', 'Freios', 'Alinhamento', 'Motor', 'Suspensão'],
                         datasets: [{
-                            data: [35, 25, 20, 12, 8],
+                            data: [45, 25, 15, 10, 5],
                             backgroundColor: ['#e63946', '#f39c12', '#2ecc71', '#3498db', '#9b59b6']
                         }]
                     }
@@ -1356,162 +1092,98 @@
             }
         };
 
-        // ==================== PLANOS ====================
-        const renderPlanos = () => `
-            <div class="plans-grid">
-                <div class="plan-card">
-                    <div class="plan-icon"><i class="fas fa-star"></i></div>
-                    <div class="plan-name">Básico</div>
-                    <div class="plan-price">R$ 97 <small>/mês</small></div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Até 50 OS/mês</li>
-                        <li><i class="fas fa-check"></i> Até 100 clientes</li>
-                        <li><i class="fas fa-check"></i> Até 50 veículos</li>
-                        <li><i class="fas fa-check"></i> Relatórios básicos</li>
-                        <li><i class="fas fa-check"></i> 2 usuários</li>
-                        <li><i class="fas fa-check"></i> Suporte email</li>
-                    </ul>
-                    <button class="btn-plan basic" onclick="upgradePlan('basico')">Plano Atual</button>
+        // ==================== ORDENS DE SERVIÇO ====================
+        const renderOS = () => {
+            return `
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubOS('nova')">➕ Nova OS</div>
+                    <div class="tab" onclick="mostrarSubOS('ativas')">🔧 Em Andamento</div>
+                    <div class="tab" onclick="mostrarSubOS('historico')">📋 Histórico</div>
                 </div>
+                <div id="subOS">${renderNovaOS()}</div>
+            `;
+        };
 
-                <div class="plan-card popular">
-                    <div class="popular-badge">Mais Popular</div>
-                    <div class="plan-icon"><i class="fas fa-crown"></i></div>
-                    <div class="plan-name">Profissional</div>
-                    <div class="plan-price">R$ 197 <small>/mês</small></div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Até 500 OS/mês</li>
-                        <li><i class="fas fa-check"></i> Até 1000 clientes</li>
-                        <li><i class="fas fa-check"></i> Até 200 veículos</li>
-                        <li><i class="fas fa-check"></i> Relatórios avançados</li>
-                        <li><i class="fas fa-check"></i> 5 usuários</li>
-                        <li><i class="fas fa-check"></i> Suporte prioritário</li>
-                        <li><i class="fas fa-check"></i> WhatsApp integrado</li>
-                        <li><i class="fas fa-check"></i> Backup automático</li>
-                    </ul>
-                    <button class="btn-plan pro" onclick="upgradePlan('profissional')">Assinar Agora</button>
-                </div>
+        const mostrarSubOS = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subOS');
+            if (secao === 'nova') div.innerHTML = renderNovaOS();
+            else if (secao === 'ativas') div.innerHTML = renderOSAtivas();
+            else div.innerHTML = renderOSHistorico();
+        };
 
-                <div class="plan-card">
-                    <div class="plan-icon"><i class="fas fa-building"></i></div>
-                    <div class="plan-name">Empresarial</div>
-                    <div class="plan-price">R$ 497 <small>/mês</small></div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> OS ilimitadas</li>
-                        <li><i class="fas fa-check"></i> Clientes ilimitados</li>
-                        <li><i class="fas fa-check"></i> Veículos ilimitados</li>
-                        <li><i class="fas fa-check"></i> Relatórios personalizados</li>
-                        <li><i class="fas fa-check"></i> 15 usuários</li>
-                        <li><i class="fas fa-check"></i> Gerente de contas</li>
-                        <li><i class="fas fa-check"></i> API exclusiva</li>
-                        <li><i class="fas fa-check"></i> Múltiplas unidades</li>
-                        <li><i class="fas fa-check"></i> Treinamento incluso</li>
-                    </ul>
-                    <button class="btn-plan business" onclick="upgradePlan('empresarial')">Fale Conosco</button>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>📊 Uso Atual</h3>
-                <div style="margin-top: 15px;">
-                    <p><strong>OS:</strong> ${App.usage.os}/${App.limits[App.plano].os} utilizadas</p>
-                    <progress value="${App.usage.os}" max="${App.limits[App.plano].os}" style="width: 100%; height: 20px;"></progress>
+        const renderNovaOS = () => {
+            App.editId = null;
+            App.editType = null;
+            window.servicos = window.servicos || [{ desc: '', valor: 0 }];
+            
+            return `
+                <div class="form-section">
+                    <h3>${App.editId ? '✏️ Editar OS' : '➕ Nova OS'}</h3>
+                    <div class="form-grid">
+                        <select id="osCliente" onchange="carregarVeiculosCliente()">
+                            <option value="">Selecione o cliente</option>
+                            ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                        </select>
+                        <select id="osVeiculo">
+                            <option value="">Selecione o veículo</option>
+                        </select>
+                        <input type="number" id="osKm" placeholder="KM Atual">
+                        <input type="date" id="osData" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
                     
-                    <p style="margin-top: 10px;"><strong>Clientes:</strong> ${App.usage.clientes}/${App.limits[App.plano].clientes}</p>
-                    <progress value="${App.usage.clientes}" max="${App.limits[App.plano].clientes}" style="width: 100%; height: 20px;"></progress>
+                    <h4 style="margin: 15px 0;">Serviços Realizados</h4>
+                    <div id="servicosContainer"></div>
                     
-                    <p style="margin-top: 10px;"><strong>Veículos:</strong> ${App.usage.veiculos}/${App.limits[App.plano].veiculos}</p>
-                    <progress value="${App.usage.veiculos}" max="${App.limits[App.plano].veiculos}" style="width: 100%; height: 20px;"></progress>
-                </div>
-            </div>
-        `;
-
-        // ==================== OS ====================
-        const renderOS = () => `
-            <div class="form-section">
-                <h3>➕ Nova Ordem de Serviço</h3>
-                <div class="form-grid">
-                    <select id="osCliente">
-                        <option value="">Selecione o cliente</option>
-                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
-                    </select>
-                    <select id="osVeiculo">
-                        <option value="">Selecione o veículo</option>
-                    </select>
-                    <input type="number" id="osKm" placeholder="KM Atual">
-                    <input type="date" id="osData" value="${new Date().toISOString().split('T')[0]}">
-                </div>
-                
-                <h4 style="margin: 15px 0;">Serviços</h4>
-                <div id="servicosContainer"></div>
-                <button class="btn-action success" onclick="adicionarServico()" style="margin: 10px 0;">
-                    <i class="fas fa-plus"></i> Adicionar Serviço
-                </button>
-                
-                <div style="background: var(--secondary); color: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Total:</span>
-                        <span style="font-size: 24px; font-weight: bold;" id="osTotal">R$ 0,00</span>
+                    <div style="display: flex; gap: 10px; margin: 15px 0;">
+                        <button class="btn-action success" onclick="adicionarServico()">
+                            <i class="fas fa-plus"></i> Serviço
+                        </button>
+                    </div>
+                    
+                    <div style="background: var(--secondary); color: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Total:</span>
+                            <span style="font-size: 24px; font-weight: bold;" id="osTotal">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Observações</label>
+                        <textarea id="osObs" rows="3" placeholder="Observações..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-action warning" onclick="cancelarEdicao()">Cancelar</button>
+                        <button class="btn-action success" onclick="salvarOS()">Salvar OS</button>
                     </div>
                 </div>
-                
-                <textarea id="osObs" rows="3" placeholder="Observações" style="width: 100%; padding: 10px; margin-bottom: 15px;"></textarea>
-                
-                <button class="btn-action success" onclick="salvarOS()" ${!canAdd('os') ? 'disabled' : ''}>
-                    <i class="fas fa-save"></i> Salvar OS
-                </button>
-                ${!canAdd('os') ? '<p style="color: var(--danger);">Limite de OS atingido. Faça upgrade!</p>' : ''}
-            </div>
+            `;
+        };
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nº</th>
-                            <th>Cliente</th>
-                            <th>Veículo</th>
-                            <th>Data</th>
-                            <th>Valor</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${App.data.os.map(o => `
-                            <tr>
-                                <td>${o.numero}</td>
-                                <td>${o.clienteNome}</td>
-                                <td>${o.veiculo}</td>
-                                <td>${o.data}</td>
-                                <td>R$ ${o.valor}</td>
-                                <td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
-                                <td>
-                                    <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action warning" onclick="gerarPDF(${o.id})"><i class="fas fa-file-pdf"></i></button>
-                                    ${o.status !== 'concluido' ? `<button class="btn-action success" onclick="concluirOS(${o.id})"><i class="fas fa-check"></i></button>` : ''}
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
-
-        // Inicializar serviços
-        if (!window.servicos) window.servicos = [{ desc: '', valor: 0 }];
+        const carregarVeiculosCliente = () => {
+            const clienteId = document.getElementById('osCliente').value;
+            const veiculos = App.data.veiculos.filter(v => v.clienteId == clienteId);
+            const select = document.getElementById('osVeiculo');
+            select.innerHTML = '<option value="">Selecione</option>' + 
+                veiculos.map(v => `<option value="${v.id}" data-km="${v.km}">${v.modelo} - ${v.placa} (${v.km}km)</option>`).join('');
+        };
 
         const renderServicos = () => {
             let html = '';
             window.servicos.forEach((s, i) => {
                 html += `
-                    <div class="servico-linha" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" placeholder="Descrição do serviço" value="${s.desc}" onchange="atualizarServico(${i}, 'desc', this.value)" style="flex: 3; padding: 8px;">
-                        <input type="number" placeholder="Valor" value="${s.valor}" onchange="atualizarServico(${i}, 'valor', this.value)" style="flex: 1; padding: 8px;">
+                    <div class="servico-linha">
+                        <input class="servico-descricao" placeholder="Descrição do serviço" value="${s.desc}" onchange="atualizarServico(${i}, 'desc', this.value)">
+                        <input class="servico-valor" type="number" placeholder="Valor R$" value="${s.valor}" onchange="atualizarServico(${i}, 'valor', this.value)">
                         ${window.servicos.length > 1 ? `<button class="btn-action danger" onclick="removerServico(${i})"><i class="fas fa-times"></i></button>` : ''}
                     </div>
                 `;
             });
-            document.getElementById('servicosContainer').innerHTML = html;
+            if (document.getElementById('servicosContainer')) {
+                document.getElementById('servicosContainer').innerHTML = html;
+            }
         };
 
         const adicionarServico = () => {
@@ -1536,63 +1208,191 @@
         };
 
         const salvarOS = () => {
-            if (!canAdd('os')) {
-                showToast('Limite de OS atingido', 'warning');
+            const clienteId = document.getElementById('osCliente').value;
+            const veiculoId = document.getElementById('osVeiculo').value;
+            const km = parseInt(document.getElementById('osKm').value);
+            const data = document.getElementById('osData').value;
+            const obs = document.getElementById('osObs').value;
+
+            if (!clienteId || !veiculoId || !km) {
+                showToast('Selecione cliente e veículo', 'warning');
                 return;
             }
 
-            const clienteId = document.getElementById('osCliente').value;
-            if (!clienteId) return showToast('Selecione um cliente', 'warning');
+            const servicosValidos = window.servicos.filter(s => s.desc.trim() && s.valor > 0);
+            if (!servicosValidos.length) {
+                showToast('Adicione serviços válidos', 'warning');
+                return;
+            }
 
             const cliente = App.data.clientes.find(c => c.id == clienteId);
-            const servicosValidos = window.servicos.filter(s => s.desc.trim() && s.valor > 0);
-            
-            if (!servicosValidos.length) return showToast('Adicione serviços válidos', 'warning');
+            const veiculo = App.data.veiculos.find(v => v.id == veiculoId);
 
-            const novaOS = {
-                id: Date.now(),
-                numero: `OS-${String(App.data.os.length + 1).padStart(3, '0')}`,
-                clienteId: parseInt(clienteId),
-                clienteNome: cliente.nome,
-                veiculo: 'Veículo',
-                data: document.getElementById('osData').value,
-                status: 'andamento',
-                servicos: servicosValidos,
-                valor: servicosValidos.reduce((s,i) => s + i.valor, 0),
-                obs: document.getElementById('osObs').value
-            };
+            if (App.editId) {
+                // Editar OS existente
+                const index = App.data.os.findIndex(o => o.id === App.editId);
+                if (index !== -1) {
+                    App.data.os[index] = {
+                        ...App.data.os[index],
+                        clienteId: parseInt(clienteId),
+                        clienteNome: cliente.nome,
+                        veiculoId: parseInt(veiculoId),
+                        veiculo: veiculo.modelo,
+                        placa: veiculo.placa,
+                        km,
+                        data,
+                        servicos: servicosValidos,
+                        valor: servicosValidos.reduce((s,i) => s + i.valor, 0),
+                        observacoes: obs
+                    };
+                    showToast('OS atualizada!', 'success');
+                }
+            } else {
+                // Nova OS
+                const novaOS = {
+                    id: Date.now(),
+                    numero: `OS-${String(App.data.os.length + 1).padStart(3, '0')}`,
+                    clienteId: parseInt(clienteId),
+                    clienteNome: cliente.nome,
+                    veiculoId: parseInt(veiculoId),
+                    veiculo: veiculo.modelo,
+                    placa: veiculo.placa,
+                    km,
+                    data,
+                    status: 'andamento',
+                    servicos: servicosValidos,
+                    valor: servicosValidos.reduce((s,i) => s + i.valor, 0),
+                    observacoes: obs
+                };
+                App.data.os.push(novaOS);
+                showToast('OS criada!', 'success');
+            }
 
-            App.data.os.push(novaOS);
-            App.usage.os++;
-            saveUserData();
-            
+            salvarDados();
             window.servicos = [{ desc: '', valor: 0 }];
-            renderServicos();
-            document.getElementById('osTotal').textContent = 'R$ 0,00';
+            App.editId = null;
+            mostrarSubOS('ativas');
+        };
+
+        const cancelarEdicao = () => {
+            window.servicos = [{ desc: '', valor: 0 }];
+            App.editId = null;
+            mostrarSubOS('ativas');
+        };
+
+        const renderOSAtivas = () => {
+            const ativas = App.data.os.filter(o => o.status === 'andamento');
+            if (!ativas.length) return '<p style="text-align: center; padding: 20px;">Nenhuma OS em andamento</p>';
             
-            showToast('OS criada com sucesso!', 'success');
-            renderSection('os');
+            return `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>KM</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ativas.map(o => `
+                                <tr>
+                                    <td>${o.numero}</td>
+                                    <td>${o.clienteNome}</td>
+                                    <td>${o.veiculo} (${o.placa})</td>
+                                    <td>${o.km} km</td>
+                                    <td>${o.data}</td>
+                                    <td>R$ ${o.valor}</td>
+                                    <td>
+                                        <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-action warning" onclick="editarOS(${o.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-action success" onclick="concluirOS(${o.id})"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const renderOSHistorico = () => {
+            const concluidas = App.data.os.filter(o => o.status === 'concluido');
+            return `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${concluidas.map(o => `
+                                <tr>
+                                    <td>${o.numero}</td>
+                                    <td>${o.clienteNome}</td>
+                                    <td>${o.veiculo}</td>
+                                    <td>${o.data}</td>
+                                    <td>R$ ${o.valor}</td>
+                                    <td>
+                                        <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
         };
 
         const verOS = (id) => {
             const os = App.data.os.find(o => o.id === id);
-            if (!os) return;
-
             const servicos = os.servicos.map(s => `<li>${s.desc} - R$ ${s.valor.toFixed(2)}</li>`).join('');
-
+            
             openModal(
                 `OS ${os.numero}`,
                 `
                     <p><strong>Cliente:</strong> ${os.clienteNome}</p>
+                    <p><strong>Veículo:</strong> ${os.veiculo} - ${os.placa}</p>
+                    <p><strong>KM:</strong> ${os.km} km</p>
                     <p><strong>Data:</strong> ${os.data}</p>
                     <p><strong>Status:</strong> ${os.status}</p>
                     <h4>Serviços:</h4>
                     <ul>${servicos}</ul>
                     <p><strong>Total:</strong> R$ ${os.valor.toFixed(2)}</p>
-                    ${os.obs ? `<p><strong>Obs:</strong> ${os.obs}</p>` : ''}
+                    ${os.observacoes ? `<p><strong>Obs:</strong> ${os.observacoes}</p>` : ''}
                 `,
                 closeModal
             );
+        };
+
+        const editarOS = (id) => {
+            const os = App.data.os.find(o => o.id === id);
+            App.editId = id;
+            window.servicos = os.servicos.map(s => ({ desc: s.desc, valor: s.valor }));
+            
+            mostrarSubOS('nova');
+            setTimeout(() => {
+                document.getElementById('osCliente').value = os.clienteId;
+                carregarVeiculosCliente();
+                setTimeout(() => {
+                    document.getElementById('osVeiculo').value = os.veiculoId;
+                    document.getElementById('osKm').value = os.km;
+                    document.getElementById('osData').value = os.data;
+                    document.getElementById('osObs').value = os.observacoes || '';
+                    renderServicos();
+                    calcularTotalOS();
+                }, 100);
+            }, 100);
         };
 
         const concluirOS = (id) => {
@@ -1603,66 +1403,129 @@
                 App.data.financeiro.push({
                     id: Date.now(),
                     tipo: 'entrada',
-                    descricao: `OS ${os.numero}`,
+                    descricao: `${os.numero} - ${os.clienteNome}`,
                     valor: os.valor,
-                    data: new Date().toISOString().split('T')[0]
+                    data: new Date().toISOString().split('T')[0],
+                    categoria: 'Serviços'
                 });
                 
-                saveUserData();
+                salvarDados();
                 showToast('OS concluída!', 'success');
-                renderSection('os');
+                mostrarSubOS('ativas');
             }
         };
 
         // ==================== CLIENTES ====================
-        const renderClientes = () => `
-            <div class="form-section">
-                <h3>➕ Novo Cliente</h3>
-                <div class="form-grid">
-                    <input type="text" id="clienteNome" placeholder="Nome completo">
-                    <input type="text" id="clienteTelefone" placeholder="Telefone">
-                    <input type="email" id="clienteEmail" placeholder="Email">
-                    <input type="text" id="clienteEndereco" placeholder="Endereço">
+        const renderClientes = () => {
+            return `
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubCliente('lista')">📋 Lista</div>
+                    <div class="tab" onclick="mostrarSubCliente('novo')">➕ Novo</div>
                 </div>
-                <button class="btn-action success" onclick="salvarCliente()" ${!canAdd('clientes') ? 'disabled' : ''}>
-                    <i class="fas fa-save"></i> Salvar Cliente
-                </button>
-                ${!canAdd('clientes') ? '<p style="color: var(--danger);">Limite de clientes atingido. Faça upgrade!</p>' : ''}
-            </div>
+                <div id="subCliente">${renderListaClientes()}</div>
+            `;
+        };
 
-            <input type="text" id="buscaCliente" placeholder="🔍 Buscar cliente..." onkeyup="buscarClientes()" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+        const mostrarSubCliente = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subCliente');
+            if (secao === 'lista') div.innerHTML = renderListaClientes();
+            else div.innerHTML = renderNovoCliente();
+        };
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>Email</th>
-                            <th>Endereço</th>
-                            <th>Veículos</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaClientes">
-                        ${App.data.clientes.map(c => `
+        const renderListaClientes = () => {
+            return `
+                <input type="text" class="search-box" placeholder="🔍 Buscar cliente..." onkeyup="buscarClientes(this.value)">
+                <div class="table-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>${c.nome}</td>
-                                <td>${c.telefone}</td>
-                                <td>${c.email}</td>
-                                <td>${c.endereco || '-'}</td>
-                                <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
-                                <td>
-                                    <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
-                                </td>
+                                <th>Nome</th>
+                                <th>Telefone</th>
+                                <th>Email</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Veículos</th>
+                                <th>Ações</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
+                        </thead>
+                        <tbody id="tabelaClientes">
+                            ${App.data.clientes.map(c => `
+                                <tr>
+                                    <td>${c.nome}</td>
+                                    <td>${c.telefone}</td>
+                                    <td>${c.email}</td>
+                                    <td>${c.cpf || '-'}</td>
+                                    <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
+                                    <td>
+                                        <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const renderNovoCliente = () => {
+            return `
+                <div class="form-section">
+                    <h3>${App.editId ? '✏️ Editar Cliente' : '➕ Novo Cliente'}</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome*</label>
+                            <input type="text" id="clienteNome" value="${App.editCliente?.nome || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone*</label>
+                            <input type="text" id="clienteTelefone" value="${App.editCliente?.telefone || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="clienteEmail" value="${App.editCliente?.email || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>CPF/CNPJ</label>
+                            <input type="text" id="clienteCpf" value="${App.editCliente?.cpf || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>Endereço</label>
+                            <input type="text" id="clienteEndereco" value="${App.editCliente?.endereco || ''}">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-action warning" onclick="cancelarEdicaoCliente()">Cancelar</button>
+                        <button class="btn-action success" onclick="salvarCliente()">Salvar</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const buscarClientes = (termo) => {
+            const filtrados = App.data.clientes.filter(c => 
+                c.nome.toLowerCase().includes(termo.toLowerCase()) ||
+                c.telefone.includes(termo) ||
+                (c.email && c.email.toLowerCase().includes(termo.toLowerCase()))
+            );
+            
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
+                <tr>
+                    <td>${c.nome}</td>
+                    <td>${c.telefone}</td>
+                    <td>${c.email}</td>
+                    <td>${c.cpf || '-'}</td>
+                    <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
+                    <td>
+                        <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        };
 
         const salvarCliente = () => {
             const nome = document.getElementById('clienteNome').value;
@@ -1673,55 +1536,35 @@
                 return;
             }
 
-            if (!canAdd('clientes')) {
-                showToast('Limite de clientes atingido', 'warning');
-                return;
+            if (App.editId) {
+                const index = App.data.clientes.findIndex(c => c.id === App.editId);
+                if (index !== -1) {
+                    App.data.clientes[index] = {
+                        ...App.data.clientes[index],
+                        nome,
+                        telefone,
+                        email: document.getElementById('clienteEmail').value,
+                        cpf: document.getElementById('clienteCpf').value,
+                        endereco: document.getElementById('clienteEndereco').value
+                    };
+                    showToast('Cliente atualizado!', 'success');
+                }
+            } else {
+                App.data.clientes.push({
+                    id: Date.now(),
+                    nome,
+                    telefone,
+                    email: document.getElementById('clienteEmail').value,
+                    cpf: document.getElementById('clienteCpf').value,
+                    endereco: document.getElementById('clienteEndereco').value
+                });
+                showToast('Cliente cadastrado!', 'success');
             }
 
-            const novoCliente = {
-                id: Date.now(),
-                nome,
-                telefone,
-                email: document.getElementById('clienteEmail').value,
-                endereco: document.getElementById('clienteEndereco').value,
-                dataCadastro: new Date().toISOString().split('T')[0]
-            };
-
-            App.data.clientes.push(novoCliente);
-            App.usage.clientes++;
-            saveUserData();
-            
-            document.getElementById('clienteNome').value = '';
-            document.getElementById('clienteTelefone').value = '';
-            document.getElementById('clienteEmail').value = '';
-            document.getElementById('clienteEndereco').value = '';
-            
-            showToast('Cliente cadastrado!', 'success');
-            renderSection('clientes');
-        };
-
-        const buscarClientes = () => {
-            const termo = document.getElementById('buscaCliente').value.toLowerCase();
-            const filtrados = App.data.clientes.filter(c => 
-                c.nome.toLowerCase().includes(termo) || 
-                c.telefone.includes(termo) ||
-                (c.email && c.email.toLowerCase().includes(termo))
-            );
-            
-            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
-                <tr>
-                    <td>${c.nome}</td>
-                    <td>${c.telefone}</td>
-                    <td>${c.email || '-'}</td>
-                    <td>${c.endereco || '-'}</td>
-                    <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
-                    <td>
-                        <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            salvarDados();
+            App.editId = null;
+            App.editCliente = null;
+            mostrarSubCliente('lista');
         };
 
         const verCliente = (id) => {
@@ -1734,174 +1577,299 @@
                 `
                     <p><strong>Telefone:</strong> ${c.telefone}</p>
                     <p><strong>Email:</strong> ${c.email || '-'}</p>
+                    <p><strong>CPF/CNPJ:</strong> ${c.cpf || '-'}</p>
                     <p><strong>Endereço:</strong> ${c.endereco || '-'}</p>
-                    <p><strong>Cadastro:</strong> ${c.dataCadastro}</p>
-                    <h4>Veículos (${veiculos.length})</h4>
+                    
+                    <h4 style="margin-top: 15px;">🚗 Veículos (${veiculos.length})</h4>
                     <ul>${veiculos.map(v => `<li>${v.modelo} - ${v.placa} (${v.km} km)</li>`).join('')}</ul>
-                    <h4>OS Realizadas (${os.length})</h4>
+                    
+                    <h4 style="margin-top: 15px;">📋 OS Realizadas (${os.length})</h4>
                     <ul>${os.map(o => `<li>${o.numero} - R$ ${o.valor} (${o.data})</li>`).join('')}</ul>
                 `,
                 closeModal
             );
         };
 
+        const editarCliente = (id) => {
+            const cliente = App.data.clientes.find(c => c.id === id);
+            App.editId = id;
+            App.editCliente = cliente;
+            mostrarSubCliente('novo');
+        };
+
+        const cancelarEdicaoCliente = () => {
+            App.editId = null;
+            App.editCliente = null;
+            mostrarSubCliente('lista');
+        };
+
         const excluirCliente = (id) => {
             if (confirm('Excluir este cliente?')) {
                 App.data.clientes = App.data.clientes.filter(c => c.id !== id);
-                App.usage.clientes--;
-                saveUserData();
+                salvarDados();
                 showToast('Cliente excluído', 'success');
-                renderSection('clientes');
+                mostrarSubCliente('lista');
             }
         };
 
         // ==================== VEÍCULOS ====================
-        const renderVeiculos = () => `
-            <div class="form-section">
-                <h3>➕ Novo Veículo</h3>
-                <div class="form-grid">
-                    <select id="veicCliente">
-                        <option value="">Selecione o cliente</option>
-                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
-                    </select>
-                    <input type="text" id="veicModelo" placeholder="Modelo (ex: Gol 2020)">
-                    <input type="text" id="veicPlaca" placeholder="Placa">
-                    <input type="number" id="veicKm" placeholder="KM Atual">
+        const renderVeiculos = () => {
+            return `
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubVeiculo('lista')">📋 Lista</div>
+                    <div class="tab" onclick="mostrarSubVeiculo('novo')">➕ Novo</div>
                 </div>
-                <button class="btn-action success" onclick="salvarVeiculo()" ${!canAdd('veiculos') ? 'disabled' : ''}>
-                    <i class="fas fa-save"></i> Salvar Veículo
-                </button>
-                ${!canAdd('veiculos') ? '<p style="color: var(--danger);">Limite de veículos atingido. Faça upgrade!</p>' : ''}
-            </div>
+                <div id="subVeiculo">${renderListaVeiculos()}</div>
+            `;
+        };
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Modelo</th>
-                            <th>Placa</th>
-                            <th>KM</th>
-                            <th>Última OS</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${App.data.veiculos.map(v => {
-                            const cliente = App.data.clientes.find(c => c.id === v.clienteId);
-                            return `
+        const mostrarSubVeiculo = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subVeiculo');
+            if (secao === 'lista') div.innerHTML = renderListaVeiculos();
+            else div.innerHTML = renderNovoVeiculo();
+        };
+
+        const renderListaVeiculos = () => {
+            return `
+                <input type="text" class="search-box" placeholder="🔍 Buscar veículo..." onkeyup="buscarVeiculos(this.value)">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Modelo</th>
+                                <th>Placa</th>
+                                <th>KM</th>
+                                <th>Ano</th>
+                                <th>Cor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaVeiculos">
+                            ${App.data.veiculos.map(v => `
                                 <tr>
-                                    <td>${cliente ? cliente.nome : 'N/A'}</td>
+                                    <td>${v.clienteNome}</td>
                                     <td>${v.modelo}</td>
                                     <td>${v.placa}</td>
                                     <td>${v.km} km</td>
-                                    <td>${v.ultimaOS || '-'}</td>
+                                    <td>${v.ano || '-'}</td>
+                                    <td>${v.cor || '-'}</td>
                                     <td>
+                                        <button class="btn-action warning" onclick="editarVeiculo(${v.id})"><i class="fas fa-edit"></i></button>
                                         <button class="btn-action danger" onclick="excluirVeiculo(${v.id})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const renderNovoVeiculo = () => {
+            return `
+                <div class="form-section">
+                    <h3>${App.editId ? '✏️ Editar Veículo' : '➕ Novo Veículo'}</h3>
+                    <div class="form-grid">
+                        <select id="veicCliente">
+                            <option value="">Selecione o cliente</option>
+                            ${App.data.clientes.map(c => `<option value="${c.id}" ${App.editVeiculo?.clienteId == c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
+                        </select>
+                        <input type="text" id="veicModelo" placeholder="Modelo" value="${App.editVeiculo?.modelo || ''}">
+                        <input type="text" id="veicPlaca" placeholder="Placa" value="${App.editVeiculo?.placa || ''}">
+                        <input type="number" id="veicKm" placeholder="KM Atual" value="${App.editVeiculo?.km || ''}">
+                        <input type="number" id="veicAno" placeholder="Ano" value="${App.editVeiculo?.ano || ''}">
+                        <input type="text" id="veicCor" placeholder="Cor" value="${App.editVeiculo?.cor || ''}">
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-action warning" onclick="cancelarEdicaoVeiculo()">Cancelar</button>
+                        <button class="btn-action success" onclick="salvarVeiculo()">Salvar</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const buscarVeiculos = (termo) => {
+            const filtrados = App.data.veiculos.filter(v => 
+                v.modelo.toLowerCase().includes(termo.toLowerCase()) ||
+                v.placa.toLowerCase().includes(termo.toLowerCase()) ||
+                v.clienteNome.toLowerCase().includes(termo.toLowerCase())
+            );
+            
+            document.getElementById('tabelaVeiculos').innerHTML = filtrados.map(v => `
+                <tr>
+                    <td>${v.clienteNome}</td>
+                    <td>${v.modelo}</td>
+                    <td>${v.placa}</td>
+                    <td>${v.km} km</td>
+                    <td>${v.ano || '-'}</td>
+                    <td>${v.cor || '-'}</td>
+                    <td>
+                        <button class="btn-action warning" onclick="editarVeiculo(${v.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action danger" onclick="excluirVeiculo(${v.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        };
 
         const salvarVeiculo = () => {
             const clienteId = document.getElementById('veicCliente').value;
             const modelo = document.getElementById('veicModelo').value;
             const placa = document.getElementById('veicPlaca').value;
             const km = parseInt(document.getElementById('veicKm').value);
+            const ano = document.getElementById('veicAno').value;
+            const cor = document.getElementById('veicCor').value;
 
             if (!clienteId || !modelo || !placa || !km) {
-                showToast('Preencha todos os campos', 'warning');
+                showToast('Preencha os campos obrigatórios', 'warning');
                 return;
             }
 
-            if (!canAdd('veiculos')) {
-                showToast('Limite de veículos atingido', 'warning');
-                return;
+            const cliente = App.data.clientes.find(c => c.id == clienteId);
+
+            if (App.editId) {
+                const index = App.data.veiculos.findIndex(v => v.id === App.editId);
+                if (index !== -1) {
+                    App.data.veiculos[index] = {
+                        ...App.data.veiculos[index],
+                        clienteId: parseInt(clienteId),
+                        clienteNome: cliente.nome,
+                        modelo,
+                        placa: placa.toUpperCase(),
+                        km,
+                        ano,
+                        cor
+                    };
+                    showToast('Veículo atualizado!', 'success');
+                }
+            } else {
+                App.data.veiculos.push({
+                    id: Date.now(),
+                    clienteId: parseInt(clienteId),
+                    clienteNome: cliente.nome,
+                    modelo,
+                    placa: placa.toUpperCase(),
+                    km,
+                    ano,
+                    cor
+                });
+                showToast('Veículo cadastrado!', 'success');
             }
 
-            const novoVeiculo = {
-                id: Date.now(),
-                clienteId: parseInt(clienteId),
-                modelo,
-                placa: placa.toUpperCase(),
-                km,
-                dataCadastro: new Date().toISOString().split('T')[0]
-            };
+            salvarDados();
+            App.editId = null;
+            App.editVeiculo = null;
+            mostrarSubVeiculo('lista');
+        };
 
-            App.data.veiculos.push(novoVeiculo);
-            App.usage.veiculos++;
-            saveUserData();
-            
-            document.getElementById('veicModelo').value = '';
-            document.getElementById('veicPlaca').value = '';
-            document.getElementById('veicKm').value = '';
-            
-            showToast('Veículo cadastrado!', 'success');
-            renderSection('veiculos');
+        const editarVeiculo = (id) => {
+            const veiculo = App.data.veiculos.find(v => v.id === id);
+            App.editId = id;
+            App.editVeiculo = veiculo;
+            mostrarSubVeiculo('novo');
+        };
+
+        const cancelarEdicaoVeiculo = () => {
+            App.editId = null;
+            App.editVeiculo = null;
+            mostrarSubVeiculo('lista');
         };
 
         const excluirVeiculo = (id) => {
             if (confirm('Excluir este veículo?')) {
                 App.data.veiculos = App.data.veiculos.filter(v => v.id !== id);
-                App.usage.veiculos--;
-                saveUserData();
+                salvarDados();
                 showToast('Veículo excluído', 'success');
-                renderSection('veiculos');
+                mostrarSubVeiculo('lista');
             }
         };
 
         // ==================== AGENDA ====================
-        const renderAgenda = () => `
-            <div class="form-section">
-                <h3>📅 Novo Agendamento</h3>
-                <div class="form-grid">
-                    <select id="agendaCliente">
-                        <option value="">Selecione o cliente</option>
-                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
-                    </select>
-                    <input type="date" id="agendaData" value="${new Date().toISOString().split('T')[0]}">
-                    <input type="time" id="agendaHora" value="09:00">
-                    <input type="text" id="agendaServico" placeholder="Tipo de serviço">
+        const renderAgenda = () => {
+            return `
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubAgenda('hoje')">📅 Hoje</div>
+                    <div class="tab" onclick="mostrarSubAgenda('semana')">📆 Semana</div>
+                    <div class="tab" onclick="mostrarSubAgenda('novo')">➕ Novo</div>
                 </div>
-                <button class="btn-action success" onclick="salvarAgendamento()">
-                    <i class="fas fa-save"></i> Agendar
-                </button>
-            </div>
+                <div id="subAgenda">${renderAgendaHoje()}</div>
+            `;
+        };
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Cliente</th>
-                            <th>Serviço</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${App.data.agenda.map(a => `
-                            <tr>
-                                <td>${a.data}</td>
-                                <td>${a.hora}</td>
-                                <td>${a.clienteNome}</td>
-                                <td>${a.servico}</td>
-                                <td><span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
-                                <td>
-                                    <button class="btn-action success" onclick="confirmarAgendamento(${a.id})"><i class="fas fa-check"></i></button>
-                                    <button class="btn-action danger" onclick="cancelarAgendamento(${a.id})"><i class="fas fa-times"></i></button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
+        const mostrarSubAgenda = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subAgenda');
+            if (secao === 'hoje') div.innerHTML = renderAgendaHoje();
+            else if (secao === 'semana') div.innerHTML = renderAgendaSemana();
+            else div.innerHTML = renderNovoAgendamento();
+        };
+
+        const renderAgendaHoje = () => {
+            const hoje = new Date().toISOString().split('T')[0];
+            const agendamentos = App.data.agenda.filter(a => a.data === hoje);
+            
+            return `
+                <div class="form-section">
+                    <h3>📅 Agendamentos de Hoje</h3>
+                    ${agendamentos.length ? agendamentos.map(a => `
+                        <div class="alert-card ${a.status === 'confirmado' ? 'success' : 'warning'}" style="margin-bottom: 10px;">
+                            <div>
+                                <h4>${a.clienteNome} - ${a.hora}</h4>
+                                <p>${a.servico}</p>
+                            </div>
+                            <span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span>
+                        </div>
+                    `).join('') : '<p>Nenhum agendamento para hoje</p>'}
+                </div>
+            `;
+        };
+
+        const renderAgendaSemana = () => {
+            const hoje = new Date();
+            const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            let html = '<div class="stats-grid">';
+            
+            for (let i = 0; i < 7; i++) {
+                const data = new Date(hoje);
+                data.setDate(hoje.getDate() + i);
+                const dataStr = data.toISOString().split('T')[0];
+                const agendamentos = App.data.agenda.filter(a => a.data === dataStr);
+                
+                html += `
+                    <div class="stat-card" style="background: var(--info);">
+                        <div>
+                            <h3>${dias[data.getDay()]}</h3>
+                            <div class="value">${agendamentos.length}</div>
+                            <small>${dataStr}</small>
+                        </div>
+                        <i class="fas fa-calendar-day stat-icon"></i>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            return html;
+        };
+
+        const renderNovoAgendamento = () => {
+            return `
+                <div class="form-section">
+                    <h3>➕ Novo Agendamento</h3>
+                    <div class="form-grid">
+                        <select id="agendaCliente">
+                            <option value="">Selecione</option>
+                            ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                        </select>
+                        <input type="date" id="agendaData" value="${new Date().toISOString().split('T')[0]}">
+                        <input type="time" id="agendaHora" value="09:00">
+                        <input type="text" id="agendaServico" placeholder="Tipo de serviço">
+                    </div>
+                    <button class="btn-action success" onclick="salvarAgendamento()">Agendar</button>
+                </div>
+            `;
+        };
 
         const salvarAgendamento = () => {
             const clienteId = document.getElementById('agendaCliente').value;
@@ -1916,7 +1884,7 @@
 
             const cliente = App.data.clientes.find(c => c.id == clienteId);
 
-            const novoAgendamento = {
+            App.data.agenda.push({
                 id: Date.now(),
                 clienteId: parseInt(clienteId),
                 clienteNome: cliente.nome,
@@ -1924,38 +1892,18 @@
                 hora,
                 servico,
                 status: 'agendado'
-            };
+            });
 
-            App.data.agenda.push(novoAgendamento);
-            saveUserData();
-            
-            document.getElementById('agendaServico').value = '';
-            
+            salvarDados();
             showToast('Agendamento realizado!', 'success');
-            renderSection('agenda');
-        };
-
-        const confirmarAgendamento = (id) => {
-            const a = App.data.agenda.find(a => a.id === id);
-            a.status = 'confirmado';
-            saveUserData();
-            showToast('Agendamento confirmado', 'success');
-            renderSection('agenda');
-        };
-
-        const cancelarAgendamento = (id) => {
-            if (confirm('Cancelar este agendamento?')) {
-                App.data.agenda = App.data.agenda.filter(a => a.id !== id);
-                saveUserData();
-                showToast('Agendamento cancelado', 'info');
-                renderSection('agenda');
-            }
+            mostrarSubAgenda('hoje');
         };
 
         // ==================== FINANCEIRO ====================
         const renderFinanceiro = () => {
-            const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada').reduce((s,i) => s + i.valor, 0);
-            const saidas = App.data.financeiro.filter(f => f.tipo === 'saida').reduce((s,i) => s + i.valor, 0);
+            const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada').reduce((s, f) => s + f.valor, 0);
+            const saidas = App.data.financeiro.filter(f => f.tipo === 'saida').reduce((s, f) => s + f.valor, 0);
+            const saldo = entradas - saidas;
             
             return `
                 <div class="stats-grid">
@@ -1976,28 +1924,30 @@
                     <div class="stat-card">
                         <div>
                             <h3>Saldo</h3>
-                            <div class="value">R$ ${(entradas - saidas).toFixed(2)}</div>
+                            <div class="value">R$ ${saldo.toFixed(2)}</div>
                         </div>
                         <i class="fas fa-chart-line stat-icon"></i>
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <h3>➕ Nova Movimentação</h3>
-                    <div class="form-grid">
-                        <select id="finTipo">
-                            <option value="entrada">Entrada</option>
-                            <option value="saida">Saída</option>
-                        </select>
-                        <input type="text" id="finDesc" placeholder="Descrição">
-                        <input type="number" id="finValor" placeholder="Valor" step="0.01">
-                        <input type="date" id="finData" value="${new Date().toISOString().split('T')[0]}">
-                    </div>
-                    <button class="btn-action success" onclick="salvarMovimentacao()">
-                        <i class="fas fa-save"></i> Registrar
-                    </button>
+                <div class="tabs">
+                    <div class="tab active" onclick="mostrarSubFinanceiro('lista')">📋 Movimentações</div>
+                    <div class="tab" onclick="mostrarSubFinanceiro('novo')">➕ Nova</div>
                 </div>
+                <div id="subFinanceiro">${renderListaFinanceiro()}</div>
+            `;
+        };
 
+        const mostrarSubFinanceiro = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subFinanceiro');
+            if (secao === 'lista') div.innerHTML = renderListaFinanceiro();
+            else div.innerHTML = renderNovaMovimentacao();
+        };
+
+        const renderListaFinanceiro = () => {
+            return `
                 <div class="table-container">
                     <table>
                         <thead>
@@ -2005,6 +1955,7 @@
                                 <th>Data</th>
                                 <th>Tipo</th>
                                 <th>Descrição</th>
+                                <th>Categoria</th>
                                 <th>Valor</th>
                                 <th>Ações</th>
                             </tr>
@@ -2015,9 +1966,10 @@
                                     <td>${f.data}</td>
                                     <td><span class="badge ${f.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${f.tipo}</span></td>
                                     <td>${f.descricao}</td>
+                                    <td>${f.categoria || '-'}</td>
                                     <td>R$ ${f.valor.toFixed(2)}</td>
                                     <td>
-                                        <button class="btn-action danger" onclick="excluirMovimentacao(${f.id})"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-action danger" onclick="excluirFinanceiro(${f.id})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -2027,13 +1979,33 @@
             `;
         };
 
-        const salvarMovimentacao = () => {
+        const renderNovaMovimentacao = () => {
+            return `
+                <div class="form-section">
+                    <h3>➕ Nova Movimentação</h3>
+                    <div class="form-grid">
+                        <select id="finTipo">
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                        </select>
+                        <input type="text" id="finDesc" placeholder="Descrição">
+                        <input type="number" id="finValor" placeholder="Valor" step="0.01">
+                        <input type="date" id="finData" value="${new Date().toISOString().split('T')[0]}">
+                        <input type="text" id="finCategoria" placeholder="Categoria">
+                    </div>
+                    <button class="btn-action success" onclick="salvarFinanceiro()">Registrar</button>
+                </div>
+            `;
+        };
+
+        const salvarFinanceiro = () => {
             const tipo = document.getElementById('finTipo').value;
             const desc = document.getElementById('finDesc').value;
             const valor = parseFloat(document.getElementById('finValor').value);
+            const categoria = document.getElementById('finCategoria').value;
 
             if (!desc || !valor) {
-                showToast('Preencha todos os campos', 'warning');
+                showToast('Preencha descrição e valor', 'warning');
                 return;
             }
 
@@ -2042,253 +2014,185 @@
                 tipo,
                 descricao: desc,
                 valor,
-                data: document.getElementById('finData').value
+                data: document.getElementById('finData').value,
+                categoria
             });
 
-            saveUserData();
+            salvarDados();
             showToast('Registrado!', 'success');
-            renderSection('financeiro');
+            mostrarSubFinanceiro('lista');
         };
 
-        const excluirMovimentacao = (id) => {
+        const excluirFinanceiro = (id) => {
             if (confirm('Excluir esta movimentação?')) {
                 App.data.financeiro = App.data.financeiro.filter(f => f.id !== id);
-                saveUserData();
+                salvarDados();
                 showToast('Excluído!', 'success');
-                renderSection('financeiro');
+                mostrarSubFinanceiro('lista');
             }
         };
 
         // ==================== RELATÓRIOS ====================
-        const renderRelatorios = () => `
-            <div class="form-section">
-                <h3>📊 Gerar Relatórios</h3>
-                <div class="form-grid">
-                    <select id="relTipo">
-                        <option value="os">Relatório de OS</option>
-                        <option value="financeiro">Relatório Financeiro</option>
-                        <option value="clientes">Relatório de Clientes</option>
-                        <option value="veiculos">Relatório de Veículos</option>
-                    </select>
-                    <input type="month" id="relMes" value="${new Date().toISOString().slice(0,7)}">
+        const renderRelatorios = () => {
+            return `
+                <div class="form-section">
+                    <h3>📊 Gerar Relatórios</h3>
+                    <div class="form-grid">
+                        <select id="relTipo">
+                            <option value="os">Relatório de OS</option>
+                            <option value="financeiro">Relatório Financeiro</option>
+                            <option value="clientes">Relatório de Clientes</option>
+                        </select>
+                        <input type="month" id="relMes" value="${new Date().toISOString().slice(0,7)}">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-action info" onclick="gerarRelatorio('tela')">Visualizar</button>
+                        <button class="btn-action success" onclick="gerarRelatorio('dados')">Exportar Dados</button>
+                    </div>
+                    <div id="relatorioResultado" style="margin-top: 20px;"></div>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-action info" onclick="gerarRelatorio('tela')">
-                        <i class="fas fa-eye"></i> Visualizar
-                    </button>
-                    <button class="btn-action warning" onclick="gerarRelatorio('pdf')">
-                        <i class="fas fa-file-pdf"></i> Exportar PDF
-                    </button>
-                    <button class="btn-action success" onclick="gerarRelatorio('excel')">
-                        <i class="fas fa-file-excel"></i> Exportar Excel
-                    </button>
-                </div>
-            </div>
+            `;
+        };
 
-            <div id="relatorioResultado" class="form-section" style="display: none;">
-                <h3>Resultado</h3>
-                <div id="relatorioConteudo"></div>
-            </div>
-        `;
-
-        const gerarRelatorio = async (formato) => {
-            const tipo = document.getElementById('relTipo').value;
+        const gerarRelatorio = (tipo) => {
+            const relTipo = document.getElementById('relTipo').value;
             const mes = document.getElementById('relMes').value;
             const [ano, mesNum] = mes.split('-');
 
             let dados = [];
             let titulo = '';
 
-            switch(tipo) {
-                case 'os':
-                    dados = App.data.os.filter(o => o.data.startsWith(mes));
-                    titulo = `Relatório de OS - ${mes}`;
-                    break;
-                case 'financeiro':
-                    dados = App.data.financeiro.filter(f => f.data.startsWith(mes));
-                    titulo = `Relatório Financeiro - ${mes}`;
-                    break;
-                case 'clientes':
-                    dados = App.data.clientes;
-                    titulo = 'Relatório de Clientes';
-                    break;
-                case 'veiculos':
-                    dados = App.data.veiculos;
-                    titulo = 'Relatório de Veículos';
-                    break;
-            }
-
-            if (formato === 'tela') {
-                document.getElementById('relatorioResultado').style.display = 'block';
-                document.getElementById('relatorioConteudo').innerHTML = gerarTabelaRelatorio(tipo, dados);
-            } else if (formato === 'pdf') {
-                await gerarPDFRelatorio(titulo, tipo, dados);
+            if (relTipo === 'os') {
+                dados = App.data.os.filter(o => o.data.startsWith(mes));
+                titulo = `Relatório de OS - ${mes}`;
+            } else if (relTipo === 'financeiro') {
+                dados = App.data.financeiro.filter(f => f.data.startsWith(mes));
+                titulo = `Relatório Financeiro - ${mes}`;
             } else {
-                showToast('Exportação Excel em desenvolvimento', 'info');
+                dados = App.data.clientes;
+                titulo = 'Relatório de Clientes';
+            }
+
+            if (tipo === 'tela') {
+                let html = `<h4>${titulo}</h4>`;
+                if (relTipo === 'os') {
+                    html += `
+                        <table>
+                            <tr><th>Nº</th><th>Cliente</th><th>Valor</th><th>Status</th></tr>
+                            ${dados.map(d => `<tr><td>${d.numero}</td><td>${d.clienteNome}</td><td>R$ ${d.valor}</td><td>${d.status}</td></tr>`).join('')}
+                            <tr><td colspan="4"><strong>Total: R$ ${dados.reduce((s,d) => s + d.valor, 0).toFixed(2)}</strong></td></tr>
+                        </table>
+                    `;
+                } else if (relTipo === 'financeiro') {
+                    const entradas = dados.filter(d => d.tipo === 'entrada').reduce((s,d) => s + d.valor, 0);
+                    const saidas = dados.filter(d => d.tipo === 'saida').reduce((s,d) => s + d.valor, 0);
+                    html += `
+                        <table>
+                            <tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr>
+                            ${dados.map(d => `<tr><td>${d.data}</td><td>${d.tipo}</td><td>${d.descricao}</td><td>R$ ${d.valor}</td></tr>`).join('')}
+                            <tr><td colspan="4"><strong>Entradas: R$ ${entradas.toFixed(2)} | Saídas: R$ ${saidas.toFixed(2)} | Saldo: R$ ${(entradas-saidas).toFixed(2)}</strong></td></tr>
+                        </table>
+                    `;
+                } else {
+                    html += `
+                        <table>
+                            <tr><th>Nome</th><th>Telefone</th><th>Email</th><th>Veículos</th></tr>
+                            ${dados.map(d => `<tr><td>${d.nome}</td><td>${d.telefone}</td><td>${d.email}</td><td>${App.data.veiculos.filter(v => v.clienteId === d.id).length}</td></tr>`).join('')}
+                        </table>
+                    `;
+                }
+                document.getElementById('relatorioResultado').innerHTML = html;
+            } else {
+                const dataStr = JSON.stringify(dados, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `relatorio_${relTipo}_${mes}.json`;
+                a.click();
+                showToast('Dados exportados!', 'success');
             }
         };
 
-        const gerarTabelaRelatorio = (tipo, dados) => {
-            if (tipo === 'os') {
-                return `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº</th>
-                                <th>Cliente</th>
-                                <th>Data</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${dados.map(d => `
-                                <tr>
-                                    <td>${d.numero}</td>
-                                    <td>${d.clienteNome}</td>
-                                    <td>${d.data}</td>
-                                    <td>R$ ${d.valor}</td>
-                                    <td>${d.status}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3"><strong>Total:</strong></td>
-                                <td><strong>R$ ${dados.reduce((s,d) => s + d.valor, 0).toFixed(2)}</strong></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                `;
-            }
-            return '<p>Dados carregados</p>';
-        };
-
-        const gerarPDFRelatorio = async (titulo, tipo, dados) => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            doc.setFontSize(18);
-            doc.text(titulo, 14, 22);
-            doc.setFontSize(11);
-            doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 14, 32);
-
-            let y = 50;
-            doc.setFontSize(10);
-
-            if (tipo === 'os') {
-                doc.text('Nº', 14, y);
-                doc.text('Cliente', 40, y);
-                doc.text('Data', 100, y);
-                doc.text('Valor', 140, y);
-                doc.text('Status', 170, y);
-                
-                y += 10;
-                dados.forEach(d => {
-                    doc.text(d.numero, 14, y);
-                    doc.text(d.clienteNome.substring(0, 15), 40, y);
-                    doc.text(d.data, 100, y);
-                    doc.text(`R$ ${d.valor}`, 140, y);
-                    doc.text(d.status, 170, y);
-                    y += 8;
-                });
+        // ==================== ALERTAS ====================
+        const renderAlertas = () => {
+            if (!App.alertas.length) {
+                return '<p style="text-align: center; padding: 20px;">Nenhum alerta no momento</p>';
             }
 
-            doc.save(`relatorio_${tipo}_${new Date().getTime()}.pdf`);
-            showToast('PDF gerado!', 'success');
-        };
-
-        const gerarRelatorioPDF = async () => {
-            const element = document.getElementById('mainContent');
-            const canvas = await html2canvas(element);
-            const imgData = canvas.toDataURL('image/png');
-            
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.addImage(imgData, 'PNG', 10, 10, 190, 0);
-            doc.save(`dashboard_${new Date().getTime()}.pdf`);
-            
-            showToast('Dashboard exportado!', 'success');
+            return `
+                <div class="alert-grid">
+                    ${App.alertas.map(a => `
+                        <div class="alert-card ${a.prioridade === 'alta' ? 'danger' : 'warning'}">
+                            <div>
+                                <h4>${a.cliente || 'Sistema'}</h4>
+                                <p>${a.mensagem}</p>
+                                <small>${a.tipo || 'alerta'}</small>
+                            </div>
+                            <span class="alert-badge">${a.prioridade === 'alta' ? '!' : 'i'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="btn-action info" onclick="gerarBackup()" style="margin-top: 20px;">💾 Fazer Backup</button>
+            `;
         };
 
         // ==================== CONFIGURAÇÕES ====================
-        const renderConfig = () => `
-            <div class="form-section">
-                <h3>⚙️ Configurações da Empresa</h3>
-                <div class="form-grid">
+        const renderConfig = () => {
+            return `
+                <div class="form-section">
+                    <h3>⚙️ Configurações</h3>
                     <div class="form-group">
-                        <label>Nome da Empresa</label>
-                        <input type="text" id="configEmpresa" value="${App.empresa}">
+                        <label>Empresa</label>
+                        <input type="text" id="configEmpresa" value="RenoveCar Centro Automotivo">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" id="configEmail" value="${App.user.email}">
+                        <input type="email" id="configEmail" value="contato@renovecar.com">
                     </div>
                     <div class="form-group">
                         <label>Telefone</label>
-                        <input type="text" id="configTelefone" placeholder="(11) 99999-9999">
+                        <input type="text" id="configTelefone" value="(11) 99999-9999">
                     </div>
-                    <div class="form-group">
-                        <label>Endereço</label>
-                        <input type="text" id="configEndereco" placeholder="Endereço completo">
+                    <button class="btn-action success" onclick="salvarConfig()">Salvar Configurações</button>
+                </div>
+
+                <div class="form-section">
+                    <h3>💾 Backup e Restauração</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-action info" onclick="gerarBackup()">📥 Fazer Backup</button>
+                        <button class="btn-action warning" onclick="restaurarBackup()">📤 Restaurar Backup</button>
+                        <button class="btn-action danger" onclick="limparDados()">🗑️ Limpar Dados</button>
                     </div>
                 </div>
-                <button class="btn-action success" onclick="salvarConfig()">
-                    <i class="fas fa-save"></i> Salvar Configurações
-                </button>
-            </div>
 
-            <div class="form-section">
-                <h3>💾 Backup e Restauração</h3>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-action info" onclick="backupDados()">
-                        <i class="fas fa-download"></i> Fazer Backup
-                    </button>
-                    <button class="btn-action warning" onclick="restaurarBackup()">
-                        <i class="fas fa-upload"></i> Restaurar Backup
-                    </button>
-                    <button class="btn-action danger" onclick="limparDados()">
-                        <i class="fas fa-trash"></i> Limpar Dados
-                    </button>
+                <div class="form-section">
+                    <h3>📊 Estatísticas</h3>
+                    <p><strong>Total de OS:</strong> ${App.data.os.length}</p>
+                    <p><strong>Total de Clientes:</strong> ${App.data.clientes.length}</p>
+                    <p><strong>Total de Veículos:</strong> ${App.data.veiculos.length}</p>
+                    <p><strong>Total de Agendamentos:</strong> ${App.data.agenda.length}</p>
+                    <p><strong>Total Financeiro:</strong> ${App.data.financeiro.length} registros</p>
                 </div>
-            </div>
-
-            <div class="form-section">
-                <h3>🔐 Segurança</h3>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-action info" onclick="alterarSenha()">
-                        <i class="fas fa-key"></i> Alterar Senha
-                    </button>
-                    <button class="btn-action warning" onclick="ativar2FA()">
-                        <i class="fas fa-shield-alt"></i> Ativar 2FA
-                    </button>
-                </div>
-            </div>
-        `;
+            `;
+        };
 
         const salvarConfig = () => {
-            App.empresa = document.getElementById('configEmpresa').value;
-            document.getElementById('empresaNome').textContent = App.empresa;
-            saveUserData();
             showToast('Configurações salvas!', 'success');
         };
 
-        const backupDados = () => {
+        const gerarBackup = () => {
             const backup = {
                 data: new Date().toISOString(),
-                empresa: App.empresa,
-                plano: App.plano,
+                usuario: App.user?.email,
                 dados: App.data
             };
-
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `renovecar_backup_${new Date().getTime()}.json`;
             a.click();
-            
             showToast('Backup realizado!', 'success');
         };
 
@@ -2303,7 +2207,7 @@
                     try {
                         const backup = JSON.parse(e.target.result);
                         App.data = backup.dados;
-                        saveUserData();
+                        salvarDados();
                         showToast('Backup restaurado!', 'success');
                         renderSection('dashboard');
                     } catch (error) {
@@ -2318,68 +2222,23 @@
         const limparDados = () => {
             if (confirm('Tem certeza? Esta ação não pode ser desfeita!')) {
                 App.data = { os: [], clientes: [], veiculos: [], agenda: [], financeiro: [] };
-                App.usage = { os: 0, clientes: 0, veiculos: 0 };
-                saveUserData();
+                salvarDados();
                 showToast('Dados limpos!', 'success');
                 renderSection('dashboard');
             }
         };
 
-        const alterarSenha = () => {
-            showToast('Função em desenvolvimento', 'info');
-        };
-
-        const ativar2FA = () => {
-            showToast('Função em desenvolvimento', 'info');
-        };
-
-        // ==================== MODAL ====================
+        // Modal
         const openModal = (title, content, onConfirm) => {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalBody').innerHTML = content;
             document.getElementById('modal').classList.add('active');
-            document.getElementById('modalConfirmBtn').onclick = onConfirm;
+            document.getElementById('modalConfirmBtn').onclick = onConfirm || closeModal;
         };
 
         const closeModal = () => {
             document.getElementById('modal').classList.remove('active');
         };
-
-        // ==================== EXPORTAÇÃO ====================
-        const gerarPDF = async (osId) => {
-            const os = App.data.os.find(o => o.id === osId);
-            if (!os) return;
-
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            doc.setFontSize(20);
-            doc.text('RenoveCar Pro', 14, 22);
-            doc.setFontSize(16);
-            doc.text(`Ordem de Serviço ${os.numero}`, 14, 32);
-
-            doc.setFontSize(12);
-            doc.text(`Cliente: ${os.clienteNome}`, 14, 50);
-            doc.text(`Data: ${os.data}`, 14, 58);
-            doc.text(`Status: ${os.status}`, 14, 66);
-
-            let y = 80;
-            doc.text('Serviços:', 14, y);
-            y += 8;
-            
-            os.servicos.forEach(s => {
-                doc.text(`• ${s.desc}: R$ ${s.valor.toFixed(2)}`, 20, y);
-                y += 8;
-            });
-
-            doc.text(`Total: R$ ${os.valor.toFixed(2)}`, 14, y + 10);
-
-            doc.save(`OS_${os.numero}.pdf`);
-            showToast('PDF gerado!', 'success');
-        };
-
-        // Inicializar
-        renderServicos();
     </script>
 </body>
 </html>
