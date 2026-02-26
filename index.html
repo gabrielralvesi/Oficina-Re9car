@@ -1,234 +1,2385 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RenoveCar Pro v2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenoveCar Pro - Sistema Automotivo Profissional</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Supabase (Backend como serviço) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --secondary: #1e1e2f;
+            --secondary-light: #2a2a3a;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-<style>
-body{
- font-family:'Inter',sans-serif;
- background:linear-gradient(135deg,#667eea,#764ba2);
- padding:20px;
- color:#222;
-}
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-.container{
- background:white;
- border-radius:12px;
- padding:20px;
- max-width:1000px;
- margin:auto;
-}
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease;
+        }
 
-h1{margin-bottom:10px}
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-button{
- padding:10px 15px;
- border:none;
- border-radius:8px;
- cursor:pointer;
- background:#e63946;
- color:white;
- font-weight:600;
- margin:5px 0;
-}
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-input,select{
- padding:8px;
- border-radius:6px;
- border:1px solid #ccc;
- width:100%;
- margin-bottom:10px;
-}
+        .login-header i {
+            font-size: 60px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
 
-.table{
- width:100%;
- border-collapse:collapse;
- margin-top:15px;
-}
+        .login-header h1 {
+            color: var(--secondary);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
 
-.table th,.table td{
- border-bottom:1px solid #eee;
- padding:8px;
- text-align:left;
-}
+        .login-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
 
-.print-area{
- display:none;
-}
+        .login-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--light);
+            padding: 5px;
+            border-radius: 10px;
+        }
 
-@media print{
- body *{visibility:hidden}
- .print-area,.print-area *{visibility:visible}
- .print-area{
-   position:absolute;
-   left:0;
-   top:0;
-   width:100%;
-   display:block;
- }
-}
-</style>
+        .login-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .login-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 30px;
+        }
+
+        .logo span {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-left: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .user-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plan-badge {
+            background: var(--success);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .date-time {
+            font-size: 13px;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 15px;
+            border-radius: 30px;
+        }
+
+        .nav-menu {
+            background: white;
+            padding: 0 15px;
+            display: flex;
+            gap: 5px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .content {
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .stat-info h3 {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            opacity: 0.3;
+        }
+
+        /* Plan Cards */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .plan-card.popular {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .plan-icon i {
+            font-size: 40px;
+            color: var(--primary);
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .plan-price small {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            color: var(--gray);
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .plan-features li i {
+            color: var(--success);
+            margin-right: 8px;
+        }
+
+        .btn-plan {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-plan.basic {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-plan.pro {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-plan.business {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-plan:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            background: var(--secondary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Forms */
+        .form-section {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn-action {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-action.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-action.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-action.info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-action.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-action:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+        .toast.info { border-left-color: var(--info); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .plans-grid { grid-template-columns: 1fr; }
+            .plan-card.popular { transform: scale(1); }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-car"></i>
+                <h1>RenoveCar Pro</h1>
+                <p>Sistema profissional de gestão automotiva</p>
+            </div>
 
-<div class="container">
-<h1><i class="fas fa-car"></i> RenoveCar Pro v2</h1>
+            <div class="login-tabs">
+                <div class="login-tab active" onclick="switchLoginTab('login')">Login</div>
+                <div class="login-tab" onclick="switchLoginTab('register')">Registro</div>
+            </div>
 
-<h3>Nova Ordem de Serviço</h3>
+            <!-- Login Form -->
+            <div class="login-form active" id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="handleLogin()">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+                <div class="login-footer">
+                    <a href="#" onclick="resetPassword()">Esqueceu a senha?</a>
+                </div>
+            </div>
 
-<label>Cliente</label>
-<input id="cliente">
+            <!-- Register Form -->
+            <div class="login-form" id="registerForm">
+                <div class="form-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" id="regEmpresa" placeholder="RenoveCar Centro Automotivo">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="contato@renovecar.com">
+                </div>
+                <div class="form-group">
+                    <label>Telefone</label>
+                    <input type="text" id="regTelefone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regPassword" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" id="regConfirmPassword" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="handleRegister()">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+                <div class="login-footer">
+                    Ao registrar, você aceita nossos <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<label>Veículo</label>
-<input id="veiculo">
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <h1>
+                    <i class="fas fa-car"></i>
+                    RenoveCar Pro
+                    <span id="empresaNome">Centro Automotivo</span>
+                </h1>
+            </div>
+            <div class="user-info">
+                <div class="user-badge">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userEmail">carregando...</span>
+                </div>
+                <div class="plan-badge" id="userPlan">
+                    <i class="fas fa-crown"></i> Plano Básico
+                </div>
+                <div class="date-time" id="currentDateTime"></div>
+                <button class="btn-action info" onclick="showPlans()">
+                    <i class="fas fa-arrow-up"></i> Upgrade
+                </button>
+                <button class="btn-action danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
 
-<label>Placa</label>
-<input id="placa">
+        <!-- Menu -->
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showSection('dashboard', this)">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </div>
+            <div class="nav-item" onclick="showSection('os', this)">
+                <i class="fas fa-clipboard-list"></i> OS
+            </div>
+            <div class="nav-item" onclick="showSection('clientes', this)">
+                <i class="fas fa-users"></i> Clientes
+            </div>
+            <div class="nav-item" onclick="showSection('veiculos', this)">
+                <i class="fas fa-car"></i> Veículos
+            </div>
+            <div class="nav-item" onclick="showSection('agenda', this)">
+                <i class="fas fa-calendar"></i> Agenda
+            </div>
+            <div class="nav-item" onclick="showSection('financeiro', this)">
+                <i class="fas fa-cash-register"></i> Financeiro
+            </div>
+            <div class="nav-item" onclick="showSection('relatorios', this)">
+                <i class="fas fa-file-alt"></i> Relatórios
+            </div>
+            <div class="nav-item" onclick="showSection('config', this)">
+                <i class="fas fa-cog"></i> Config
+            </div>
+            <div class="nav-item" onclick="showSection('planos', this)">
+                <i class="fas fa-crown"></i> Planos
+                <span class="badge badge-danger" id="planAlert" style="display: none;">!</span>
+            </div>
+        </div>
 
-<label>Descrição do Serviço</label>
-<input id="descricao">
+        <!-- Conteúdo Principal -->
+        <div class="content" id="mainContent"></div>
+    </div>
 
-<label>Valor</label>
-<input id="valor" type="number" step="0.01">
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="btn-action info" onclick="closeModal()">Fechar</button>
+                <button class="btn-action success" id="modalConfirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
-<label>Forma de Pagamento</label>
-<select id="pagamento">
-<option>Pix</option>
-<option>Dinheiro</option>
-<option>Cartão</option>
-<option>Transferência</option>
-<option>Boleto</option>
-</select>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
-<button onclick="salvarOS()">Salvar OS</button>
-<button onclick="exportarBackup()">Exportar Backup</button>
-<input type="file" onchange="importarBackup(event)">
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
-<table class="table">
-<thead>
-<tr>
-<th>Nº</th>
-<th>Cliente</th>
-<th>Veículo</th>
-<th>Valor</th>
-<th>Pagamento</th>
-<th>Ação</th>
-</tr>
-</thead>
-<tbody id="lista"></tbody>
-</table>
+    <script>
+        // ==================== CONFIGURAÇÃO SUPABASE ====================
+        const SUPABASE_URL = 'https://seu-projeto.supabase.co'; // Substituir pelo seu URL
+        const SUPABASE_KEY = 'sua-chave'; // Substituir pela sua chave
+        
+        // Inicializar Supabase (modo demonstração se não configurado)
+        let supabase;
+        try {
+            supabase = supabaseClient 
+                ? supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY)
+                : null;
+        } catch (e) {
+            console.warn('Supabase não configurado, usando localStorage');
+        }
 
-</div>
+        // ==================== ESTADO GLOBAL ====================
+        const App = {
+            user: null,
+            empresa: null,
+            plano: 'basico',
+            usage: {
+                os: 0,
+                clientes: 0,
+                veiculos: 0
+            },
+            limits: {
+                basico: { os: 50, clientes: 100, veiculos: 50, preco: 97 },
+                profissional: { os: 500, clientes: 1000, veiculos: 200, preco: 197 },
+                empresarial: { os: 999999, clientes: 999999, veiculos: 999999, preco: 497 }
+            },
+            data: {
+                os: [],
+                clientes: [],
+                veiculos: [],
+                agenda: [],
+                financeiro: []
+            },
+            charts: {}
+        };
 
-<div class="print-area" id="printArea"></div>
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            checkSession();
+        });
 
-<script>
+        // ==================== UTILITÁRIOS ====================
+        const showLoading = () => document.getElementById('loading').classList.add('active');
+        const hideLoading = () => document.getElementById('loading').classList.remove('active');
 
-const App={
- data: JSON.parse(localStorage.getItem("renovecar_v2")) || {os:[],seq:1}
-}
+        const showToast = (message, type = 'info') => {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
 
-function save(){
- localStorage.setItem("renovecar_v2",JSON.stringify(App.data))
-}
+        const updateDateTime = () => {
+            document.getElementById('currentDateTime').textContent = 
+                new Date().toLocaleDateString('pt-BR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+        };
 
-function gerarNumero(){
- const ano=new Date().getFullYear()
- const numero=String(App.data.seq).padStart(3,"0")
- App.data.seq++
- return `OS-${ano}-${numero}`
-}
+        // ==================== AUTENTICAÇÃO ====================
+        const switchLoginTab = (tab) => {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelectorAll('.login-tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.login-tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        };
 
-function salvarOS(){
+        const handleLogin = async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
- const nova={
-   numero:gerarNumero(),
-   cliente:cliente.value,
-   veiculo:veiculo.value,
-   placa:placa.value,
-   descricao:descricao.value,
-   valor:parseFloat(valor.value)||0,
-   pagamento:pagamento.value,
-   data:new Date().toLocaleDateString("pt-BR")
- }
+            if (!email || !password) {
+                showToast('Preencha todos os campos', 'warning');
+                return;
+            }
 
- if(!nova.cliente||!nova.descricao){
-   alert("Preencha os campos obrigatórios")
-   return
- }
+            showLoading();
 
- App.data.os.unshift(nova)
- save()
- render()
- limpar()
-}
+            try {
+                // Simular login (substituir por Supabase quando configurado)
+                await new Promise(r => setTimeout(r, 1000));
+                
+                // Dados mockados
+                App.user = { email, nome: email.split('@')[0] };
+                App.empresa = 'RenoveCar Centro Automotivo';
+                App.plano = 'basico';
+                
+                loadUserData();
+                
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                
+                showToast(`Bem-vindo, ${App.user.nome}!`, 'success');
+                renderSection('dashboard');
+                
+            } catch (error) {
+                showToast('Erro ao fazer login', 'error');
+            } finally {
+                hideLoading();
+            }
+        };
 
-function limpar(){
- cliente.value=""
- veiculo.value=""
- placa.value=""
- descricao.value=""
- valor.value=""
-}
+        const handleRegister = async () => {
+            const empresa = document.getElementById('regEmpresa').value;
+            const email = document.getElementById('regEmail').value;
+            const telefone = document.getElementById('regTelefone').value;
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
 
-function render(){
- lista.innerHTML=App.data.os.map(os=>`
-<tr>
-<td>${os.numero}</td>
-<td>${os.cliente}</td>
-<td>${os.veiculo}</td>
-<td>R$ ${os.valor.toFixed(2)}</td>
-<td>${os.pagamento}</td>
-<td>
-<button onclick='imprimir(${JSON.stringify(os)})'>Imprimir</button>
-</td>
-</tr>
-`).join("")
-}
+            if (!empresa || !email || !telefone || !password) {
+                showToast('Preencha todos os campos', 'warning');
+                return;
+            }
 
-function imprimir(os){
- printArea.innerHTML=`
- <h2>Ordem de Serviço</h2>
- <p><b>Número:</b> ${os.numero}</p>
- <p><b>Cliente:</b> ${os.cliente}</p>
- <p><b>Veículo:</b> ${os.veiculo}</p>
- <p><b>Placa:</b> ${os.placa}</p>
- <p><b>Serviço:</b> ${os.descricao}</p>
- <p><b>Valor:</b> R$ ${os.valor.toFixed(2)}</p>
- <p><b>Pagamento:</b> ${os.pagamento}</p>
- <p><b>Data:</b> ${os.data}</p>
- `
- window.print()
-}
+            if (password !== confirm) {
+                showToast('As senhas não conferem', 'warning');
+                return;
+            }
 
-function exportarBackup(){
- const blob=new Blob([JSON.stringify(App.data)],{type:"application/json"})
- const a=document.createElement("a")
- a.href=URL.createObjectURL(blob)
- a.download="backup_renovecar.json"
- a.click()
-}
+            showLoading();
 
-function importarBackup(e){
- const file=e.target.files[0]
- const reader=new FileReader()
- reader.onload=function(){
-   App.data=JSON.parse(reader.result)
-   save()
-   render()
- }
- reader.readAsText(file)
-}
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+                
+                showToast('Conta criada com sucesso! Faça login.', 'success');
+                switchLoginTab('login');
+                
+            } catch (error) {
+                showToast('Erro ao criar conta', 'error');
+            } finally {
+                hideLoading();
+            }
+        };
 
-render()
+        const checkSession = () => {
+            const saved = localStorage.getItem('renovecar_session');
+            if (saved) {
+                try {
+                    const session = JSON.parse(saved);
+                    App.user = session.user;
+                    App.empresa = session.empresa;
+                    App.plano = session.plano;
+                    
+                    loadUserData();
+                    
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    
+                    renderSection('dashboard');
+                } catch (e) {
+                    localStorage.removeItem('renovecar_session');
+                }
+            }
+        };
 
-</script>
+        const logout = () => {
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('renovecar_session');
+                App.user = null;
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('loginScreen').style.display = 'flex';
+                showToast('Sessão encerrada', 'info');
+            }
+        };
+
+        const resetPassword = () => {
+            showToast('Função de recuperação em breve', 'info');
+        };
+
+        // ==================== CARREGAR DADOS ====================
+        const loadUserData = () => {
+            document.getElementById('userEmail').textContent = App.user.email;
+            document.getElementById('empresaNome').textContent = App.empresa;
+            document.getElementById('userPlan').innerHTML = `<i class="fas fa-crown"></i> Plano ${App.plano.charAt(0).toUpperCase() + App.plano.slice(1)}`;
+            
+            // Carregar dados do localStorage
+            try {
+                const saved = localStorage.getItem(`renovecar_${App.user.email}`);
+                if (saved) {
+                    App.data = JSON.parse(saved);
+                } else {
+                    // Dados iniciais
+                    App.data = {
+                        os: [],
+                        clientes: [
+                            { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', email: 'joao@email.com' }
+                        ],
+                        veiculos: [
+                            { id: 1, clienteId: 1, modelo: 'Gol 2020', placa: 'ABC-1234', km: 45230 }
+                        ],
+                        agenda: [],
+                        financeiro: []
+                    };
+                }
+                
+                // Atualizar uso
+                App.usage.os = App.data.os.length;
+                App.usage.clientes = App.data.clientes.length;
+                App.usage.veiculos = App.data.veiculos.length;
+                
+                // Verificar limites
+                checkLimits();
+                
+            } catch (e) {
+                console.error('Erro ao carregar dados:', e);
+            }
+        };
+
+        const saveUserData = () => {
+            if (App.user) {
+                localStorage.setItem(`renovecar_${App.user.email}`, JSON.stringify(App.data));
+                localStorage.setItem('renovecar_session', JSON.stringify({
+                    user: App.user,
+                    empresa: App.empresa,
+                    plano: App.plano
+                }));
+            }
+        };
+
+        // ==================== PLANOS E LIMITES ====================
+        const checkLimits = () => {
+            const limits = App.limits[App.plano];
+            const nearLimit = [];
+            
+            if (App.usage.os >= limits.os * 0.8) nearLimit.push('OS');
+            if (App.usage.clientes >= limits.clientes * 0.8) nearLimit.push('clientes');
+            if (App.usage.veiculos >= limits.veiculos * 0.8) nearLimit.push('veículos');
+            
+            if (nearLimit.length > 0) {
+                document.getElementById('planAlert').style.display = 'inline';
+                showToast(`Limite próximo: ${nearLimit.join(', ')}. Faça upgrade!`, 'warning');
+            }
+        };
+
+        const canAdd = (type) => {
+            const limits = App.limits[App.plano];
+            return App.usage[type] < limits[type];
+        };
+
+        const showPlans = () => {
+            showSection('planos', document.querySelectorAll('.nav-item')[9]);
+        };
+
+        const upgradePlan = (plan) => {
+            const limits = App.limits[plan];
+            
+            openModal(
+                `Confirmar upgrade para Plano ${plan.charAt(0).toUpperCase() + plan.slice(1)}`,
+                `
+                    <p><strong>Plano:</strong> ${plan}</p>
+                    <p><strong>Preço:</strong> R$ ${limits.preco}/mês</p>
+                    <p><strong>Inclui:</strong></p>
+                    <ul>
+                        <li>Até ${limits.os} OS/mês</li>
+                        <li>Até ${limits.clientes} clientes</li>
+                        <li>Até ${limits.veiculos} veículos</li>
+                    </ul>
+                    <p>Deseja continuar com o upgrade?</p>
+                `,
+                () => {
+                    App.plano = plan;
+                    document.getElementById('userPlan').innerHTML = `<i class="fas fa-crown"></i> Plano ${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
+                    document.getElementById('planAlert').style.display = 'none';
+                    saveUserData();
+                    closeModal();
+                    showToast(`Upgrade para ${plan} realizado!`, 'success');
+                    renderSection('planos');
+                }
+            );
+        };
+
+        // ==================== NAVEGAÇÃO ====================
+        const showSection = (section, element) => {
+            if (element) {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                element.classList.add('active');
+            }
+            
+            showLoading();
+            setTimeout(() => {
+                document.getElementById('mainContent').innerHTML = renderSection(section);
+                if (section === 'dashboard') setTimeout(initCharts, 100);
+                hideLoading();
+            }, 300);
+        };
+
+        const renderSection = (section) => {
+            const sections = {
+                dashboard: renderDashboard,
+                os: renderOS,
+                clientes: renderClientes,
+                veiculos: renderVeiculos,
+                agenda: renderAgenda,
+                financeiro: renderFinanceiro,
+                relatorios: renderRelatorios,
+                config: renderConfig,
+                planos: renderPlanos
+            };
+            
+            return sections[section] ? sections[section]() : '<p>Seção em construção</p>';
+        };
+
+        // ==================== DASHBOARD ====================
+        const renderDashboard = () => {
+            const mes = new Date().getMonth();
+            const faturamento = App.data.financeiro
+                .filter(f => f.tipo === 'entrada' && new Date(f.data).getMonth() === mes)
+                .reduce((s,i) => s + i.valor, 0);
+            
+            const osMes = App.data.os.filter(o => new Date(o.data).getMonth() === mes).length;
+            
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="showSection('financeiro')">
+                        <div>
+                            <h3>Faturamento Mês</h3>
+                            <div class="value">R$ ${faturamento.toFixed(2)}</div>
+                        </div>
+                        <i class="fas fa-chart-line stat-icon"></i>
+                    </div>
+                    <div class="stat-card" onclick="showSection('os')">
+                        <div>
+                            <h3>OS Mês</h3>
+                            <div class="value">${osMes}</div>
+                            <small>Limite: ${App.usage.os}/${App.limits[App.plano].os}</small>
+                        </div>
+                        <i class="fas fa-clipboard-list stat-icon"></i>
+                    </div>
+                    <div class="stat-card" onclick="showSection('clientes')">
+                        <div>
+                            <h3>Clientes</h3>
+                            <div class="value">${App.data.clientes.length}</div>
+                            <small>Limite: ${App.usage.clientes}/${App.limits[App.plano].clientes}</small>
+                        </div>
+                        <i class="fas fa-users stat-icon"></i>
+                    </div>
+                    <div class="stat-card" onclick="showSection('veiculos')">
+                        <div>
+                            <h3>Veículos</h3>
+                            <div class="value">${App.data.veiculos.length}</div>
+                            <small>Limite: ${App.usage.veiculos}/${App.limits[App.plano].veiculos}</small>
+                        </div>
+                        <i class="fas fa-car stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>📊 Faturamento Últimos 7 Dias</h3>
+                        <canvas id="faturamentoChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>🥧 Serviços mais Realizados</h3>
+                        <canvas id="servicosChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📋 Últimas OS</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Cliente</th>
+                                    <th>Veículo</th>
+                                    <th>Data</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${App.data.os.slice(0,5).map(o => `
+                                    <tr>
+                                        <td>${o.numero}</td>
+                                        <td>${o.clienteNome}</td>
+                                        <td>${o.veiculo}</td>
+                                        <td>${o.data}</td>
+                                        <td>R$ ${o.valor}</td>
+                                        <td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn-action info" onclick="gerarRelatorioPDF()">
+                        <i class="fas fa-file-pdf"></i> Exportar Dashboard PDF
+                    </button>
+                    <button class="btn-action success" onclick="backupDados()">
+                        <i class="fas fa-database"></i> Backup Agendado
+                    </button>
+                </div>
+            `;
+        };
+
+        const initCharts = () => {
+            // Destruir gráficos existentes
+            if (App.charts.faturamento) App.charts.faturamento.destroy();
+            if (App.charts.servicos) App.charts.servicos.destroy();
+
+            // Gráfico de faturamento
+            const ctx1 = document.getElementById('faturamentoChart')?.getContext('2d');
+            if (ctx1) {
+                const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+                const valores = [1200, 1900, 1500, 1800, 2100, 1600, 1400];
+                
+                App.charts.faturamento = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: dias,
+                        datasets: [{
+                            label: 'Faturamento',
+                            data: valores,
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46,204,113,0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // Gráfico de serviços
+            const ctx2 = document.getElementById('servicosChart')?.getContext('2d');
+            if (ctx2) {
+                App.charts.servicos = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Troca de Óleo', 'Freios', 'Alinhamento', 'Suspensão', 'Motor'],
+                        datasets: [{
+                            data: [35, 25, 20, 12, 8],
+                            backgroundColor: ['#e63946', '#f39c12', '#2ecc71', '#3498db', '#9b59b6']
+                        }]
+                    }
+                });
+            }
+        };
+
+        // ==================== PLANOS ====================
+        const renderPlanos = () => `
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <div class="plan-icon"><i class="fas fa-star"></i></div>
+                    <div class="plan-name">Básico</div>
+                    <div class="plan-price">R$ 97 <small>/mês</small></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Até 50 OS/mês</li>
+                        <li><i class="fas fa-check"></i> Até 100 clientes</li>
+                        <li><i class="fas fa-check"></i> Até 50 veículos</li>
+                        <li><i class="fas fa-check"></i> Relatórios básicos</li>
+                        <li><i class="fas fa-check"></i> 2 usuários</li>
+                        <li><i class="fas fa-check"></i> Suporte email</li>
+                    </ul>
+                    <button class="btn-plan basic" onclick="upgradePlan('basico')">Plano Atual</button>
+                </div>
+
+                <div class="plan-card popular">
+                    <div class="popular-badge">Mais Popular</div>
+                    <div class="plan-icon"><i class="fas fa-crown"></i></div>
+                    <div class="plan-name">Profissional</div>
+                    <div class="plan-price">R$ 197 <small>/mês</small></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Até 500 OS/mês</li>
+                        <li><i class="fas fa-check"></i> Até 1000 clientes</li>
+                        <li><i class="fas fa-check"></i> Até 200 veículos</li>
+                        <li><i class="fas fa-check"></i> Relatórios avançados</li>
+                        <li><i class="fas fa-check"></i> 5 usuários</li>
+                        <li><i class="fas fa-check"></i> Suporte prioritário</li>
+                        <li><i class="fas fa-check"></i> WhatsApp integrado</li>
+                        <li><i class="fas fa-check"></i> Backup automático</li>
+                    </ul>
+                    <button class="btn-plan pro" onclick="upgradePlan('profissional')">Assinar Agora</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-icon"><i class="fas fa-building"></i></div>
+                    <div class="plan-name">Empresarial</div>
+                    <div class="plan-price">R$ 497 <small>/mês</small></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> OS ilimitadas</li>
+                        <li><i class="fas fa-check"></i> Clientes ilimitados</li>
+                        <li><i class="fas fa-check"></i> Veículos ilimitados</li>
+                        <li><i class="fas fa-check"></i> Relatórios personalizados</li>
+                        <li><i class="fas fa-check"></i> 15 usuários</li>
+                        <li><i class="fas fa-check"></i> Gerente de contas</li>
+                        <li><i class="fas fa-check"></i> API exclusiva</li>
+                        <li><i class="fas fa-check"></i> Múltiplas unidades</li>
+                        <li><i class="fas fa-check"></i> Treinamento incluso</li>
+                    </ul>
+                    <button class="btn-plan business" onclick="upgradePlan('empresarial')">Fale Conosco</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📊 Uso Atual</h3>
+                <div style="margin-top: 15px;">
+                    <p><strong>OS:</strong> ${App.usage.os}/${App.limits[App.plano].os} utilizadas</p>
+                    <progress value="${App.usage.os}" max="${App.limits[App.plano].os}" style="width: 100%; height: 20px;"></progress>
+                    
+                    <p style="margin-top: 10px;"><strong>Clientes:</strong> ${App.usage.clientes}/${App.limits[App.plano].clientes}</p>
+                    <progress value="${App.usage.clientes}" max="${App.limits[App.plano].clientes}" style="width: 100%; height: 20px;"></progress>
+                    
+                    <p style="margin-top: 10px;"><strong>Veículos:</strong> ${App.usage.veiculos}/${App.limits[App.plano].veiculos}</p>
+                    <progress value="${App.usage.veiculos}" max="${App.limits[App.plano].veiculos}" style="width: 100%; height: 20px;"></progress>
+                </div>
+            </div>
+        `;
+
+        // ==================== OS ====================
+        const renderOS = () => `
+            <div class="form-section">
+                <h3>➕ Nova Ordem de Serviço</h3>
+                <div class="form-grid">
+                    <select id="osCliente">
+                        <option value="">Selecione o cliente</option>
+                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                    </select>
+                    <select id="osVeiculo">
+                        <option value="">Selecione o veículo</option>
+                    </select>
+                    <input type="number" id="osKm" placeholder="KM Atual">
+                    <input type="date" id="osData" value="${new Date().toISOString().split('T')[0]}">
+                </div>
+                
+                <h4 style="margin: 15px 0;">Serviços</h4>
+                <div id="servicosContainer"></div>
+                <button class="btn-action success" onclick="adicionarServico()" style="margin: 10px 0;">
+                    <i class="fas fa-plus"></i> Adicionar Serviço
+                </button>
+                
+                <div style="background: var(--secondary); color: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Total:</span>
+                        <span style="font-size: 24px; font-weight: bold;" id="osTotal">R$ 0,00</span>
+                    </div>
+                </div>
+                
+                <textarea id="osObs" rows="3" placeholder="Observações" style="width: 100%; padding: 10px; margin-bottom: 15px;"></textarea>
+                
+                <button class="btn-action success" onclick="salvarOS()" ${!canAdd('os') ? 'disabled' : ''}>
+                    <i class="fas fa-save"></i> Salvar OS
+                </button>
+                ${!canAdd('os') ? '<p style="color: var(--danger);">Limite de OS atingido. Faça upgrade!</p>' : ''}
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº</th>
+                            <th>Cliente</th>
+                            <th>Veículo</th>
+                            <th>Data</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${App.data.os.map(o => `
+                            <tr>
+                                <td>${o.numero}</td>
+                                <td>${o.clienteNome}</td>
+                                <td>${o.veiculo}</td>
+                                <td>${o.data}</td>
+                                <td>R$ ${o.valor}</td>
+                                <td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
+                                <td>
+                                    <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-action warning" onclick="gerarPDF(${o.id})"><i class="fas fa-file-pdf"></i></button>
+                                    ${o.status !== 'concluido' ? `<button class="btn-action success" onclick="concluirOS(${o.id})"><i class="fas fa-check"></i></button>` : ''}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        // Inicializar serviços
+        if (!window.servicos) window.servicos = [{ desc: '', valor: 0 }];
+
+        const renderServicos = () => {
+            let html = '';
+            window.servicos.forEach((s, i) => {
+                html += `
+                    <div class="servico-linha" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" placeholder="Descrição do serviço" value="${s.desc}" onchange="atualizarServico(${i}, 'desc', this.value)" style="flex: 3; padding: 8px;">
+                        <input type="number" placeholder="Valor" value="${s.valor}" onchange="atualizarServico(${i}, 'valor', this.value)" style="flex: 1; padding: 8px;">
+                        ${window.servicos.length > 1 ? `<button class="btn-action danger" onclick="removerServico(${i})"><i class="fas fa-times"></i></button>` : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('servicosContainer').innerHTML = html;
+        };
+
+        const adicionarServico = () => {
+            window.servicos.push({ desc: '', valor: 0 });
+            renderServicos();
+        };
+
+        const removerServico = (i) => {
+            window.servicos.splice(i, 1);
+            renderServicos();
+            calcularTotalOS();
+        };
+
+        const atualizarServico = (i, campo, valor) => {
+            window.servicos[i][campo] = campo === 'valor' ? parseFloat(valor) || 0 : valor;
+            calcularTotalOS();
+        };
+
+        const calcularTotalOS = () => {
+            const total = window.servicos.reduce((s, i) => s + (i.valor || 0), 0);
+            document.getElementById('osTotal').textContent = `R$ ${total.toFixed(2)}`;
+        };
+
+        const salvarOS = () => {
+            if (!canAdd('os')) {
+                showToast('Limite de OS atingido', 'warning');
+                return;
+            }
+
+            const clienteId = document.getElementById('osCliente').value;
+            if (!clienteId) return showToast('Selecione um cliente', 'warning');
+
+            const cliente = App.data.clientes.find(c => c.id == clienteId);
+            const servicosValidos = window.servicos.filter(s => s.desc.trim() && s.valor > 0);
+            
+            if (!servicosValidos.length) return showToast('Adicione serviços válidos', 'warning');
+
+            const novaOS = {
+                id: Date.now(),
+                numero: `OS-${String(App.data.os.length + 1).padStart(3, '0')}`,
+                clienteId: parseInt(clienteId),
+                clienteNome: cliente.nome,
+                veiculo: 'Veículo',
+                data: document.getElementById('osData').value,
+                status: 'andamento',
+                servicos: servicosValidos,
+                valor: servicosValidos.reduce((s,i) => s + i.valor, 0),
+                obs: document.getElementById('osObs').value
+            };
+
+            App.data.os.push(novaOS);
+            App.usage.os++;
+            saveUserData();
+            
+            window.servicos = [{ desc: '', valor: 0 }];
+            renderServicos();
+            document.getElementById('osTotal').textContent = 'R$ 0,00';
+            
+            showToast('OS criada com sucesso!', 'success');
+            renderSection('os');
+        };
+
+        const verOS = (id) => {
+            const os = App.data.os.find(o => o.id === id);
+            if (!os) return;
+
+            const servicos = os.servicos.map(s => `<li>${s.desc} - R$ ${s.valor.toFixed(2)}</li>`).join('');
+
+            openModal(
+                `OS ${os.numero}`,
+                `
+                    <p><strong>Cliente:</strong> ${os.clienteNome}</p>
+                    <p><strong>Data:</strong> ${os.data}</p>
+                    <p><strong>Status:</strong> ${os.status}</p>
+                    <h4>Serviços:</h4>
+                    <ul>${servicos}</ul>
+                    <p><strong>Total:</strong> R$ ${os.valor.toFixed(2)}</p>
+                    ${os.obs ? `<p><strong>Obs:</strong> ${os.obs}</p>` : ''}
+                `,
+                closeModal
+            );
+        };
+
+        const concluirOS = (id) => {
+            if (confirm('Confirmar conclusão da OS?')) {
+                const os = App.data.os.find(o => o.id === id);
+                os.status = 'concluido';
+                
+                App.data.financeiro.push({
+                    id: Date.now(),
+                    tipo: 'entrada',
+                    descricao: `OS ${os.numero}`,
+                    valor: os.valor,
+                    data: new Date().toISOString().split('T')[0]
+                });
+                
+                saveUserData();
+                showToast('OS concluída!', 'success');
+                renderSection('os');
+            }
+        };
+
+        // ==================== CLIENTES ====================
+        const renderClientes = () => `
+            <div class="form-section">
+                <h3>➕ Novo Cliente</h3>
+                <div class="form-grid">
+                    <input type="text" id="clienteNome" placeholder="Nome completo">
+                    <input type="text" id="clienteTelefone" placeholder="Telefone">
+                    <input type="email" id="clienteEmail" placeholder="Email">
+                    <input type="text" id="clienteEndereco" placeholder="Endereço">
+                </div>
+                <button class="btn-action success" onclick="salvarCliente()" ${!canAdd('clientes') ? 'disabled' : ''}>
+                    <i class="fas fa-save"></i> Salvar Cliente
+                </button>
+                ${!canAdd('clientes') ? '<p style="color: var(--danger);">Limite de clientes atingido. Faça upgrade!</p>' : ''}
+            </div>
+
+            <input type="text" id="buscaCliente" placeholder="🔍 Buscar cliente..." onkeyup="buscarClientes()" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Endereço</th>
+                            <th>Veículos</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaClientes">
+                        ${App.data.clientes.map(c => `
+                            <tr>
+                                <td>${c.nome}</td>
+                                <td>${c.telefone}</td>
+                                <td>${c.email}</td>
+                                <td>${c.endereco || '-'}</td>
+                                <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
+                                <td>
+                                    <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        const salvarCliente = () => {
+            const nome = document.getElementById('clienteNome').value;
+            const telefone = document.getElementById('clienteTelefone').value;
+            
+            if (!nome || !telefone) {
+                showToast('Nome e telefone são obrigatórios', 'warning');
+                return;
+            }
+
+            if (!canAdd('clientes')) {
+                showToast('Limite de clientes atingido', 'warning');
+                return;
+            }
+
+            const novoCliente = {
+                id: Date.now(),
+                nome,
+                telefone,
+                email: document.getElementById('clienteEmail').value,
+                endereco: document.getElementById('clienteEndereco').value,
+                dataCadastro: new Date().toISOString().split('T')[0]
+            };
+
+            App.data.clientes.push(novoCliente);
+            App.usage.clientes++;
+            saveUserData();
+            
+            document.getElementById('clienteNome').value = '';
+            document.getElementById('clienteTelefone').value = '';
+            document.getElementById('clienteEmail').value = '';
+            document.getElementById('clienteEndereco').value = '';
+            
+            showToast('Cliente cadastrado!', 'success');
+            renderSection('clientes');
+        };
+
+        const buscarClientes = () => {
+            const termo = document.getElementById('buscaCliente').value.toLowerCase();
+            const filtrados = App.data.clientes.filter(c => 
+                c.nome.toLowerCase().includes(termo) || 
+                c.telefone.includes(termo) ||
+                (c.email && c.email.toLowerCase().includes(termo))
+            );
+            
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
+                <tr>
+                    <td>${c.nome}</td>
+                    <td>${c.telefone}</td>
+                    <td>${c.email || '-'}</td>
+                    <td>${c.endereco || '-'}</td>
+                    <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
+                    <td>
+                        <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        const verCliente = (id) => {
+            const c = App.data.clientes.find(c => c.id === id);
+            const veiculos = App.data.veiculos.filter(v => v.clienteId === id);
+            const os = App.data.os.filter(o => o.clienteId === id);
+
+            openModal(
+                c.nome,
+                `
+                    <p><strong>Telefone:</strong> ${c.telefone}</p>
+                    <p><strong>Email:</strong> ${c.email || '-'}</p>
+                    <p><strong>Endereço:</strong> ${c.endereco || '-'}</p>
+                    <p><strong>Cadastro:</strong> ${c.dataCadastro}</p>
+                    <h4>Veículos (${veiculos.length})</h4>
+                    <ul>${veiculos.map(v => `<li>${v.modelo} - ${v.placa} (${v.km} km)</li>`).join('')}</ul>
+                    <h4>OS Realizadas (${os.length})</h4>
+                    <ul>${os.map(o => `<li>${o.numero} - R$ ${o.valor} (${o.data})</li>`).join('')}</ul>
+                `,
+                closeModal
+            );
+        };
+
+        const excluirCliente = (id) => {
+            if (confirm('Excluir este cliente?')) {
+                App.data.clientes = App.data.clientes.filter(c => c.id !== id);
+                App.usage.clientes--;
+                saveUserData();
+                showToast('Cliente excluído', 'success');
+                renderSection('clientes');
+            }
+        };
+
+        // ==================== VEÍCULOS ====================
+        const renderVeiculos = () => `
+            <div class="form-section">
+                <h3>➕ Novo Veículo</h3>
+                <div class="form-grid">
+                    <select id="veicCliente">
+                        <option value="">Selecione o cliente</option>
+                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                    </select>
+                    <input type="text" id="veicModelo" placeholder="Modelo (ex: Gol 2020)">
+                    <input type="text" id="veicPlaca" placeholder="Placa">
+                    <input type="number" id="veicKm" placeholder="KM Atual">
+                </div>
+                <button class="btn-action success" onclick="salvarVeiculo()" ${!canAdd('veiculos') ? 'disabled' : ''}>
+                    <i class="fas fa-save"></i> Salvar Veículo
+                </button>
+                ${!canAdd('veiculos') ? '<p style="color: var(--danger);">Limite de veículos atingido. Faça upgrade!</p>' : ''}
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Modelo</th>
+                            <th>Placa</th>
+                            <th>KM</th>
+                            <th>Última OS</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${App.data.veiculos.map(v => {
+                            const cliente = App.data.clientes.find(c => c.id === v.clienteId);
+                            return `
+                                <tr>
+                                    <td>${cliente ? cliente.nome : 'N/A'}</td>
+                                    <td>${v.modelo}</td>
+                                    <td>${v.placa}</td>
+                                    <td>${v.km} km</td>
+                                    <td>${v.ultimaOS || '-'}</td>
+                                    <td>
+                                        <button class="btn-action danger" onclick="excluirVeiculo(${v.id})"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        const salvarVeiculo = () => {
+            const clienteId = document.getElementById('veicCliente').value;
+            const modelo = document.getElementById('veicModelo').value;
+            const placa = document.getElementById('veicPlaca').value;
+            const km = parseInt(document.getElementById('veicKm').value);
+
+            if (!clienteId || !modelo || !placa || !km) {
+                showToast('Preencha todos os campos', 'warning');
+                return;
+            }
+
+            if (!canAdd('veiculos')) {
+                showToast('Limite de veículos atingido', 'warning');
+                return;
+            }
+
+            const novoVeiculo = {
+                id: Date.now(),
+                clienteId: parseInt(clienteId),
+                modelo,
+                placa: placa.toUpperCase(),
+                km,
+                dataCadastro: new Date().toISOString().split('T')[0]
+            };
+
+            App.data.veiculos.push(novoVeiculo);
+            App.usage.veiculos++;
+            saveUserData();
+            
+            document.getElementById('veicModelo').value = '';
+            document.getElementById('veicPlaca').value = '';
+            document.getElementById('veicKm').value = '';
+            
+            showToast('Veículo cadastrado!', 'success');
+            renderSection('veiculos');
+        };
+
+        const excluirVeiculo = (id) => {
+            if (confirm('Excluir este veículo?')) {
+                App.data.veiculos = App.data.veiculos.filter(v => v.id !== id);
+                App.usage.veiculos--;
+                saveUserData();
+                showToast('Veículo excluído', 'success');
+                renderSection('veiculos');
+            }
+        };
+
+        // ==================== AGENDA ====================
+        const renderAgenda = () => `
+            <div class="form-section">
+                <h3>📅 Novo Agendamento</h3>
+                <div class="form-grid">
+                    <select id="agendaCliente">
+                        <option value="">Selecione o cliente</option>
+                        ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                    </select>
+                    <input type="date" id="agendaData" value="${new Date().toISOString().split('T')[0]}">
+                    <input type="time" id="agendaHora" value="09:00">
+                    <input type="text" id="agendaServico" placeholder="Tipo de serviço">
+                </div>
+                <button class="btn-action success" onclick="salvarAgendamento()">
+                    <i class="fas fa-save"></i> Agendar
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${App.data.agenda.map(a => `
+                            <tr>
+                                <td>${a.data}</td>
+                                <td>${a.hora}</td>
+                                <td>${a.clienteNome}</td>
+                                <td>${a.servico}</td>
+                                <td><span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+                                <td>
+                                    <button class="btn-action success" onclick="confirmarAgendamento(${a.id})"><i class="fas fa-check"></i></button>
+                                    <button class="btn-action danger" onclick="cancelarAgendamento(${a.id})"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        const salvarAgendamento = () => {
+            const clienteId = document.getElementById('agendaCliente').value;
+            const data = document.getElementById('agendaData').value;
+            const hora = document.getElementById('agendaHora').value;
+            const servico = document.getElementById('agendaServico').value;
+
+            if (!clienteId || !data || !hora || !servico) {
+                showToast('Preencha todos os campos', 'warning');
+                return;
+            }
+
+            const cliente = App.data.clientes.find(c => c.id == clienteId);
+
+            const novoAgendamento = {
+                id: Date.now(),
+                clienteId: parseInt(clienteId),
+                clienteNome: cliente.nome,
+                data,
+                hora,
+                servico,
+                status: 'agendado'
+            };
+
+            App.data.agenda.push(novoAgendamento);
+            saveUserData();
+            
+            document.getElementById('agendaServico').value = '';
+            
+            showToast('Agendamento realizado!', 'success');
+            renderSection('agenda');
+        };
+
+        const confirmarAgendamento = (id) => {
+            const a = App.data.agenda.find(a => a.id === id);
+            a.status = 'confirmado';
+            saveUserData();
+            showToast('Agendamento confirmado', 'success');
+            renderSection('agenda');
+        };
+
+        const cancelarAgendamento = (id) => {
+            if (confirm('Cancelar este agendamento?')) {
+                App.data.agenda = App.data.agenda.filter(a => a.id !== id);
+                saveUserData();
+                showToast('Agendamento cancelado', 'info');
+                renderSection('agenda');
+            }
+        };
+
+        // ==================== FINANCEIRO ====================
+        const renderFinanceiro = () => {
+            const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada').reduce((s,i) => s + i.valor, 0);
+            const saidas = App.data.financeiro.filter(f => f.tipo === 'saida').reduce((s,i) => s + i.valor, 0);
+            
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div>
+                            <h3>Entradas</h3>
+                            <div class="value">R$ ${entradas.toFixed(2)}</div>
+                        </div>
+                        <i class="fas fa-arrow-up stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h3>Saídas</h3>
+                            <div class="value">R$ ${saidas.toFixed(2)}</div>
+                        </div>
+                        <i class="fas fa-arrow-down stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h3>Saldo</h3>
+                            <div class="value">R$ ${(entradas - saidas).toFixed(2)}</div>
+                        </div>
+                        <i class="fas fa-chart-line stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>➕ Nova Movimentação</h3>
+                    <div class="form-grid">
+                        <select id="finTipo">
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                        </select>
+                        <input type="text" id="finDesc" placeholder="Descrição">
+                        <input type="number" id="finValor" placeholder="Valor" step="0.01">
+                        <input type="date" id="finData" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    <button class="btn-action success" onclick="salvarMovimentacao()">
+                        <i class="fas fa-save"></i> Registrar
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.financeiro.sort((a,b) => new Date(b.data) - new Date(a.data)).map(f => `
+                                <tr>
+                                    <td>${f.data}</td>
+                                    <td><span class="badge ${f.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${f.tipo}</span></td>
+                                    <td>${f.descricao}</td>
+                                    <td>R$ ${f.valor.toFixed(2)}</td>
+                                    <td>
+                                        <button class="btn-action danger" onclick="excluirMovimentacao(${f.id})"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const salvarMovimentacao = () => {
+            const tipo = document.getElementById('finTipo').value;
+            const desc = document.getElementById('finDesc').value;
+            const valor = parseFloat(document.getElementById('finValor').value);
+
+            if (!desc || !valor) {
+                showToast('Preencha todos os campos', 'warning');
+                return;
+            }
+
+            App.data.financeiro.push({
+                id: Date.now(),
+                tipo,
+                descricao: desc,
+                valor,
+                data: document.getElementById('finData').value
+            });
+
+            saveUserData();
+            showToast('Registrado!', 'success');
+            renderSection('financeiro');
+        };
+
+        const excluirMovimentacao = (id) => {
+            if (confirm('Excluir esta movimentação?')) {
+                App.data.financeiro = App.data.financeiro.filter(f => f.id !== id);
+                saveUserData();
+                showToast('Excluído!', 'success');
+                renderSection('financeiro');
+            }
+        };
+
+        // ==================== RELATÓRIOS ====================
+        const renderRelatorios = () => `
+            <div class="form-section">
+                <h3>📊 Gerar Relatórios</h3>
+                <div class="form-grid">
+                    <select id="relTipo">
+                        <option value="os">Relatório de OS</option>
+                        <option value="financeiro">Relatório Financeiro</option>
+                        <option value="clientes">Relatório de Clientes</option>
+                        <option value="veiculos">Relatório de Veículos</option>
+                    </select>
+                    <input type="month" id="relMes" value="${new Date().toISOString().slice(0,7)}">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-action info" onclick="gerarRelatorio('tela')">
+                        <i class="fas fa-eye"></i> Visualizar
+                    </button>
+                    <button class="btn-action warning" onclick="gerarRelatorio('pdf')">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button class="btn-action success" onclick="gerarRelatorio('excel')">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </button>
+                </div>
+            </div>
+
+            <div id="relatorioResultado" class="form-section" style="display: none;">
+                <h3>Resultado</h3>
+                <div id="relatorioConteudo"></div>
+            </div>
+        `;
+
+        const gerarRelatorio = async (formato) => {
+            const tipo = document.getElementById('relTipo').value;
+            const mes = document.getElementById('relMes').value;
+            const [ano, mesNum] = mes.split('-');
+
+            let dados = [];
+            let titulo = '';
+
+            switch(tipo) {
+                case 'os':
+                    dados = App.data.os.filter(o => o.data.startsWith(mes));
+                    titulo = `Relatório de OS - ${mes}`;
+                    break;
+                case 'financeiro':
+                    dados = App.data.financeiro.filter(f => f.data.startsWith(mes));
+                    titulo = `Relatório Financeiro - ${mes}`;
+                    break;
+                case 'clientes':
+                    dados = App.data.clientes;
+                    titulo = 'Relatório de Clientes';
+                    break;
+                case 'veiculos':
+                    dados = App.data.veiculos;
+                    titulo = 'Relatório de Veículos';
+                    break;
+            }
+
+            if (formato === 'tela') {
+                document.getElementById('relatorioResultado').style.display = 'block';
+                document.getElementById('relatorioConteudo').innerHTML = gerarTabelaRelatorio(tipo, dados);
+            } else if (formato === 'pdf') {
+                await gerarPDFRelatorio(titulo, tipo, dados);
+            } else {
+                showToast('Exportação Excel em desenvolvimento', 'info');
+            }
+        };
+
+        const gerarTabelaRelatorio = (tipo, dados) => {
+            if (tipo === 'os') {
+                return `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${dados.map(d => `
+                                <tr>
+                                    <td>${d.numero}</td>
+                                    <td>${d.clienteNome}</td>
+                                    <td>${d.data}</td>
+                                    <td>R$ ${d.valor}</td>
+                                    <td>${d.status}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Total:</strong></td>
+                                <td><strong>R$ ${dados.reduce((s,d) => s + d.valor, 0).toFixed(2)}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                `;
+            }
+            return '<p>Dados carregados</p>';
+        };
+
+        const gerarPDFRelatorio = async (titulo, tipo, dados) => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(18);
+            doc.text(titulo, 14, 22);
+            doc.setFontSize(11);
+            doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 14, 32);
+
+            let y = 50;
+            doc.setFontSize(10);
+
+            if (tipo === 'os') {
+                doc.text('Nº', 14, y);
+                doc.text('Cliente', 40, y);
+                doc.text('Data', 100, y);
+                doc.text('Valor', 140, y);
+                doc.text('Status', 170, y);
+                
+                y += 10;
+                dados.forEach(d => {
+                    doc.text(d.numero, 14, y);
+                    doc.text(d.clienteNome.substring(0, 15), 40, y);
+                    doc.text(d.data, 100, y);
+                    doc.text(`R$ ${d.valor}`, 140, y);
+                    doc.text(d.status, 170, y);
+                    y += 8;
+                });
+            }
+
+            doc.save(`relatorio_${tipo}_${new Date().getTime()}.pdf`);
+            showToast('PDF gerado!', 'success');
+        };
+
+        const gerarRelatorioPDF = async () => {
+            const element = document.getElementById('mainContent');
+            const canvas = await html2canvas(element);
+            const imgData = canvas.toDataURL('image/png');
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.addImage(imgData, 'PNG', 10, 10, 190, 0);
+            doc.save(`dashboard_${new Date().getTime()}.pdf`);
+            
+            showToast('Dashboard exportado!', 'success');
+        };
+
+        // ==================== CONFIGURAÇÕES ====================
+        const renderConfig = () => `
+            <div class="form-section">
+                <h3>⚙️ Configurações da Empresa</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome da Empresa</label>
+                        <input type="text" id="configEmpresa" value="${App.empresa}">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="configEmail" value="${App.user.email}">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" id="configTelefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>Endereço</label>
+                        <input type="text" id="configEndereco" placeholder="Endereço completo">
+                    </div>
+                </div>
+                <button class="btn-action success" onclick="salvarConfig()">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+            </div>
+
+            <div class="form-section">
+                <h3>💾 Backup e Restauração</h3>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-action info" onclick="backupDados()">
+                        <i class="fas fa-download"></i> Fazer Backup
+                    </button>
+                    <button class="btn-action warning" onclick="restaurarBackup()">
+                        <i class="fas fa-upload"></i> Restaurar Backup
+                    </button>
+                    <button class="btn-action danger" onclick="limparDados()">
+                        <i class="fas fa-trash"></i> Limpar Dados
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>🔐 Segurança</h3>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-action info" onclick="alterarSenha()">
+                        <i class="fas fa-key"></i> Alterar Senha
+                    </button>
+                    <button class="btn-action warning" onclick="ativar2FA()">
+                        <i class="fas fa-shield-alt"></i> Ativar 2FA
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const salvarConfig = () => {
+            App.empresa = document.getElementById('configEmpresa').value;
+            document.getElementById('empresaNome').textContent = App.empresa;
+            saveUserData();
+            showToast('Configurações salvas!', 'success');
+        };
+
+        const backupDados = () => {
+            const backup = {
+                data: new Date().toISOString(),
+                empresa: App.empresa,
+                plano: App.plano,
+                dados: App.data
+            };
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `renovecar_backup_${new Date().getTime()}.json`;
+            a.click();
+            
+            showToast('Backup realizado!', 'success');
+        };
+
+        const restaurarBackup = () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const backup = JSON.parse(e.target.result);
+                        App.data = backup.dados;
+                        saveUserData();
+                        showToast('Backup restaurado!', 'success');
+                        renderSection('dashboard');
+                    } catch (error) {
+                        showToast('Arquivo inválido', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        };
+
+        const limparDados = () => {
+            if (confirm('Tem certeza? Esta ação não pode ser desfeita!')) {
+                App.data = { os: [], clientes: [], veiculos: [], agenda: [], financeiro: [] };
+                App.usage = { os: 0, clientes: 0, veiculos: 0 };
+                saveUserData();
+                showToast('Dados limpos!', 'success');
+                renderSection('dashboard');
+            }
+        };
+
+        const alterarSenha = () => {
+            showToast('Função em desenvolvimento', 'info');
+        };
+
+        const ativar2FA = () => {
+            showToast('Função em desenvolvimento', 'info');
+        };
+
+        // ==================== MODAL ====================
+        const openModal = (title, content, onConfirm) => {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modalConfirmBtn').onclick = onConfirm;
+        };
+
+        const closeModal = () => {
+            document.getElementById('modal').classList.remove('active');
+        };
+
+        // ==================== EXPORTAÇÃO ====================
+        const gerarPDF = async (osId) => {
+            const os = App.data.os.find(o => o.id === osId);
+            if (!os) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(20);
+            doc.text('RenoveCar Pro', 14, 22);
+            doc.setFontSize(16);
+            doc.text(`Ordem de Serviço ${os.numero}`, 14, 32);
+
+            doc.setFontSize(12);
+            doc.text(`Cliente: ${os.clienteNome}`, 14, 50);
+            doc.text(`Data: ${os.data}`, 14, 58);
+            doc.text(`Status: ${os.status}`, 14, 66);
+
+            let y = 80;
+            doc.text('Serviços:', 14, y);
+            y += 8;
+            
+            os.servicos.forEach(s => {
+                doc.text(`• ${s.desc}: R$ ${s.valor.toFixed(2)}`, 20, y);
+                y += 8;
+            });
+
+            doc.text(`Total: R$ ${os.valor.toFixed(2)}`, 14, y + 10);
+
+            doc.save(`OS_${os.numero}.pdf`);
+            showToast('PDF gerado!', 'success');
+        };
+
+        // Inicializar
+        renderServicos();
+    </script>
 </body>
 </html>
