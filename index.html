@@ -30,7 +30,6 @@
             --light: #f8f9fa;
             --gray: #6c757d;
             --border: #dee2e6;
-            --agro: #27ae60;
         }
 
         body {
@@ -75,19 +74,6 @@
             font-weight: 400;
             opacity: 0.9;
             margin-left: 8px;
-        }
-
-        .parceiro-badge {
-            background: var(--agro);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 10px;
         }
 
         .user-info {
@@ -231,15 +217,6 @@
             border-left-color: var(--danger);
         }
 
-        .alert-card.success {
-            border-left-color: var(--success);
-        }
-
-        .alert-card.agro {
-            border-left-color: var(--agro);
-            background: #f0fff4;
-        }
-
         .alert-info h4 {
             font-size: 14px;
             margin-bottom: 5px;
@@ -263,10 +240,6 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .alert-badge.agro {
-            background: var(--agro);
         }
 
         /* Formulários */
@@ -345,18 +318,8 @@
             color: white;
         }
 
-        .btn-agro {
-            background: var(--agro);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-info {
-            background: var(--info);
+        .btn-danger {
+            background: var(--danger);
             color: white;
         }
 
@@ -434,16 +397,6 @@
             color: white;
         }
 
-        .btn-notify {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-agro-sm {
-            background: var(--agro);
-            color: white;
-        }
-
         /* Badges */
         .badge {
             padding: 4px 8px;
@@ -472,11 +425,6 @@
             color: #0c5460;
         }
 
-        .badge-agro {
-            background: var(--agro);
-            color: white;
-        }
-
         /* Filtros */
         .filters {
             background: white;
@@ -502,40 +450,44 @@
             color: var(--gray);
         }
 
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .timeline-item {
-            padding: 10px 20px;
-            position: relative;
-            border-left: 2px solid var(--primary);
-            margin-left: 20px;
-        }
-
-        .timeline-item:before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 15px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--primary);
-        }
-
-        .timeline-date {
-            font-size: 12px;
-            color: var(--gray);
-            margin-bottom: 5px;
-        }
-
-        .timeline-content {
-            background: var(--light);
+        /* Linhas de Serviço */
+        .servico-linha {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            background: white;
             padding: 10px;
             border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .servico-descricao {
+            flex: 3;
+        }
+
+        .servico-valor {
+            flex: 1;
+        }
+
+        .btn-remove {
+            background: var(--danger);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            background: var(--success);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
         }
 
         /* Modal */
@@ -636,10 +588,6 @@
             border-left-color: var(--info);
         }
 
-        .toast.agro {
-            border-left-color: var(--agro);
-        }
-
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -714,7 +662,6 @@
             .header { flex-direction: column; text-align: center; }
             .user-info { justify-content: center; }
             .stats-grid { grid-template-columns: 1fr; }
-            .alert-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -728,9 +675,6 @@
                     <i class="fas fa-car"></i>
                     RenoveCar Pro
                     <span>Centro Automotivo</span>
-                    <span class="parceiro-badge">
-                        <i class="fas fa-tractor"></i> Parceiro AgroGB
-                    </span>
                 </h1>
             </div>
             <div class="user-info">
@@ -758,15 +702,6 @@
             </div>
             <div class="nav-item" onclick="showSection('clientes', this)">
                 <i class="fas fa-users"></i> Clientes
-            </div>
-            <div class="nav-item" onclick="showSection('agro', this)">
-                <i class="fas fa-tractor"></i> AgroGB
-            </div>
-            <div class="nav-item" onclick="showSection('manutencoes', this)">
-                <i class="fas fa-tools"></i> Manutenções
-            </div>
-            <div class="nav-item" onclick="showSection('funcionarios', this)">
-                <i class="fas fa-user-tie"></i> Funcionários
             </div>
             <div class="nav-item" onclick="showSection('estoque', this)">
                 <i class="fas fa-boxes"></i> Estoque
@@ -809,10 +744,6 @@
     <script>
         // ==================== SISTEMA RENOVECAR PRO ====================
         
-        // Constantes
-        const KM_MEDIO_DIA = 100; // Média de 100km por dia
-        const DIAS_MEDIA_MES = 30;
-        
         // Estado da aplicação
         const App = {
             currentSection: 'dashboard',
@@ -820,78 +751,11 @@
             data: {
                 caixa: [],
                 clientes: [],
-                funcionarios: [],
                 estoque: [],
-                vales: [],
-                os: [], // Ordens de Serviço
-                osAgro: [], // Ordens de Serviço da AgroGB
+                os: [],
                 notificacoes: []
             }
         };
-
-        // Tabela de manutenções preventivas
-        const MANUTENCOES_PREVENTIVAS = [
-            { 
-                id: 1,
-                nome: 'Troca de Óleo e Filtro',
-                kmIntervalo: 5000,
-                mesesIntervalo: 6,
-                descricao: 'Trocar óleo do motor e filtro de óleo',
-                alertaKm: 500,
-                alertaDias: 15,
-                valorMedio: 250
-            },
-            { 
-                id: 2,
-                nome: 'Revisão dos Freios',
-                kmIntervalo: 10000,
-                mesesIntervalo: 12,
-                descricao: 'Verificar pastilhas, discos e fluído de freio',
-                alertaKm: 800,
-                alertaDias: 20,
-                valorMedio: 180
-            },
-            { 
-                id: 3,
-                nome: 'Alinhamento e Balanceamento',
-                kmIntervalo: 10000,
-                mesesIntervalo: 6,
-                descricao: 'Alinhar direção e balancear rodas',
-                alertaKm: 800,
-                alertaDias: 15,
-                valorMedio: 120
-            },
-            { 
-                id: 4,
-                nome: 'Troca de Filtro de Ar',
-                kmIntervalo: 10000,
-                mesesIntervalo: 12,
-                descricao: 'Trocar filtro de ar do motor',
-                alertaKm: 800,
-                alertaDias: 20,
-                valorMedio: 60
-            },
-            { 
-                id: 5,
-                nome: 'Troca de Filtro de Combustível',
-                kmIntervalo: 20000,
-                mesesIntervalo: 24,
-                descricao: 'Trocar filtro de combustível',
-                alertaKm: 1500,
-                alertaDias: 30,
-                valorMedio: 80
-            },
-            { 
-                id: 6,
-                nome: 'Revisão Geral',
-                kmIntervalo: 20000,
-                mesesIntervalo: 12,
-                descricao: 'Revisão completa do veículo',
-                alertaKm: 1500,
-                alertaDias: 25,
-                valorMedio: 450
-            }
-        ];
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -900,7 +764,7 @@
             updateDateTime();
             setInterval(updateDateTime, 1000);
             verificarNotificacoes();
-            setInterval(verificarNotificacoes, 3600000); // Verificar a cada hora
+            setInterval(verificarNotificacoes, 3600000);
             setTimeout(() => {
                 renderSection('dashboard');
                 hideLoading();
@@ -925,8 +789,7 @@
                 success: 'fa-check-circle',
                 error: 'fa-exclamation-circle',
                 warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle',
-                agro: 'fa-tractor'
+                info: 'fa-info-circle'
             };
             
             toast.innerHTML = `
@@ -958,11 +821,10 @@
         // Persistência
         function loadData() {
             try {
-                const saved = localStorage.getItem('renovecar_pro_data');
+                const saved = localStorage.getItem('renovecar_data');
                 if (saved) {
                     App.data = JSON.parse(saved);
                 } else {
-                    // Dados iniciais com exemplos
                     initializeDemoData();
                 }
             } catch (e) {
@@ -973,70 +835,34 @@
 
         function initializeDemoData() {
             const hoje = new Date().toISOString().split('T')[0];
-            const mesPassado = new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0];
             
             App.data = {
                 caixa: [
-                    { id: 1, tipo: 'entrada', descricao: 'OS #001 - Troca de Óleo', valor: 250.00, data: hoje, osId: 1 },
-                    { id: 2, tipo: 'entrada', descricao: 'OS #002 - Revisão Freios', valor: 180.00, data: hoje, osId: 2 },
-                    { id: 3, tipo: 'saida', descricao: 'Compra de Óleos', valor: 350.00, data: mesPassado },
-                    { id: 4, tipo: 'entrada', descricao: 'OS Agro #001 - Trator', valor: 1200.00, data: mesPassado, osId: 101, agro: true }
+                    { id: 1, tipo: 'entrada', descricao: 'OS #001 - Serviços', valor: 350.00, data: hoje },
+                    { id: 2, tipo: 'entrada', descricao: 'OS #002 - Reparos', valor: 520.00, data: hoje }
                 ],
                 clientes: [
                     { 
                         id: 1, 
                         nome: 'João Silva', 
                         telefone: '(11) 99999-9999', 
-                        email: 'joao@email.com',
-                        documento: '123.456.789-00',
-                        tipo: 'CPF',
-                        endereco: 'Rua A, 123 - São Paulo',
                         veiculo: 'Gol 2020', 
                         placa: 'ABC-1234',
-                        kmAtual: 45230,
-                        dataUltimaOS: hoje,
-                        observacoes: 'Cliente preferencial'
+                        kmAtual: 45230
                     },
                     { 
                         id: 2, 
                         nome: 'Maria Santos', 
                         telefone: '(11) 98888-8888',
-                        email: 'maria@email.com',
-                        documento: '12.345.678/0001-90',
-                        tipo: 'CNPJ',
-                        endereco: 'Av B, 456 - São Paulo',
                         veiculo: 'Onix 2022', 
                         placa: 'XYZ-5678',
-                        kmAtual: 15320,
-                        dataUltimaOS: mesPassado
-                    },
-                    { 
-                        id: 3, 
-                        nome: 'AgroGB Matriz', 
-                        telefone: '(11) 97777-7777',
-                        email: 'frota@agrogb.com.br',
-                        documento: '23.456.789/0001-01',
-                        tipo: 'CNPJ',
-                        endereco: 'Rodovia BR-xxx, Km 45 - Interior',
-                        veiculo: 'Frota de Tratores',
-                        placa: 'FROTA-01',
-                        kmAtual: 1250,
-                        horasTrabalho: 450,
-                        agro: true,
-                        responsavel: 'Carlos Agro'
+                        kmAtual: 15320
                     }
                 ],
-                funcionarios: [
-                    { id: 1, nome: 'Carlos Mecânico', cargo: 'Mecânico Sênior', salario: 3500.00, telefone: '(11) 96666-6666', especialidade: 'Motores' },
-                    { id: 2, nome: 'Ana Recepcionista', cargo: 'Recepcionista', salario: 1800.00, telefone: '(11) 95555-5555' },
-                    { id: 3, nome: 'João Tratorista', cargo: 'Mecânico Agrícola', salario: 4000.00, telefone: '(11) 94444-4444', especialidade: 'Tratores' }
-                ],
                 estoque: [
-                    { id: 1, produto: 'Óleo 5W30', quantidade: 45, preco: 25.00, fornecedor: 'Petrobras', min: 10 },
-                    { id: 2, produto: 'Filtro de Óleo', quantidade: 28, preco: 15.00, fornecedor: 'Fram', min: 15 },
-                    { id: 3, produto: 'Óleo Trator', quantidade: 15, preco: 85.00, fornecedor: 'Agrolub', min: 5, agro: true }
+                    { id: 1, produto: 'Óleo 5W30', quantidade: 45, preco: 25.00 },
+                    { id: 2, produto: 'Filtro de Óleo', quantidade: 28, preco: 15.00 }
                 ],
-                vales: [],
                 os: [
                     {
                         id: 1,
@@ -1051,57 +877,11 @@
                         dataSaida: hoje,
                         status: 'concluido',
                         servicos: [
-                            { id: 1, nome: 'Troca de Óleo', valor: 150, kmProximo: 50230, dataProxima: new Date(Date.now() + 180*24*60*60*1000).toISOString().split('T')[0] },
-                            { id: 3, nome: 'Alinhamento', valor: 100, kmProximo: 55230, dataProxima: new Date(Date.now() + 180*24*60*60*1000).toISOString().split('T')[0] }
+                            { descricao: 'Troca de Óleo e Filtro', valor: 150 },
+                            { descricao: 'Alinhamento e Balanceamento', valor: 120 },
+                            { descricao: 'Revisão dos Freios', valor: 180 }
                         ],
-                        produtos: [],
-                        valorTotal: 250,
-                        formaPagamento: 'dinheiro',
-                        observacoes: 'Cliente solicitou revisão completa'
-                    },
-                    {
-                        id: 2,
-                        numero: 'OS-2024-002',
-                        clienteId: 2,
-                        clienteNome: 'Maria Santos',
-                        veiculo: 'Onix 2022',
-                        placa: 'XYZ-5678',
-                        kmEntrada: 15320,
-                        kmSaida: 15320,
-                        dataEntrada: hoje,
-                        status: 'andamento',
-                        servicos: [
-                            { id: 2, nome: 'Revisão Freios', valor: 180 }
-                        ],
-                        produtos: [
-                            { id: 2, nome: 'Pastilha de Freio', quantidade: 1, valorUnit: 80, valorTotal: 80 }
-                        ],
-                        valorTotal: 260,
-                        observacoes: 'Aguardando peças'
-                    }
-                ],
-                osAgro: [
-                    {
-                        id: 101,
-                        numero: 'AGRO-2024-001',
-                        clienteId: 3,
-                        clienteNome: 'AgroGB Matriz',
-                        equipamento: 'Trator Massey Ferguson 4292',
-                        horasTrabalho: 450,
-                        horasEntrada: 450,
-                        dataEntrada: mesPassado,
-                        dataSaida: mesPassado,
-                        status: 'concluido',
-                        servicos: [
-                            { id: 5, nome: 'Revisão 500h', valor: 800 },
-                            { id: 1, nome: 'Troca de Óleo', valor: 400 }
-                        ],
-                        produtos: [
-                            { nome: 'Óleo Trator', quantidade: 8, valorUnit: 85, valorTotal: 680 }
-                        ],
-                        valorTotal: 1880,
-                        responsavel: 'João Tratorista',
-                        proximaRevisaoHoras: 950
+                        valorTotal: 450
                     }
                 ],
                 notificacoes: []
@@ -1109,100 +889,34 @@
         }
 
         function saveData() {
-            localStorage.setItem('renovecar_pro_data', JSON.stringify(App.data));
+            localStorage.setItem('renovecar_data', JSON.stringify(App.data));
         }
 
-        // Cálculo de KM estimado
-        function calcularKmEstimado(kmBase, diasPassados) {
-            return kmBase + (diasPassados * KM_MEDIO_DIA);
-        }
-
-        // Verificar Notificações
+        // Verificar Notificações (simplificado)
         function verificarNotificacoes() {
             App.data.notificacoes = [];
-            const hoje = new Date();
             
-            // Verificar manutenções preventivas para cada cliente
             App.data.clientes.forEach(cliente => {
-                if (cliente.agro) {
-                    // Para equipamentos agrícolas (horas de trabalho)
-                    const ultimaOS = App.data.osAgro
-                        .filter(os => os.clienteId === cliente.id && os.status === 'concluido')
-                        .sort((a, b) => new Date(b.dataSaida) - new Date(a.dataSaida))[0];
+                const ultimaOS = App.data.os
+                    .filter(os => os.clienteId === cliente.id)
+                    .sort((a, b) => new Date(b.dataSaida) - new Date(a.dataSaida))[0];
+                
+                if (ultimaOS) {
+                    // Exemplo simples: alerta após 90 dias
+                    const diasDesdeOS = Math.floor((new Date() - new Date(ultimaOS.dataSaida)) / (1000 * 60 * 60 * 24));
                     
-                    if (ultimaOS) {
-                        const horasTrabalhadas = (cliente.horasTrabalho || 0) - ultimaOS.horasEntrada;
-                        const horasRestanteProx = 500 - horasTrabalhadas; // Revisão a cada 500h
-                        
-                        if (horasRestanteProx <= 50 && horasRestanteProx > 0) {
-                            App.data.notificacoes.push({
-                                id: Date.now() + Math.random(),
-                                clienteId: cliente.id,
-                                clienteNome: cliente.nome,
-                                equipamento: cliente.veiculo,
-                                tipo: 'agro',
-                                manutencao: 'Revisão de 500h',
-                                horasRestante: horasRestanteProx,
-                                mensagem: `${cliente.nome} - Revisão em ${horasRestanteProx} horas`,
-                                prioridade: horasRestanteProx <= 20 ? 'alta' : 'media'
-                            });
-                        }
-                    }
-                } else {
-                    // Para veículos normais
-                    const ultimaOS = App.data.os
-                        .filter(os => os.clienteId === cliente.id && os.status === 'concluido')
-                        .sort((a, b) => new Date(b.dataSaida) - new Date(a.dataSaida))[0];
-                    
-                    if (ultimaOS) {
-                        const diasDesdeOS = Math.floor((hoje - new Date(ultimaOS.dataSaida)) / (1000 * 60 * 60 * 24));
-                        const kmEstimado = calcularKmEstimado(ultimaOS.kmSaida, diasDesdeOS);
-                        
-                        // Verificar cada serviço realizado
-                        ultimaOS.servicos.forEach(servico => {
-                            const manutencao = MANUTENCOES_PREVENTIVAS.find(m => m.nome === servico.nome);
-                            if (manutencao) {
-                                const kmRestante = servico.kmProximo - kmEstimado;
-                                const diasRestante = Math.floor((new Date(servico.dataProxima) - hoje) / (1000 * 60 * 60 * 24));
-                                
-                                if (kmRestante <= manutencao.alertaKm && kmRestante > 0) {
-                                    App.data.notificacoes.push({
-                                        id: Date.now() + Math.random(),
-                                        clienteId: cliente.id,
-                                        clienteNome: cliente.nome,
-                                        veiculo: cliente.veiculo,
-                                        placa: cliente.placa,
-                                        tipo: 'km',
-                                        manutencao: servico.nome,
-                                        kmRestante: Math.round(kmRestante),
-                                        diasRestante: null,
-                                        mensagem: `${cliente.nome} - ${servico.nome} em ${Math.round(kmRestante)}km`,
-                                        prioridade: kmRestante <= 200 ? 'alta' : 'media'
-                                    });
-                                }
-                                
-                                if (diasRestante <= manutencao.alertaDias && diasRestante > 0) {
-                                    App.data.notificacoes.push({
-                                        id: Date.now() + Math.random(),
-                                        clienteId: cliente.id,
-                                        clienteNome: cliente.nome,
-                                        veiculo: cliente.veiculo,
-                                        placa: cliente.placa,
-                                        tipo: 'tempo',
-                                        manutencao: servico.nome,
-                                        kmRestante: null,
-                                        diasRestante,
-                                        mensagem: `${cliente.nome} - ${servico.nome} em ${diasRestante} dias`,
-                                        prioridade: diasRestante <= 5 ? 'alta' : 'media'
-                                    });
-                                }
-                            }
+                    if (diasDesdeOS > 90) {
+                        App.data.notificacoes.push({
+                            id: Date.now() + Math.random(),
+                            clienteId: cliente.id,
+                            clienteNome: cliente.nome,
+                            mensagem: `${cliente.nome} - Revisão recomendada (${diasDesdeOS} dias)`,
+                            prioridade: diasDesdeOS > 120 ? 'alta' : 'media'
                         });
                     }
                 }
             });
             
-            // Atualizar contador
             document.getElementById('notificacaoCount').textContent = App.data.notificacoes.length;
         }
 
@@ -1228,9 +942,6 @@
                     os: renderOrdensServico,
                     caixa: renderCaixa,
                     clientes: renderClientes,
-                    agro: renderAgroGB,
-                    manutencoes: renderManutencoes,
-                    funcionarios: renderFuncionarios,
                     estoque: renderEstoque,
                     notificacoes: renderNotificacoes
                 };
@@ -1263,11 +974,6 @@
             
             // OS do mês
             const osMes = App.data.os.filter(os => new Date(os.dataEntrada).getMonth() === mesAtual).length;
-            const osAgroMes = App.data.osAgro.filter(os => new Date(os.dataEntrada).getMonth() === mesAtual).length;
-            
-            // Alertas
-            const notificacoesAlta = App.data.notificacoes.filter(n => n.prioridade === 'alta').length;
-            const estoqueBaixo = App.data.estoque.filter(i => i.quantidade <= (i.min || 10)).length;
             
             return `
                 <div class="stats-grid">
@@ -1281,41 +987,36 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>OS este mês</h3>
-                            <div class="value">${osMes + osAgroMes}</div>
+                            <div class="value">${osMes}</div>
                         </div>
                         <i class="fas fa-clipboard-list stat-icon"></i>
                     </div>
                     <div class="stat-card">
                         <div class="stat-info">
-                            <h3>Alertas</h3>
-                            <div class="value">${notificacoesAlta}</div>
+                            <h3>Clientes</h3>
+                            <div class="value">${App.data.clientes.length}</div>
                         </div>
-                        <i class="fas fa-exclamation-triangle stat-icon"></i>
+                        <i class="fas fa-users stat-icon"></i>
                     </div>
                     <div class="stat-card">
                         <div class="stat-info">
-                            <h3>Estoque Baixo</h3>
-                            <div class="value">${estoqueBaixo}</div>
+                            <h3>Alertas</h3>
+                            <div class="value">${App.data.notificacoes.length}</div>
                         </div>
-                        <i class="fas fa-boxes stat-icon"></i>
+                        <i class="fas fa-bell stat-icon"></i>
                     </div>
                 </div>
 
                 ${App.data.notificacoes.filter(n => n.prioridade === 'alta').length > 0 ? `
                     <div class="alert-grid">
-                        <h3 style="grid-column: 1/-1; margin-bottom: 10px;">🔔 Alertas Urgentes</h3>
-                        ${App.data.notificacoes.filter(n => n.prioridade === 'alta').slice(0, 4).map(notif => `
+                        <h3 style="grid-column: 1/-1; margin-bottom: 10px;">🔔 Alertas</h3>
+                        ${App.data.notificacoes.filter(n => n.prioridade === 'alta').slice(0, 3).map(notif => `
                             <div class="alert-card danger">
                                 <div class="alert-info">
-                                    <h4>${notif.clienteNome} - ${notif.veiculo || notif.equipamento}</h4>
-                                    <p>${notif.manutencao}</p>
-                                    <small>${notif.tipo === 'km' ? `📏 ${notif.kmRestante}km restantes` : 
-                                              notif.tipo === 'agro' ? `⏱️ ${notif.horasRestante}h restantes` : 
-                                              `⏰ ${notif.diasRestante} dias restantes`}</small>
+                                    <h4>${notif.clienteNome}</h4>
+                                    <p>${notif.mensagem}</p>
                                 </div>
-                                <button class="btn-icon btn-notify" onclick="agendarOSFromNotificacao(${notif.clienteId})">
-                                    <i class="fas fa-calendar-plus"></i>
-                                </button>
+                                <span class="alert-badge">URGENTE</span>
                             </div>
                         `).join('')}
                     </div>
@@ -1327,8 +1028,8 @@
                         <canvas id="fluxoCaixaChart"></canvas>
                     </div>
                     <div class="chart-card">
-                        <h3><i class="fas fa-chart-pie"></i> Serviços mais Realizados</h3>
-                        <canvas id="servicosChart"></canvas>
+                        <h3><i class="fas fa-chart-pie"></i> Status das OS</h3>
+                        <canvas id="statusChart"></canvas>
                     </div>
                 </div>
 
@@ -1340,29 +1041,24 @@
                                 <tr>
                                     <th>Nº OS</th>
                                     <th>Cliente</th>
-                                    <th>Veículo</th>
                                     <th>Data</th>
                                     <th>Valor</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${[...App.data.os, ...App.data.osAgro.map(os => ({...os, numero: os.numero, agro: true}))]
-                                    .sort((a, b) => new Date(b.dataEntrada) - new Date(a.dataEntrada))
-                                    .slice(0, 5)
-                                    .map(os => `
-                                        <tr>
-                                            <td>${os.numero}</td>
-                                            <td>${os.clienteNome} ${os.agro ? '<span class="badge badge-agro">Agro</span>' : ''}</td>
-                                            <td>${os.veiculo || os.equipamento}</td>
-                                            <td>${os.dataEntrada}</td>
-                                            <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                            <td>
-                                                <span class="badge ${os.status === 'concluido' ? 'badge-success' : os.status === 'andamento' ? 'badge-warning' : 'badge-info'}">
-                                                    ${os.status === 'concluido' ? 'Concluído' : os.status === 'andamento' ? 'Em Andamento' : 'Aguardando'}
-                                                </span>
-                                            </td>
-                                        </tr>
+                                ${App.data.os.slice(0, 5).map(os => `
+                                    <tr>
+                                        <td>${os.numero}</td>
+                                        <td>${os.clienteNome}</td>
+                                        <td>${os.dataEntrada}</td>
+                                        <td>R$ ${os.valorTotal.toFixed(2)}</td>
+                                        <td>
+                                            <span class="badge ${os.status === 'concluido' ? 'badge-success' : os.status === 'andamento' ? 'badge-warning' : 'badge-info'}">
+                                                ${os.status}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 `).join('')}
                             </tbody>
                         </table>
@@ -1374,7 +1070,7 @@
         function initCharts() {
             // Destruir gráficos existentes
             if (App.charts.fluxo) App.charts.fluxo.destroy();
-            if (App.charts.servicos) App.charts.servicos.destroy();
+            if (App.charts.status) App.charts.status.destroy();
 
             // Gráfico de Fluxo de Caixa
             const ctxFluxo = document.getElementById('fluxoCaixaChart')?.getContext('2d');
@@ -1424,23 +1120,19 @@
                 });
             }
 
-            // Gráfico de Serviços
-            const ctxServicos = document.getElementById('servicosChart')?.getContext('2d');
-            if (ctxServicos) {
-                const servicosCount = {};
-                App.data.os.forEach(os => {
-                    os.servicos.forEach(s => {
-                        servicosCount[s.nome] = (servicosCount[s.nome] || 0) + 1;
-                    });
-                });
+            // Gráfico de Status das OS
+            const ctxStatus = document.getElementById('statusChart')?.getContext('2d');
+            if (ctxStatus) {
+                const concluidas = App.data.os.filter(os => os.status === 'concluido').length;
+                const andamento = App.data.os.filter(os => os.status === 'andamento').length;
                 
-                App.charts.servicos = new Chart(ctxServicos, {
+                App.charts.status = new Chart(ctxStatus, {
                     type: 'doughnut',
                     data: {
-                        labels: Object.keys(servicosCount).length ? Object.keys(servicosCount) : ['Troca de Óleo', 'Freios', 'Alinhamento'],
+                        labels: ['Concluídas', 'Em Andamento'],
                         datasets: [{
-                            data: Object.values(servicosCount).length ? Object.values(servicosCount) : [8, 5, 3],
-                            backgroundColor: ['#e63946', '#f39c12', '#2ecc71', '#3498db', '#9b59b6']
+                            data: [concluidas || 1, andamento || 1],
+                            backgroundColor: ['#2ecc71', '#f39c12']
                         }]
                     },
                     options: {
@@ -1484,6 +1176,11 @@
         }
 
         function renderNovaOS() {
+            // Inicializar array de serviços se não existir
+            if (!window.servicosOS) {
+                window.servicosOS = [{ descricao: '', valor: 0 }];
+            }
+            
             return `
                 <div class="form-section">
                     <h3 style="margin-bottom: 15px;">🔧 Nova Ordem de Serviço</h3>
@@ -1518,29 +1215,14 @@
                         </div>
                     </div>
 
-                    <h4 style="margin: 20px 0 10px;">📝 Serviços</h4>
-                    <div id="servicosOS" style="margin-bottom: 15px;">
-                        ${MANUTENCOES_PREVENTIVAS.map(m => `
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 5px; background: white; border-radius: 5px;">
-                                <input type="checkbox" value="${m.id}" onchange="toggleServicoOS(${m.id}, '${m.nome}', ${m.valorMedio})">
-                                <span style="flex: 1;">${m.nome}</span>
-                                <span style="color: var(--gray);">R$ ${m.valorMedio.toFixed(2)}</span>
-                                <input type="number" id="valorServico_${m.id}" placeholder="Valor" style="width: 100px; padding: 5px;" value="${m.valorMedio}" disabled>
-                            </div>
-                        `).join('')}
+                    <h4 style="margin: 20px 0 10px;">📝 Serviços Realizados</h4>
+                    <div id="servicosContainer">
+                        ${renderServicosLinhas()}
                     </div>
-
-                    <h4 style="margin: 20px 0 10px;">📦 Produtos</h4>
-                    <div id="produtosOS" style="margin-bottom: 15px;">
-                        ${App.data.estoque.map(p => `
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 5px; background: white; border-radius: 5px;">
-                                <input type="checkbox" value="${p.id}" onchange="toggleProdutoOS(${p.id}, '${p.produto}', ${p.preco})">
-                                <span style="flex: 1;">${p.produto}</span>
-                                <span style="color: var(--gray);">R$ ${p.preco.toFixed(2)}</span>
-                                <input type="number" id="qtdProduto_${p.id}" placeholder="Qtd" style="width: 70px; padding: 5px;" value="1" min="1" disabled>
-                            </div>
-                        `).join('')}
-                    </div>
+                    
+                    <button class="btn-add" onclick="adicionarServico()">
+                        <i class="fas fa-plus"></i> Adicionar Serviço
+                    </button>
 
                     <div style="background: var(--secondary); color: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1564,6 +1246,47 @@
             `;
         }
 
+        function renderServicosLinhas() {
+            let html = '';
+            window.servicosOS.forEach((servico, index) => {
+                html += `
+                    <div class="servico-linha" id="servico-${index}">
+                        <input type="text" class="servico-descricao" placeholder="Descrição do serviço" value="${servico.descricao}" onchange="atualizarServico(${index}, 'descricao', this.value)">
+                        <input type="number" class="servico-valor" placeholder="Valor R$" value="${servico.valor}" step="0.01" onchange="atualizarServico(${index}, 'valor', this.value)">
+                        ${window.servicosOS.length > 1 ? 
+                            `<button class="btn-remove" onclick="removerServico(${index})"><i class="fas fa-times"></i></button>` : 
+                            ''}
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        function adicionarServico() {
+            window.servicosOS.push({ descricao: '', valor: 0 });
+            document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
+        }
+
+        function removerServico(index) {
+            window.servicosOS.splice(index, 1);
+            document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
+            calcularTotalOS();
+        }
+
+        function atualizarServico(index, campo, valor) {
+            if (campo === 'valor') {
+                window.servicosOS[index][campo] = parseFloat(valor) || 0;
+            } else {
+                window.servicosOS[index][campo] = valor;
+            }
+            calcularTotalOS();
+        }
+
+        function calcularTotalOS() {
+            const total = window.servicosOS.reduce((sum, s) => sum + (parseFloat(s.valor) || 0), 0);
+            document.getElementById('osValorTotal').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
         function carregarDadosClienteOS() {
             const select = document.getElementById('osCliente');
             const option = select.options[select.selectedIndex];
@@ -1571,62 +1294,6 @@
             document.getElementById('osVeiculo').value = option.dataset.veiculo || '';
             document.getElementById('osPlaca').value = option.dataset.placa || '';
             document.getElementById('osKmEntrada').value = option.dataset.km || '';
-            
-            // Reset serviços e produtos
-            window.servicosOS = [];
-            window.produtosOS = [];
-            atualizarValorTotalOS();
-        }
-
-        function toggleServicoOS(id, nome, valor) {
-            const checkbox = event.currentTarget;
-            const valorInput = document.getElementById(`valorServico_${id}`);
-            
-            if (!window.servicosOS) window.servicosOS = [];
-            
-            if (checkbox.checked) {
-                valorInput.disabled = false;
-                window.servicosOS.push({
-                    id,
-                    nome,
-                    valor: parseFloat(valorInput.value) || valor
-                });
-            } else {
-                valorInput.disabled = true;
-                window.servicosOS = window.servicosOS.filter(s => s.id !== id);
-            }
-            
-            atualizarValorTotalOS();
-        }
-
-        function toggleProdutoOS(id, nome, valor) {
-            const checkbox = event.currentTarget;
-            const qtdInput = document.getElementById(`qtdProduto_${id}`);
-            
-            if (!window.produtosOS) window.produtosOS = [];
-            
-            if (checkbox.checked) {
-                qtdInput.disabled = false;
-                window.produtosOS.push({
-                    id,
-                    nome,
-                    valorUnit: valor,
-                    quantidade: parseInt(qtdInput.value) || 1
-                });
-            } else {
-                qtdInput.disabled = true;
-                window.produtosOS = window.produtosOS.filter(p => p.id !== id);
-            }
-            
-            atualizarValorTotalOS();
-        }
-
-        function atualizarValorTotalOS() {
-            const totalServicos = (window.servicosOS || []).reduce((s, i) => s + i.valor, 0);
-            const totalProdutos = (window.produtosOS || []).reduce((s, i) => s + (i.valorUnit * i.quantidade), 0);
-            const total = totalServicos + totalProdutos;
-            
-            document.getElementById('osValorTotal').textContent = `R$ ${total.toFixed(2)}`;
         }
 
         function salvarOS() {
@@ -1640,29 +1307,15 @@
                 return;
             }
             
-            if ((!window.servicosOS || window.servicosOS.length === 0) && 
-                (!window.produtosOS || window.produtosOS.length === 0)) {
-                showToast('Adicione pelo menos um serviço ou produto!', 'warning');
+            // Filtrar serviços vazios
+            const servicosValidos = window.servicosOS.filter(s => s.descricao.trim() !== '' && s.valor > 0);
+            
+            if (servicosValidos.length === 0) {
+                showToast('Adicione pelo menos um serviço válido!', 'warning');
                 return;
             }
             
             const cliente = App.data.clientes.find(c => c.id == clienteId);
-            
-            // Calcular próximas manutenções
-            const servicosComProximos = (window.servicosOS || []).map(s => {
-                const manutencao = MANUTENCOES_PREVENTIVAS.find(m => m.id === s.id);
-                if (manutencao) {
-                    const dataProxima = new Date(dataEntrada);
-                    dataProxima.setMonth(dataProxima.getMonth() + manutencao.mesesIntervalo);
-                    
-                    return {
-                        ...s,
-                        kmProximo: kmEntrada + manutencao.kmIntervalo,
-                        dataProxima: dataProxima.toISOString().split('T')[0]
-                    };
-                }
-                return s;
-            });
             
             // Gerar número da OS
             const ano = new Date().getFullYear();
@@ -1680,10 +1333,8 @@
                 kmSaida: kmEntrada,
                 dataEntrada,
                 status: 'andamento',
-                servicos: servicosComProximos,
-                produtos: window.produtosOS || [],
-                valorTotal: (window.servicosOS || []).reduce((s, i) => s + i.valor, 0) + 
-                           (window.produtosOS || []).reduce((s, i) => s + (i.valorUnit * i.quantidade), 0),
+                servicos: servicosValidos,
+                valorTotal: servicosValidos.reduce((s, i) => s + i.valor, 0),
                 observacoes: obs
             };
             
@@ -1702,26 +1353,13 @@
             document.getElementById('osKmEntrada').value = '';
             document.getElementById('osObs').value = '';
             
-            // Desmarcar todos os checkboxes
-            document.querySelectorAll('#servicosOS input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
-                const id = cb.value;
-                document.getElementById(`valorServico_${id}`).disabled = true;
-            });
-            
-            document.querySelectorAll('#produtosOS input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
-                const id = cb.value;
-                document.getElementById(`qtdProduto_${id}`).disabled = true;
-            });
-            
-            window.servicosOS = [];
-            window.produtosOS = [];
-            atualizarValorTotalOS();
+            window.servicosOS = [{ descricao: '', valor: 0 }];
+            document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
+            document.getElementById('osValorTotal').textContent = 'R$ 0,00';
         }
 
         function renderOSAtivas() {
-            const osAtivas = App.data.os.filter(os => os.status === 'andamento' || os.status === 'aguardando');
+            const osAtivas = App.data.os.filter(os => os.status === 'andamento');
             
             if (osAtivas.length === 0) {
                 return '<p style="text-align: center; color: var(--gray);">Nenhuma OS em andamento</p>';
@@ -1738,7 +1376,6 @@
                                 <th>KM</th>
                                 <th>Serviços</th>
                                 <th>Valor</th>
-                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -1749,20 +1386,15 @@
                                     <td>${os.clienteNome}</td>
                                     <td>${os.veiculo} (${os.placa})</td>
                                     <td>${os.kmEntrada} km</td>
-                                    <td>${os.servicos.map(s => s.nome).join(', ')}</td>
+                                    <td>${os.servicos.map(s => s.descricao).join(', ')}</td>
                                     <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                    <td>
-                                        <span class="badge ${os.status === 'andamento' ? 'badge-warning' : 'badge-info'}">
-                                            ${os.status === 'andamento' ? 'Em Andamento' : 'Aguardando'}
-                                        </span>
-                                    </td>
                                     <td>
                                         <div class="action-buttons">
                                             <button class="btn-icon btn-view" onclick="verOS(${os.id})">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <button class="btn-icon btn-success" onclick="concluirOS(${os.id})">
-                                                <i class="fas fa-check"></i>
+                                                <i class="fas fa-check"></i> Concluir
                                             </button>
                                         </div>
                                     </td>
@@ -1784,8 +1416,8 @@
                             <tr>
                                 <th>Nº OS</th>
                                 <th>Cliente</th>
-                                <th>Veículo</th>
                                 <th>Data</th>
+                                <th>Serviços</th>
                                 <th>Valor</th>
                                 <th>Ações</th>
                             </tr>
@@ -1795,8 +1427,8 @@
                                 <tr>
                                     <td>${os.numero}</td>
                                     <td>${os.clienteNome}</td>
-                                    <td>${os.veiculo} (${os.placa})</td>
                                     <td>${os.dataEntrada}</td>
+                                    <td>${os.servicos.map(s => s.descricao).join(', ')}</td>
                                     <td>R$ ${os.valorTotal.toFixed(2)}</td>
                                     <td>
                                         <button class="btn-icon btn-view" onclick="verOS(${os.id})">
@@ -1812,29 +1444,26 @@
         }
 
         function verOS(id) {
-            const os = App.data.os.find(o => o.id === id) || App.data.osAgro.find(o => o.id === id);
+            const os = App.data.os.find(o => o.id === id);
             if (!os) return;
+            
+            const servicosList = os.servicos.map(s => 
+                `<li>${s.descricao} - R$ ${s.valor.toFixed(2)}</li>`
+            ).join('');
             
             const conteudo = `
                 <div style="padding: 10px;">
                     <h3>OS: ${os.numero}</h3>
                     <p><strong>Cliente:</strong> ${os.clienteNome}</p>
-                    <p><strong>Veículo:</strong> ${os.veiculo || os.equipamento} (${os.placa || '-'})</p>
-                    <p><strong>KM/Horas:</strong> ${os.kmEntrada || os.horasEntrada}</p>
+                    <p><strong>Veículo:</strong> ${os.veiculo} (${os.placa})</p>
+                    <p><strong>KM Entrada:</strong> ${os.kmEntrada} km</p>
                     <p><strong>Data Entrada:</strong> ${os.dataEntrada}</p>
                     <p><strong>Status:</strong> ${os.status}</p>
                     
                     <h4 style="margin-top: 15px;">Serviços:</h4>
                     <ul style="margin-left: 20px;">
-                        ${os.servicos.map(s => `<li>${s.nome} - R$ ${s.valor.toFixed(2)}</li>`).join('')}
+                        ${servicosList}
                     </ul>
-                    
-                    ${os.produtos && os.produtos.length > 0 ? `
-                        <h4 style="margin-top: 15px;">Produtos:</h4>
-                        <ul style="margin-left: 20px;">
-                            ${os.produtos.map(p => `<li>${p.nome} - ${p.quantidade}x R$ ${(p.valorUnit || p.valor || 0).toFixed(2)}</li>`).join('')}
-                        </ul>
-                    ` : ''}
                     
                     <p style="margin-top: 15px;"><strong>Valor Total:</strong> R$ ${os.valorTotal.toFixed(2)}</p>
                     ${os.observacoes ? `<p><strong>Obs:</strong> ${os.observacoes}</p>` : ''}
@@ -1859,7 +1488,6 @@
                     const cliente = App.data.clientes.find(c => c.id === os.clienteId);
                     if (cliente) {
                         cliente.kmAtual = parseInt(kmSaida);
-                        cliente.dataUltimaOS = os.dataSaida;
                     }
                     
                     // Registrar no caixa
@@ -1868,343 +1496,18 @@
                         tipo: 'entrada',
                         descricao: `OS ${os.numero} - ${os.clienteNome}`,
                         valor: os.valorTotal,
-                        data: os.dataSaida,
-                        osId: os.id
+                        data: os.dataSaida
                     });
                     
                     saveData();
                     showToast('OS concluída!', 'success');
                     renderSection('os');
+                    verificarNotificacoes();
                 }
             }
         }
 
-        // ==================== AGROGB ====================
-        function renderAgroGB() {
-            return `
-                <div class="stats-grid">
-                    <div class="stat-card" style="background: var(--agro);">
-                        <div class="stat-info">
-                            <h3>Equipamentos</h3>
-                            <div class="value">${App.data.clientes.filter(c => c.agro).length}</div>
-                        </div>
-                        <i class="fas fa-tractor stat-icon"></i>
-                    </div>
-                    <div class="stat-card" style="background: var(--agro);">
-                        <div class="stat-info">
-                            <h3>OS este mês</h3>
-                            <div class="value">${App.data.osAgro.filter(os => new Date(os.dataEntrada).getMonth() === new Date().getMonth()).length}</div>
-                        </div>
-                        <i class="fas fa-clipboard-list stat-icon"></i>
-                    </div>
-                    <div class="stat-card" style="background: var(--agro);">
-                        <div class="stat-info">
-                            <h3>Faturamento Mês</h3>
-                            <div class="value">R$ ${App.data.osAgro
-                                .filter(os => new Date(os.dataEntrada).getMonth() === new Date().getMonth())
-                                .reduce((s, i) => s + i.valorTotal, 0).toFixed(2)}</div>
-                        </div>
-                        <i class="fas fa-chart-line stat-icon"></i>
-                    </div>
-                    <div class="stat-card" style="background: var(--agro);">
-                        <div class="stat-info">
-                            <h3>Próximas Revisões</h3>
-                            <div class="value">${App.data.notificacoes.filter(n => n.tipo === 'agro').length}</div>
-                        </div>
-                        <i class="fas fa-bell stat-icon"></i>
-                    </div>
-                </div>
-
-                <div class="tabs">
-                    <div class="tab active" onclick="mostrarSubSecaoAgro('ativos')">📋 Equipamentos</div>
-                    <div class="tab" onclick="mostrarSubSecaoAgro('os')">🔧 Ordens de Serviço</div>
-                    <div class="tab" onclick="mostrarSubSecaoAgro('historico')">📊 Histórico</div>
-                </div>
-
-                <div id="subSecaoAgro">
-                    ${renderEquipamentosAgro()}
-                </div>
-            `;
-        }
-
-        function mostrarSubSecaoAgro(secao) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            const subSecao = document.getElementById('subSecaoAgro');
-            
-            if (secao === 'ativos') {
-                subSecao.innerHTML = renderEquipamentosAgro();
-            } else if (secao === 'os') {
-                subSecao.innerHTML = renderOSAgro();
-            } else if (secao === 'historico') {
-                subSecao.innerHTML = renderHistoricoAgro();
-            }
-        }
-
-        function renderEquipamentosAgro() {
-            const equipamentos = App.data.clientes.filter(c => c.agro);
-            
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">➕ Novo Equipamento</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Cliente/Empresa</label>
-                            <input type="text" id="agroCliente" value="AgroGB Matriz" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Equipamento*</label>
-                            <input type="text" id="agroEquipamento" placeholder="Ex: Trator Massey Ferguson">
-                        </div>
-                        <div class="form-group">
-                            <label>Modelo</label>
-                            <input type="text" id="agroModelo" placeholder="Ex: 4292">
-                        </div>
-                        <div class="form-group">
-                            <label>Horas Atuais*</label>
-                            <input type="number" id="agroHoras" placeholder="450">
-                        </div>
-                        <div class="form-group">
-                            <label>Responsável</label>
-                            <input type="text" id="agroResponsavel" placeholder="Nome do operador">
-                        </div>
-                    </div>
-                    <button class="btn btn-agro" onclick="cadastrarEquipamentoAgro()">
-                        <i class="fas fa-save"></i> Cadastrar Equipamento
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Equipamento</th>
-                                <th>Modelo</th>
-                                <th>Horas</th>
-                                <th>Última OS</th>
-                                <th>Próx. Revisão</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${equipamentos.map(eq => {
-                                const ultimaOS = App.data.osAgro
-                                    .filter(os => os.clienteId === eq.id)
-                                    .sort((a, b) => new Date(b.dataSaida) - new Date(a.dataSaida))[0];
-                                
-                                const horasRestante = ultimaOS ? 500 - (eq.horasTrabalho - ultimaOS.horasEntrada) : 500 - eq.horasTrabalho;
-                                
-                                return `
-                                    <tr>
-                                        <td>${eq.veiculo}</td>
-                                        <td>${eq.modelo || '-'}</td>
-                                        <td>${eq.horasTrabalho || 0} h</td>
-                                        <td>${ultimaOS ? ultimaOS.dataSaida : '-'}</td>
-                                        <td>
-                                            ${horasRestante > 0 && horasRestante < 100 ? 
-                                                `<span class="badge badge-warning">${horasRestante} h</span>` : 
-                                                horasRestante <= 0 ? 
-                                                `<span class="badge badge-danger">Vencida</span>` : 
-                                                `${horasRestante} h`}
-                                        </td>
-                                        <td>
-                                            ${horasRestante <= 50 ? 
-                                                '<span class="badge badge-danger">Revisão</span>' : 
-                                                '<span class="badge badge-success">OK</span>'}
-                                        </td>
-                                        <td>
-                                            <button class="btn-icon btn-agro-sm" onclick="abrirOSAgro(${eq.id})">
-                                                <i class="fas fa-plus"></i> OS
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `;
-                            }).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function cadastrarEquipamentoAgro() {
-            const equipamento = document.getElementById('agroEquipamento').value;
-            const modelo = document.getElementById('agroModelo').value;
-            const horas = parseInt(document.getElementById('agroHoras').value);
-            const responsavel = document.getElementById('agroResponsavel').value;
-            
-            if (!equipamento || !horas) {
-                showToast('Preencha os campos obrigatórios!', 'warning');
-                return;
-            }
-            
-            const novoEquipamento = {
-                id: Date.now(),
-                nome: 'AgroGB Matriz',
-                agro: true,
-                veiculo: equipamento,
-                modelo: modelo,
-                horasTrabalho: horas,
-                responsavel: responsavel,
-                dataCadastro: new Date().toISOString().split('T')[0]
-            };
-            
-            App.data.clientes.push(novoEquipamento);
-            saveData();
-            
-            showToast('Equipamento cadastrado!', 'success');
-            renderSection('agro');
-        }
-
-        function renderOSAgro() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">🔧 Nova OS Agrícola</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Equipamento*</label>
-                            <select id="agroOSEquipamento">
-                                <option value="">Selecione</option>
-                                ${App.data.clientes.filter(c => c.agro).map(eq => 
-                                    `<option value="${eq.id}" data-horas="${eq.horasTrabalho}">${eq.veiculo} - ${eq.horasTrabalho || 0}h</option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Horas Atuais</label>
-                            <input type="number" id="agroOSHoras" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Tipo de Serviço</label>
-                            <select id="agroOSTipo">
-                                <option value="revisao">Revisão de 500h</option>
-                                <option value="manutencao">Manutenção Corretiva</option>
-                                <option value="trocaoleo">Troca de Óleo</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div style="margin: 20px 0;">
-                        <label>Descrição do Serviço</label>
-                        <textarea id="agroOSDesc" rows="3" class="form-group" style="width: 100%;"></textarea>
-                    </div>
-                    
-                    <button class="btn btn-agro" onclick="abrirOSAgro()">
-                        <i class="fas fa-save"></i> Abrir OS
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº OS</th>
-                                <th>Equipamento</th>
-                                <th>Horas</th>
-                                <th>Data</th>
-                                <th>Serviço</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${App.data.osAgro.map(os => `
-                                <tr>
-                                    <td>${os.numero}</td>
-                                    <td>${os.equipamento}</td>
-                                    <td>${os.horasEntrada} h</td>
-                                    <td>${os.dataEntrada}</td>
-                                    <td>${os.servicos.map(s => s.nome).join(', ')}</td>
-                                    <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                    <td>
-                                        <span class="badge ${os.status === 'concluido' ? 'badge-success' : 'badge-warning'}">
-                                            ${os.status}
-                                        </span>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function abrirOSAgro(equipamentoId) {
-            if (equipamentoId) {
-                // Se veio do botão, preencher formulário
-                const equipamento = App.data.clientes.find(c => c.id === equipamentoId);
-                document.getElementById('agroOSEquipamento').value = equipamentoId;
-                document.getElementById('agroOSHoras').value = equipamento.horasTrabalho;
-                showToast('Preencha os dados da OS', 'info');
-                return;
-            }
-            
-            // Criar nova OS
-            const equipId = document.getElementById('agroOSEquipamento').value;
-            const horas = parseInt(document.getElementById('agroOSHoras').value);
-            const tipo = document.getElementById('agroOSTipo').value;
-            const desc = document.getElementById('agroOSDesc').value;
-            
-            if (!equipId || !horas) {
-                showToast('Selecione um equipamento!', 'warning');
-                return;
-            }
-            
-            const equipamento = App.data.clientes.find(c => c.id == equipId);
-            
-            const servicos = {
-                revisao: { nome: 'Revisão de 500h', valor: 800 },
-                manutencao: { nome: 'Manutenção Corretiva', valor: 600 },
-                trocaoleo: { nome: 'Troca de Óleo', valor: 400 }
-            };
-            
-            const novaOS = {
-                id: Date.now(),
-                numero: `AGRO-${new Date().getFullYear()}-${String(App.data.osAgro.length + 1).padStart(3, '0')}`,
-                clienteId: equipamento.id,
-                clienteNome: 'AgroGB',
-                equipamento: equipamento.veiculo,
-                horasEntrada: horas,
-                dataEntrada: new Date().toISOString().split('T')[0],
-                status: 'andamento',
-                servicos: [{
-                    nome: servicos[tipo].nome,
-                    valor: servicos[tipo].valor
-                }],
-                valorTotal: servicos[tipo].valor,
-                observacoes: desc,
-                proximaRevisaoHoras: horas + 500
-            };
-            
-            App.data.osAgro.push(novaOS);
-            saveData();
-            
-            showToast('OS Agro aberta com sucesso!', 'success');
-            renderSection('agro');
-        }
-
-        function renderHistoricoAgro() {
-            return `
-                <div class="timeline">
-                    ${App.data.osAgro.sort((a, b) => new Date(b.dataEntrada) - new Date(a.dataEntrada)).map(os => `
-                        <div class="timeline-item">
-                            <div class="timeline-date">${os.dataEntrada} - ${os.numero}</div>
-                            <div class="timeline-content">
-                                <strong>${os.equipamento}</strong><br>
-                                Serviço: ${os.servicos.map(s => s.nome).join(', ')}<br>
-                                Horas: ${os.horasEntrada}h → ${os.horasSaida || os.horasEntrada}h<br>
-                                Valor: R$ ${os.valorTotal.toFixed(2)}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // ==================== FUNÇÕES EXISTENTES (adaptadas) ====================
-        
+        // ==================== CAIXA ====================
         function renderCaixa() {
             const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0);
             const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0);
@@ -2319,6 +1622,7 @@
             }
         }
 
+        // ==================== CLIENTES ====================
         function renderClientes() {
             return `
                 <div class="tabs">
@@ -2352,31 +1656,12 @@
                     <h3 style="margin-bottom: 15px;">👤 Novo Cliente</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Tipo*</label>
-                            <select id="tipoCliente">
-                                <option value="CPF">Pessoa Física</option>
-                                <option value="CNPJ">Pessoa Jurídica</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Nome/Razão*</label>
+                            <label>Nome*</label>
                             <input type="text" id="nomeCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>CPF/CNPJ*</label>
-                            <input type="text" id="docCliente">
                         </div>
                         <div class="form-group">
                             <label>Telefone*</label>
                             <input type="text" id="telCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="emailCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>Endereço</label>
-                            <input type="text" id="endCliente">
                         </div>
                         <div class="form-group">
                             <label>Veículo*</label>
@@ -2408,7 +1693,6 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Documento</th>
                                 <th>Telefone</th>
                                 <th>Veículo</th>
                                 <th>Placa</th>
@@ -2417,10 +1701,9 @@
                             </tr>
                         </thead>
                         <tbody id="tabelaClientes">
-                            ${App.data.clientes.filter(c => !c.agro).map(c => `
+                            ${App.data.clientes.map(c => `
                                 <tr>
                                     <td>${c.nome}</td>
-                                    <td>${c.documento}</td>
                                     <td>${c.telefone}</td>
                                     <td>${c.veiculo}</td>
                                     <td>${c.placa}</td>
@@ -2443,36 +1726,29 @@
 
         function cadastrarCliente() {
             const nome = document.getElementById('nomeCliente').value;
-            const doc = document.getElementById('docCliente').value;
             const tel = document.getElementById('telCliente').value;
             const veic = document.getElementById('veicCliente').value;
             const placa = document.getElementById('placaCliente').value;
             const km = parseInt(document.getElementById('kmCliente').value);
 
-            if (!nome || !doc || !tel || !veic || !placa || !km) {
-                showToast('Preencha todos os campos obrigatórios!', 'warning');
+            if (!nome || !tel || !veic || !placa || !km) {
+                showToast('Preencha todos os campos!', 'warning');
                 return;
             }
 
             App.data.clientes.push({
                 id: Date.now(),
                 nome,
-                documento: doc,
                 telefone: tel,
-                email: document.getElementById('emailCliente').value,
-                endereco: document.getElementById('endCliente').value,
                 veiculo: veic,
                 placa: placa.toUpperCase(),
-                kmAtual: km,
-                dataCadastro: new Date().toISOString().split('T')[0]
+                kmAtual: km
             });
             
             saveData();
             showToast('Cliente cadastrado!', 'success');
             
-            // Limpar campos
             document.getElementById('nomeCliente').value = '';
-            document.getElementById('docCliente').value = '';
             document.getElementById('telCliente').value = '';
             document.getElementById('veicCliente').value = '';
             document.getElementById('placaCliente').value = '';
@@ -2482,17 +1758,14 @@
         function buscarClientes() {
             const termo = document.getElementById('buscaCliente').value.toLowerCase();
             const filtrados = App.data.clientes.filter(c => 
-                !c.agro && (
-                    c.nome.toLowerCase().includes(termo) ||
-                    c.placa.toLowerCase().includes(termo) ||
-                    c.telefone.includes(termo)
-                )
+                c.nome.toLowerCase().includes(termo) ||
+                c.placa.toLowerCase().includes(termo) ||
+                c.telefone.includes(termo)
             );
             
             document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
                 <tr>
                     <td>${c.nome}</td>
-                    <td>${c.documento}</td>
                     <td>${c.telefone}</td>
                     <td>${c.veiculo}</td>
                     <td>${c.placa}</td>
@@ -2516,7 +1789,6 @@
             openModal('Detalhes do Cliente', `
                 <div>
                     <p><strong>Nome:</strong> ${c.nome}</p>
-                    <p><strong>Documento:</strong> ${c.documento}</p>
                     <p><strong>Telefone:</strong> ${c.telefone}</p>
                     <p><strong>Veículo:</strong> ${c.veiculo} - ${c.placa}</p>
                     <p><strong>KM Atual:</strong> ${c.kmAtual} km</p>
@@ -2534,143 +1806,101 @@
             }
         }
 
-        function renderManutencoes() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">📊 Próximas Manutenções</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Veículo</th>
-                                    <th>Manutenção</th>
-                                    <th>Previsão</th>
-                                    <th>Tipo</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${App.data.notificacoes.map(notif => `
-                                    <tr>
-                                        <td>${notif.clienteNome}</td>
-                                        <td>${notif.veiculo || notif.equipamento}</td>
-                                        <td>${notif.manutencao}</td>
-                                        <td>
-                                            ${notif.tipo === 'km' ? 
-                                                `<span class="badge badge-info">${notif.kmRestante} km</span>` : 
-                                                notif.tipo === 'agro' ?
-                                                `<span class="badge badge-agro">${notif.horasRestante} h</span>` :
-                                                `<span class="badge badge-info">${notif.diasRestante} dias</span>`}
-                                        </td>
-                                        <td>
-                                            <span class="badge ${notif.prioridade === 'alta' ? 'badge-danger' : 'badge-warning'}">
-                                                ${notif.prioridade === 'alta' ? 'Urgente' : 'Aviso'}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button class="btn-icon btn-success" onclick="agendarOSFromNotificacao(${notif.clienteId})">
-                                                <i class="fas fa-calendar-plus"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
-        function agendarOSFromNotificacao(clienteId) {
-            showSection('os', document.querySelectorAll('.nav-item')[1]);
-            setTimeout(() => {
-                document.getElementById('osCliente').value = clienteId;
-                carregarDadosClienteOS();
-            }, 500);
-        }
-
-        function renderFuncionarios() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">👔 Funcionários</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Cargo</th>
-                                    <th>Salário</th>
-                                    <th>Telefone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${App.data.funcionarios.map(f => `
-                                    <tr>
-                                        <td>${f.nome}</td>
-                                        <td>${f.cargo}</td>
-                                        <td>R$ ${f.salario.toFixed(2)}</td>
-                                        <td>${f.telefone}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
+        // ==================== ESTOQUE ====================
         function renderEstoque() {
             return `
                 <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">📦 Estoque</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Qtd</th>
-                                    <th>Preço</th>
-                                    <th>Fornecedor</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${App.data.estoque.map(p => `
-                                    <tr>
-                                        <td>${p.produto} ${p.agro ? '<span class="badge badge-agro">Agro</span>' : ''}</td>
-                                        <td>${p.quantidade}</td>
-                                        <td>R$ ${p.preco.toFixed(2)}</td>
-                                        <td>${p.fornecedor || '-'}</td>
-                                        <td>
-                                            ${p.quantidade <= (p.min || 10) ? 
-                                                '<span class="badge badge-danger">Baixo</span>' : 
-                                                '<span class="badge badge-success">OK</span>'}
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                    <h3 style="margin-bottom: 15px;">➕ Novo Produto</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Produto*</label>
+                            <input type="text" id="nomeProduto">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantidade*</label>
+                            <input type="number" id="qtdProduto">
+                        </div>
+                        <div class="form-group">
+                            <label>Preço*</label>
+                            <input type="number" id="precoProduto" step="0.01">
+                        </div>
                     </div>
+                    <button class="btn btn-primary" onclick="cadastrarProduto()">
+                        <i class="fas fa-save"></i> Cadastrar
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Qtd</th>
+                                <th>Preço</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.estoque.map(p => `
+                                <tr>
+                                    <td>${p.produto}</td>
+                                    <td>${p.quantidade}</td>
+                                    <td>R$ ${p.preco.toFixed(2)}</td>
+                                    <td>
+                                        ${p.quantidade < 10 ? 
+                                            '<span class="badge badge-danger">Baixo</span>' : 
+                                            '<span class="badge badge-success">OK</span>'}
+                                    </td>
+                                    <td>
+                                        <button class="btn-icon btn-delete" onclick="excluirProduto(${p.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
             `;
         }
 
+        function cadastrarProduto() {
+            const produto = document.getElementById('nomeProduto').value;
+            const qtd = parseInt(document.getElementById('qtdProduto').value);
+            const preco = parseFloat(document.getElementById('precoProduto').value);
+
+            if (!produto || !qtd || !preco) {
+                showToast('Preencha todos os campos!', 'warning');
+                return;
+            }
+
+            App.data.estoque.push({
+                id: Date.now(),
+                produto,
+                quantidade: qtd,
+                preco
+            });
+            
+            saveData();
+            renderSection('estoque');
+            showToast('Produto cadastrado!', 'success');
+        }
+
+        function excluirProduto(id) {
+            if (confirm('Excluir este produto?')) {
+                App.data.estoque = App.data.estoque.filter(p => p.id !== id);
+                saveData();
+                renderSection('estoque');
+                showToast('Produto excluído!', 'success');
+            }
+        }
+
+        // ==================== NOTIFICAÇÕES ====================
         function renderNotificacoes() {
             return `
                 <div class="form-section">
                     <h3 style="margin-bottom: 15px;">🔔 Todos os Alertas</h3>
-                    <div class="filters">
-                        <div class="filter-group">
-                            <select id="filtroNotif" onchange="filtrarNotificacoes()">
-                                <option value="todos">Todos</option>
-                                <option value="alta">Prioridade Alta</option>
-                                <option value="km">Por KM</option>
-                                <option value="tempo">Por Tempo</option>
-                                <option value="agro">Agro</option>
-                            </select>
-                        </div>
-                    </div>
                     <div id="listaNotificacoes">
                         ${renderListaNotificacoes()}
                     </div>
@@ -2690,9 +1920,7 @@
                             <tr>
                                 <th>Prioridade</th>
                                 <th>Cliente</th>
-                                <th>Manutenção</th>
-                                <th>Previsão</th>
-                                <th>Ações</th>
+                                <th>Mensagem</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2704,77 +1932,7 @@
                                         </span>
                                     </td>
                                     <td>${n.clienteNome}</td>
-                                    <td>${n.manutencao}</td>
-                                    <td>
-                                        ${n.tipo === 'km' ? `${n.kmRestante} km` : 
-                                          n.tipo === 'agro' ? `${n.horasRestante} h` : 
-                                          `${n.diasRestante} dias`}
-                                    </td>
-                                    <td>
-                                        <button class="btn-icon btn-success" onclick="agendarOSFromNotificacao(${n.clienteId})">
-                                            <i class="fas fa-calendar-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function filtrarNotificacoes() {
-            const filtro = document.getElementById('filtroNotif').value;
-            
-            let notificacoes = [...App.data.notificacoes];
-            
-            if (filtro === 'alta') {
-                notificacoes = notificacoes.filter(n => n.prioridade === 'alta');
-            } else if (filtro === 'km') {
-                notificacoes = notificacoes.filter(n => n.tipo === 'km');
-            } else if (filtro === 'tempo') {
-                notificacoes = notificacoes.filter(n => n.tipo === 'tempo');
-            } else if (filtro === 'agro') {
-                notificacoes = notificacoes.filter(n => n.tipo === 'agro');
-            }
-            
-            if (notificacoes.length === 0) {
-                document.getElementById('listaNotificacoes').innerHTML = '<p style="text-align: center; color: var(--gray);">Nenhum alerta encontrado</p>';
-                return;
-            }
-            
-            document.getElementById('listaNotificacoes').innerHTML = `
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Prioridade</th>
-                                <th>Cliente</th>
-                                <th>Manutenção</th>
-                                <th>Previsão</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${notificacoes.map(n => `
-                                <tr>
-                                    <td>
-                                        <span class="badge ${n.prioridade === 'alta' ? 'badge-danger' : 'badge-warning'}">
-                                            ${n.prioridade === 'alta' ? 'Urgente' : 'Aviso'}
-                                        </span>
-                                    </td>
-                                    <td>${n.clienteNome}</td>
-                                    <td>${n.manutencao}</td>
-                                    <td>
-                                        ${n.tipo === 'km' ? `${n.kmRestante} km` : 
-                                          n.tipo === 'agro' ? `${n.horasRestante} h` : 
-                                          `${n.diasRestante} dias`}
-                                    </td>
-                                    <td>
-                                        <button class="btn-icon btn-success" onclick="agendarOSFromNotificacao(${n.clienteId})">
-                                            <i class="fas fa-calendar-plus"></i>
-                                        </button>
-                                    </td>
+                                    <td>${n.mensagem}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
