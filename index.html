@@ -35,71 +35,12 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-        }
-
-        /* Login */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header i {
-            font-size: 60px;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .login-header h1 {
-            color: var(--secondary);
-            font-size: 28px;
-        }
-
-        .login-demo {
-            text-align: center;
-            margin-top: 20px;
             padding: 15px;
-            background: var(--light);
-            border-radius: 8px;
-            font-size: 13px;
         }
 
-        .login-demo strong {
-            color: var(--primary);
-        }
-
-        /* Dashboard */
         .dashboard {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
-            display: none;
-        }
-
-        .dashboard.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .header {
@@ -119,6 +60,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .logo i {
+            font-size: 30px;
         }
 
         .user-info {
@@ -562,24 +507,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Progress */
-        progress {
-            width: 100%;
-            height: 20px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-
-        progress::-webkit-progress-bar {
-            background-color: var(--light);
-            border-radius: 10px;
-        }
-
-        progress::-webkit-progress-value {
-            background-color: var(--primary);
-            border-radius: 10px;
-        }
-
         @media (max-width: 768px) {
             .charts-grid { grid-template-columns: 1fr; }
             .nav-menu { flex-direction: column; }
@@ -588,35 +515,7 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-container" id="loginScreen">
-        <div class="login-box">
-            <div class="login-header">
-                <i class="fas fa-car"></i>
-                <h1>RenoveCar Pro</h1>
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="loginEmail" value="admin@renovecar.com">
-            </div>
-            <div class="form-group">
-                <label>Senha</label>
-                <input type="password" id="loginPassword" value="123456">
-            </div>
-            <button class="btn" onclick="handleLogin()">
-                <i class="fas fa-sign-in-alt"></i> Entrar
-            </button>
-
-            <div class="login-demo">
-                <strong>🔑 Dados para teste:</strong><br>
-                Email: admin@renovecar.com<br>
-                Senha: 123456
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard -->
+    <!-- Dashboard (direto, sem login) -->
     <div class="dashboard" id="dashboard">
         <div class="header">
             <div class="logo">
@@ -631,9 +530,6 @@
                     <span id="userName">Admin</span>
                 </div>
                 <div class="date-time" id="currentDateTime"></div>
-                <button class="btn-action danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
             </div>
         </div>
 
@@ -678,7 +574,6 @@
     <script>
         // Estado da aplicação
         const App = {
-            user: null,
             editId: null,
             editType: null,
             alertas: [],
@@ -778,7 +673,7 @@
             updateDateTime();
             setInterval(updateDateTime, 1000);
             carregarDados();
-            checkSession();
+            renderSection('dashboard');
         });
 
         // Utilitários
@@ -873,52 +768,6 @@
                     prioridade: 'alta'
                 });
             });
-        };
-
-        // Login
-        const handleLogin = () => {
-            showLoading();
-            setTimeout(() => {
-                const email = document.getElementById('loginEmail').value;
-                if (email) {
-                    App.user = { email, nome: 'Admin' };
-                    document.getElementById('userName').textContent = App.user.nome;
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    
-                    localStorage.setItem('renovecar_session', JSON.stringify({ user: App.user }));
-                    
-                    showToast(`Bem-vindo, ${App.user.nome}!`, 'success');
-                    renderSection('dashboard');
-                }
-                hideLoading();
-            }, 500);
-        };
-
-        const checkSession = () => {
-            const saved = localStorage.getItem('renovecar_session');
-            if (saved) {
-                try {
-                    const session = JSON.parse(saved);
-                    App.user = session.user;
-                    document.getElementById('userName').textContent = App.user.nome;
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    renderSection('dashboard');
-                } catch (e) {
-                    localStorage.removeItem('renovecar_session');
-                }
-            }
-        };
-
-        const logout = () => {
-            if (confirm('Deseja sair do sistema?')) {
-                localStorage.removeItem('renovecar_session');
-                App.user = null;
-                document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('loginScreen').style.display = 'flex';
-                showToast('Sessão encerrada', 'info');
-            }
         };
 
         // Navegação
@@ -2184,7 +2033,6 @@
         const gerarBackup = () => {
             const backup = {
                 data: new Date().toISOString(),
-                usuario: App.user?.email,
                 dados: App.data
             };
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
