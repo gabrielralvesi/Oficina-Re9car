@@ -3,667 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RenoveCar Pro - Sistema Automotivo</title>
+    <title>RenoveCar Pro</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #e63946;
-            --primary-dark: #c1121f;
-            --secondary: #1e1e2f;
-            --secondary-light: #2a2a3a;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --info: #3498db;
-            --dark: #1a1a1a;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --border: #dee2e6;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 15px;
-        }
-
-        .dashboard {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        :root { --primary: #e63946; --secondary: #1e1e2f; --success: #2ecc71; --warning: #f39c12; --danger: #e74c3c; --light: #f8f9fa; --gray: #6c757d; --border: #dee2e6; }
+        body { background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px; min-height: 100vh; }
+        .dashboard { max-width: 1400px; margin: 0 auto; }
+        
         /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 20px 25px;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .logo h1 {
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo i {
-            font-size: 30px;
-        }
-
-        .logo span {
-            font-size: 12px;
-            font-weight: 400;
-            opacity: 0.9;
-            margin-left: 8px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .user-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .date-time {
-            font-size: 13px;
-            background: rgba(0,0,0,0.2);
-            padding: 8px 15px;
-            border-radius: 30px;
-        }
-
-        /* Navegação */
-        .nav-menu {
-            background: white;
-            padding: 0 15px;
-            display: flex;
-            gap: 5px;
-            border-bottom: 1px solid var(--border);
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .nav-menu::-webkit-scrollbar {
-            height: 3px;
-        }
-
-        .nav-menu::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 3px;
-        }
-
-        .nav-item {
-            padding: 12px 18px;
-            cursor: pointer;
-            color: var(--gray);
-            font-weight: 500;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .nav-item i {
-            font-size: 16px;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
+        .header { background: var(--primary); color: white; padding: 20px; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h1 { font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .user-badge { background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 30px; display: flex; align-items: center; gap: 8px; }
+        .date-time { font-size: 13px; background: rgba(0,0,0,0.2); padding: 8px 15px; border-radius: 30px; }
+        
+        /* Menu */
+        .nav-menu { background: white; padding: 0 15px; display: flex; gap: 5px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .nav-item { padding: 12px 18px; cursor: pointer; color: var(--gray); display: flex; align-items: center; gap: 8px; border-bottom: 3px solid transparent; }
+        .nav-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+        
         /* Conteúdo */
-        .content {
-            background: white;
-            padding: 25px;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            min-height: 500px;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
-            color: white;
-            padding: 18px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .stat-info h3 {
-            font-size: 13px;
-            font-weight: 400;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .stat-info .value {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .stat-icon {
-            font-size: 40px;
-            opacity: 0.3;
-        }
-
-        /* Alert Cards */
-        .alert-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .alert-card {
-            background: white;
-            border-left: 4px solid;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .alert-card.warning {
-            border-left-color: var(--warning);
-        }
-
-        .alert-card.danger {
-            border-left-color: var(--danger);
-        }
-
-        .alert-info h4 {
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: var(--dark);
-        }
-
-        .alert-info p {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .alert-info small {
-            font-size: 11px;
-            color: var(--gray);
-        }
-
-        .alert-badge {
-            background: var(--primary);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
+        .content { background: white; padding: 25px; border-radius: 0 0 15px 15px; min-height: 500px; }
+        
+        /* Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--secondary); color: white; padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; }
+        .stat-info .value { font-size: 22px; font-weight: 700; }
+        .stat-icon { font-size: 40px; opacity: 0.3; }
+        
+        /* Gráficos */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .chart-card { border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+        
         /* Formulários */
-        .form-section {
-            background: var(--light);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 0;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--secondary);
-            font-size: 13px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
-        }
-
+        .form-section { background: var(--light); border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 8px; }
+        
         /* Botões */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: var(--gray);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--gray); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        
         /* Tabelas */
-        .table-container {
-            overflow-x: auto;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            margin-top: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        th {
-            background: var(--secondary);
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        tr:hover {
-            background: var(--light);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .btn-icon {
-            padding: 5px 8px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .btn-edit {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-view {
-            background: var(--info);
-            color: white;
-        }
-
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        th { background: var(--secondary); color: white; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid var(--border); }
+        
         /* Badges */
-        .badge {
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        /* Filtros */
-        .filters {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            border: 1px solid var(--border);
-        }
-
-        .filter-group {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .filter-group label {
-            font-size: 12px;
-            margin-bottom: 4px;
-            display: block;
-            color: var(--gray);
-        }
-
-        /* Linhas de Serviço */
-        .servico-linha {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .servico-descricao {
-            flex: 3;
-        }
-
-        .servico-valor {
-            flex: 1;
-        }
-
-        .btn-remove {
-            background: var(--danger);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background: var(--success);
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-
+        .badge { padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        
+        /* Serviços */
+        .servico-linha { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; background: white; padding: 10px; border-radius: 8px; }
+        .servico-descricao { flex: 3; }
+        .servico-valor { flex: 1; }
+        .btn-remove { background: var(--danger); color: white; width: 30px; height: 30px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-add { background: var(--success); color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin: 10px 0; }
+        
         /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h2 {
-            font-size: 18px;
-            color: var(--secondary);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 12px; width: 90%; max-width: 500px; }
+        .modal-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .modal-body { padding: 20px; }
+        .modal-footer { padding: 15px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+        
         /* Toast */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
-        }
-
-        .toast {
-            background: white;
-            border-radius: 8px;
-            padding: 12px 18px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid;
-            min-width: 250px;
-        }
-
-        .toast.success {
-            border-left-color: var(--success);
-        }
-
-        .toast.error {
-            border-left-color: var(--danger);
-        }
-
-        .toast.warning {
-            border-left-color: var(--warning);
-        }
-
-        .toast.info {
-            border-left-color: var(--info);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 1001; }
+        .toast { background: white; border-radius: 8px; padding: 12px 18px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px; border-left: 4px solid; }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        
         /* Loading */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.9);
-            z-index: 1002;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loading.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 45px;
-            height: 45px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); align-items: center; justify-content: center; }
+        .loading.active { display: flex; }
+        .spinner { width: 45px; height: 45px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
         /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 2px;
-            background: var(--light);
-            padding: 5px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray);
-        }
-
-        .tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            body { padding: 8px; }
-            .header { flex-direction: column; text-align: center; }
-            .user-info { justify-content: center; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .form-grid { grid-template-columns: 1fr; }
-        }
+        .tabs { display: flex; gap: 2px; background: var(--light); padding: 5px; border-radius: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 8px 15px; cursor: pointer; border-radius: 6px; color: var(--gray); }
+        .tab.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -671,1294 +103,380 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">
-                <h1>
-                    <i class="fas fa-car"></i>
-                    RenoveCar Pro
-                    <span>Centro Automotivo</span>
-                </h1>
+                <h1><i class="fas fa-car"></i> RenoveCar Pro</h1>
             </div>
-            <div class="user-info">
-                <div class="user-badge">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Administrador</span>
-                </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div class="user-badge"><i class="fas fa-user-circle"></i> Admin</div>
                 <div class="date-time" id="currentDateTime"></div>
-                <button class="btn btn-sm btn-outline" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
+                <button class="btn btn-sm btn-outline" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </div>
 
         <!-- Menu -->
         <div class="nav-menu">
-            <div class="nav-item active" onclick="showSection('dashboard', this)">
-                <i class="fas fa-chart-pie"></i> Dashboard
-            </div>
-            <div class="nav-item" onclick="showSection('os', this)">
-                <i class="fas fa-clipboard-list"></i> Ordens de Serviço
-            </div>
-            <div class="nav-item" onclick="showSection('caixa', this)">
-                <i class="fas fa-cash-register"></i> Caixa
-            </div>
-            <div class="nav-item" onclick="showSection('clientes', this)">
-                <i class="fas fa-users"></i> Clientes
-            </div>
-            <div class="nav-item" onclick="showSection('estoque', this)">
-                <i class="fas fa-boxes"></i> Estoque
-            </div>
-            <div class="nav-item" onclick="showSection('notificacoes', this)">
-                <i class="fas fa-bell"></i> Alertas
-                <span class="badge badge-danger" id="notificacaoCount">0</span>
-            </div>
+            <div class="nav-item active" onclick="showSection('dashboard', this)"><i class="fas fa-chart-pie"></i> Dashboard</div>
+            <div class="nav-item" onclick="showSection('os', this)"><i class="fas fa-clipboard-list"></i> OS</div>
+            <div class="nav-item" onclick="showSection('caixa', this)"><i class="fas fa-cash-register"></i> Caixa</div>
+            <div class="nav-item" onclick="showSection('clientes', this)"><i class="fas fa-users"></i> Clientes</div>
+            <div class="nav-item" onclick="showSection('notificacoes', this)"><i class="fas fa-bell"></i> Alertas <span class="badge badge-danger" id="notificacaoCount">0</span></div>
         </div>
 
-        <!-- Conteúdo Principal -->
-        <div class="content" id="mainContent">
-            <!-- Carregado via JS -->
-        </div>
+        <!-- Conteúdo -->
+        <div class="content" id="mainContent"></div>
     </div>
 
     <!-- Modal -->
     <div class="modal" id="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
-            </div>
+            <div class="modal-header"><h2 id="modalTitle"></h2><button class="close-modal" onclick="closeModal()">&times;</button></div>
             <div class="modal-body" id="modalBody"></div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-outline" onclick="closeModal()">Cancelar</button>
-                <button class="btn btn-sm btn-primary" id="modalConfirmBtn">Confirmar</button>
-            </div>
+            <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" id="modalConfirmBtn">OK</button></div>
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toast -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Loading -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-    </div>
+    <div class="loading" id="loading"><div class="spinner"></div></div>
 
     <script>
-        // ==================== SISTEMA RENOVECAR PRO ====================
-        
-        // Estado da aplicação
+        // Estado global
         const App = {
-            currentSection: 'dashboard',
+            section: 'dashboard',
             charts: {},
-            data: {
-                caixa: [],
-                clientes: [],
-                estoque: [],
-                os: [],
-                notificacoes: []
-            }
+            data: { caixa: [], clientes: [], os: [], notificacoes: [] },
+            servicos: []
         };
 
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             showLoading();
             loadData();
             updateDateTime();
             setInterval(updateDateTime, 1000);
             verificarNotificacoes();
             setInterval(verificarNotificacoes, 3600000);
-            setTimeout(() => {
-                renderSection('dashboard');
-                hideLoading();
-            }, 500);
+            setTimeout(() => { renderSection('dashboard'); hideLoading(); }, 500);
         });
 
         // Utilitários
-        function showLoading() {
-            document.getElementById('loading').classList.add('active');
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('active');
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
+        const showLoading = () => document.getElementById('loading').classList.add('active');
+        const hideLoading = () => document.getElementById('loading').classList.remove('active');
+        const showToast = (msg, type = 'info') => {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-            
-            toast.innerHTML = `
-                <i class="fas ${icons[type] || icons.info}"></i>
-                <span>${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+        const updateDateTime = () => document.getElementById('currentDateTime').textContent = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-        function updateDateTime() {
-            const now = new Date();
-            const options = { 
-                weekday: 'short', 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            document.getElementById('currentDateTime').textContent = 
-                now.toLocaleDateString('pt-BR', options);
-        }
-
-        // Persistência
-        function loadData() {
+        // Dados
+        const loadData = () => {
             try {
-                const saved = localStorage.getItem('renovecar_data');
-                if (saved) {
-                    App.data = JSON.parse(saved);
-                } else {
-                    initializeDemoData();
-                }
-            } catch (e) {
-                console.error('Erro ao carregar dados:', e);
-                initializeDemoData();
-            }
-        }
+                App.data = JSON.parse(localStorage.getItem('renovecar')) || {
+                    caixa: [{ id: 1, tipo: 'entrada', desc: 'OS #001', valor: 350, data: new Date().toISOString().split('T')[0] }],
+                    clientes: [{ id: 1, nome: 'João Silva', tel: '(11)99999-9999', veic: 'Gol 2020', placa: 'ABC-1234', km: 45230 }],
+                    os: [{ id: 1, numero: 'OS-001', clienteId: 1, clienteNome: 'João Silva', veiculo: 'Gol 2020', placa: 'ABC-1234', kmEntrada: 45230, data: new Date().toISOString().split('T')[0], status: 'concluido', servicos: [{ desc: 'Troca de Óleo', valor: 150 }], total: 150 }],
+                    notificacoes: []
+                };
+            } catch { App.data = { caixa: [], clientes: [], os: [], notificacoes: [] }; }
+        };
+        const saveData = () => localStorage.setItem('renovecar', JSON.stringify(App.data));
 
-        function initializeDemoData() {
-            const hoje = new Date().toISOString().split('T')[0];
-            
-            App.data = {
-                caixa: [
-                    { id: 1, tipo: 'entrada', descricao: 'OS #001 - Serviços', valor: 350.00, data: hoje },
-                    { id: 2, tipo: 'entrada', descricao: 'OS #002 - Reparos', valor: 520.00, data: hoje }
-                ],
-                clientes: [
-                    { 
-                        id: 1, 
-                        nome: 'João Silva', 
-                        telefone: '(11) 99999-9999', 
-                        veiculo: 'Gol 2020', 
-                        placa: 'ABC-1234',
-                        kmAtual: 45230
-                    },
-                    { 
-                        id: 2, 
-                        nome: 'Maria Santos', 
-                        telefone: '(11) 98888-8888',
-                        veiculo: 'Onix 2022', 
-                        placa: 'XYZ-5678',
-                        kmAtual: 15320
-                    }
-                ],
-                estoque: [
-                    { id: 1, produto: 'Óleo 5W30', quantidade: 45, preco: 25.00 },
-                    { id: 2, produto: 'Filtro de Óleo', quantidade: 28, preco: 15.00 }
-                ],
-                os: [
-                    {
-                        id: 1,
-                        numero: 'OS-2024-001',
-                        clienteId: 1,
-                        clienteNome: 'João Silva',
-                        veiculo: 'Gol 2020',
-                        placa: 'ABC-1234',
-                        kmEntrada: 45230,
-                        kmSaida: 45230,
-                        dataEntrada: hoje,
-                        dataSaida: hoje,
-                        status: 'concluido',
-                        servicos: [
-                            { descricao: 'Troca de Óleo e Filtro', valor: 150 },
-                            { descricao: 'Alinhamento e Balanceamento', valor: 120 },
-                            { descricao: 'Revisão dos Freios', valor: 180 }
-                        ],
-                        valorTotal: 450
-                    }
-                ],
-                notificacoes: []
-            };
-        }
-
-        function saveData() {
-            localStorage.setItem('renovecar_data', JSON.stringify(App.data));
-        }
-
-        // Verificar Notificações (simplificado)
-        function verificarNotificacoes() {
-            App.data.notificacoes = [];
-            
-            App.data.clientes.forEach(cliente => {
-                const ultimaOS = App.data.os
-                    .filter(os => os.clienteId === cliente.id)
-                    .sort((a, b) => new Date(b.dataSaida) - new Date(a.dataSaida))[0];
-                
-                if (ultimaOS) {
-                    // Exemplo simples: alerta após 90 dias
-                    const diasDesdeOS = Math.floor((new Date() - new Date(ultimaOS.dataSaida)) / (1000 * 60 * 60 * 24));
-                    
-                    if (diasDesdeOS > 90) {
-                        App.data.notificacoes.push({
-                            id: Date.now() + Math.random(),
-                            clienteId: cliente.id,
-                            clienteNome: cliente.nome,
-                            mensagem: `${cliente.nome} - Revisão recomendada (${diasDesdeOS} dias)`,
-                            prioridade: diasDesdeOS > 120 ? 'alta' : 'media'
-                        });
-                    }
-                }
-            });
-            
+        // Notificações
+        const verificarNotificacoes = () => {
+            App.data.notificacoes = App.data.clientes.filter(c => {
+                const ultimaOS = App.data.os.filter(o => o.clienteId === c.id).sort((a,b) => new Date(b.data) - new Date(a.data))[0];
+                return ultimaOS && (new Date() - new Date(ultimaOS.data)) / (1000*60*60*24) > 90;
+            }).map(c => ({ clienteNome: c.nome, msg: 'Revisão recomendada', prioridade: 'media' }));
             document.getElementById('notificacaoCount').textContent = App.data.notificacoes.length;
-        }
+        };
 
         // Navegação
-        function showSection(section, element) {
-            App.currentSection = section;
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            element.classList.add('active');
-            
+        const showSection = (section, el) => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            App.section = section;
             renderSection(section);
-        }
+        };
 
-        function renderSection(section) {
+        const renderSection = (section) => {
             const content = document.getElementById('mainContent');
             showLoading();
-            
             setTimeout(() => {
-                const sections = {
+                content.innerHTML = {
                     dashboard: renderDashboard,
-                    os: renderOrdensServico,
+                    os: renderOS,
                     caixa: renderCaixa,
                     clientes: renderClientes,
-                    estoque: renderEstoque,
                     notificacoes: renderNotificacoes
-                };
-                
-                content.innerHTML = sections[section] ? sections[section]() : '<p>Seção não encontrada</p>';
-                
-                if (section === 'dashboard') {
-                    setTimeout(initCharts, 100);
-                }
-                
+                }[section]();
+                if (section === 'dashboard') setTimeout(initCharts, 100);
                 hideLoading();
             }, 300);
-        }
+        };
 
         // ==================== DASHBOARD ====================
-        function renderDashboard() {
-            const hoje = new Date();
-            const mesAtual = hoje.getMonth();
-            
-            // Cálculos financeiros
-            const entradasMes = App.data.caixa
-                .filter(i => i.tipo === 'entrada' && new Date(i.data).getMonth() === mesAtual)
-                .reduce((s, i) => s + i.valor, 0);
-            
-            const saidasMes = App.data.caixa
-                .filter(i => i.tipo === 'saida' && new Date(i.data).getMonth() === mesAtual)
-                .reduce((s, i) => s + i.valor, 0);
-            
-            const saldoMes = entradasMes - saidasMes;
-            
-            // OS do mês
-            const osMes = App.data.os.filter(os => new Date(os.dataEntrada).getMonth() === mesAtual).length;
+        const renderDashboard = () => {
+            const mes = new Date().getMonth();
+            const entradas = App.data.caixa.filter(i => i.tipo === 'entrada' && new Date(i.data).getMonth() === mes).reduce((s,i) => s + i.valor, 0);
+            const saidas = App.data.caixa.filter(i => i.tipo === 'saida' && new Date(i.data).getMonth() === mes).reduce((s,i) => s + i.valor, 0);
             
             return `
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Saldo do Mês</h3>
-                            <div class="value">R$ ${saldoMes.toFixed(2)}</div>
-                        </div>
-                        <i class="fas fa-chart-line stat-icon"></i>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>OS este mês</h3>
-                            <div class="value">${osMes}</div>
-                        </div>
-                        <i class="fas fa-clipboard-list stat-icon"></i>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Clientes</h3>
-                            <div class="value">${App.data.clientes.length}</div>
-                        </div>
-                        <i class="fas fa-users stat-icon"></i>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Alertas</h3>
-                            <div class="value">${App.data.notificacoes.length}</div>
-                        </div>
-                        <i class="fas fa-bell stat-icon"></i>
-                    </div>
+                    <div class="stat-card"><div><h3>Saldo</h3><div class="value">R$ ${(entradas-saidas).toFixed(2)}</div></div><i class="fas fa-chart-line stat-icon"></i></div>
+                    <div class="stat-card"><div><h3>OS Mês</h3><div class="value">${App.data.os.filter(o => new Date(o.data).getMonth() === mes).length}</div></div><i class="fas fa-clipboard-list stat-icon"></i></div>
+                    <div class="stat-card"><div><h3>Clientes</h3><div class="value">${App.data.clientes.length}</div></div><i class="fas fa-users stat-icon"></i></div>
+                    <div class="stat-card"><div><h3>Alertas</h3><div class="value">${App.data.notificacoes.length}</div></div><i class="fas fa-bell stat-icon"></i></div>
                 </div>
-
-                ${App.data.notificacoes.filter(n => n.prioridade === 'alta').length > 0 ? `
-                    <div class="alert-grid">
-                        <h3 style="grid-column: 1/-1; margin-bottom: 10px;">🔔 Alertas</h3>
-                        ${App.data.notificacoes.filter(n => n.prioridade === 'alta').slice(0, 3).map(notif => `
-                            <div class="alert-card danger">
-                                <div class="alert-info">
-                                    <h4>${notif.clienteNome}</h4>
-                                    <p>${notif.mensagem}</p>
-                                </div>
-                                <span class="alert-badge">URGENTE</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-
-                <div class="charts-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-                    <div class="chart-card">
-                        <h3><i class="fas fa-chart-bar"></i> Fluxo de Caixa (Últimos 7 dias)</h3>
-                        <canvas id="fluxoCaixaChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3><i class="fas fa-chart-pie"></i> Status das OS</h3>
-                        <canvas id="statusChart"></canvas>
-                    </div>
+                <div class="charts-grid">
+                    <div class="chart-card"><h3>Fluxo de Caixa</h3><canvas id="fluxoChart"></canvas></div>
+                    <div class="chart-card"><h3>Status OS</h3><canvas id="statusChart"></canvas></div>
                 </div>
-
                 <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">📋 Últimas Ordens de Serviço</h3>
+                    <h3>Últimas OS</h3>
                     <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nº OS</th>
-                                    <th>Cliente</th>
-                                    <th>Data</th>
-                                    <th>Valor</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${App.data.os.slice(0, 5).map(os => `
-                                    <tr>
-                                        <td>${os.numero}</td>
-                                        <td>${os.clienteNome}</td>
-                                        <td>${os.dataEntrada}</td>
-                                        <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                        <td>
-                                            <span class="badge ${os.status === 'concluido' ? 'badge-success' : os.status === 'andamento' ? 'badge-warning' : 'badge-info'}">
-                                                ${os.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
+                        <table><thead><tr><th>Nº</th><th>Cliente</th><th>Valor</th><th>Status</th></tr></thead>
+                        <tbody>${App.data.os.slice(0,5).map(o => `<tr><td>${o.numero}</td><td>${o.clienteNome}</td><td>R$ ${o.total}</td><td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td></tr>`).join('')}</tbody>
                         </table>
                     </div>
                 </div>
             `;
-        }
+        };
 
-        function initCharts() {
-            // Destruir gráficos existentes
-            if (App.charts.fluxo) App.charts.fluxo.destroy();
-            if (App.charts.status) App.charts.status.destroy();
+        const initCharts = () => {
+            const ctx1 = document.getElementById('fluxoChart')?.getContext('2d');
+            if (ctx1) new Chart(ctx1, { type: 'line', data: { labels: ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'], datasets: [{ label: 'Entradas', data: [1200,1900,1500,1800,2100,1600,1400], borderColor: '#2ecc71' }] } });
+            const ctx2 = document.getElementById('statusChart')?.getContext('2d');
+            if (ctx2) new Chart(ctx2, { type: 'doughnut', data: { labels: ['Concluídas','Andamento'], datasets: [{ data: [App.data.os.filter(o => o.status === 'concluido').length || 1, App.data.os.filter(o => o.status === 'andamento').length || 1], backgroundColor: ['#2ecc71','#f39c12'] }] } });
+        };
 
-            // Gráfico de Fluxo de Caixa
-            const ctxFluxo = document.getElementById('fluxoCaixaChart')?.getContext('2d');
-            if (ctxFluxo) {
-                const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-                const hoje = new Date();
-                const entradas = [];
-                const saidas = [];
-                
-                for (let i = 6; i >= 0; i--) {
-                    const data = new Date(hoje);
-                    data.setDate(hoje.getDate() - i);
-                    const dataStr = data.toISOString().split('T')[0];
-                    
-                    entradas.push(App.data.caixa
-                        .filter(item => item.tipo === 'entrada' && item.data === dataStr)
-                        .reduce((s, i) => s + i.valor, 0));
-                    
-                    saidas.push(App.data.caixa
-                        .filter(item => item.tipo === 'saida' && item.data === dataStr)
-                        .reduce((s, i) => s + i.valor, 0));
-                }
+        // ==================== OS ====================
+        const renderOS = () => `
+            <div class="tabs">
+                <div class="tab active" onclick="mostrarSubOS('nova')">➕ Nova</div>
+                <div class="tab" onclick="mostrarSubOS('ativas')">🔧 Ativas</div>
+                <div class="tab" onclick="mostrarSubOS('historico')">📋 Histórico</div>
+            </div>
+            <div id="subOS">${renderNovaOS()}</div>
+        `;
 
-                App.charts.fluxo = new Chart(ctxFluxo, {
-                    type: 'line',
-                    data: {
-                        labels: dias,
-                        datasets: [{
-                            label: 'Entradas',
-                            data: entradas,
-                            borderColor: '#2ecc71',
-                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                            tension: 0.4
-                        }, {
-                            label: 'Saídas',
-                            data: saidas,
-                            borderColor: '#e74c3c',
-                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-            }
-
-            // Gráfico de Status das OS
-            const ctxStatus = document.getElementById('statusChart')?.getContext('2d');
-            if (ctxStatus) {
-                const concluidas = App.data.os.filter(os => os.status === 'concluido').length;
-                const andamento = App.data.os.filter(os => os.status === 'andamento').length;
-                
-                App.charts.status = new Chart(ctxStatus, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Concluídas', 'Em Andamento'],
-                        datasets: [{
-                            data: [concluidas || 1, andamento || 1],
-                            backgroundColor: ['#2ecc71', '#f39c12']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } }
-                    }
-                });
-            }
-        }
-
-        // ==================== ORDENS DE SERVIÇO ====================
-        function renderOrdensServico() {
-            return `
-                <div class="tabs">
-                    <div class="tab active" onclick="mostrarSubSecaoOS('nova')">➕ Nova OS</div>
-                    <div class="tab" onclick="mostrarSubSecaoOS('ativas')">🔧 Em Andamento</div>
-                    <div class="tab" onclick="mostrarSubSecaoOS('historico')">📋 Histórico</div>
-                </div>
-
-                <div id="subSecaoOS">
-                    ${renderNovaOS()}
-                </div>
-            `;
-        }
-
-        function mostrarSubSecaoOS(secao) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
+        const mostrarSubOS = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            
-            const subSecao = document.getElementById('subSecaoOS');
-            
-            if (secao === 'nova') {
-                subSecao.innerHTML = renderNovaOS();
-            } else if (secao === 'ativas') {
-                subSecao.innerHTML = renderOSAtivas();
-            } else if (secao === 'historico') {
-                subSecao.innerHTML = renderOSHistorico();
-            }
-        }
+            document.getElementById('subOS').innerHTML = secao === 'nova' ? renderNovaOS() : secao === 'ativas' ? renderOSAtivas() : renderOSHistorico();
+        };
 
-        function renderNovaOS() {
-            // Inicializar array de serviços se não existir
-            if (!window.servicosOS) {
-                window.servicosOS = [{ descricao: '', valor: 0 }];
-            }
-            
+        const renderNovaOS = () => {
+            App.servicos = App.servicos.length ? App.servicos : [{ desc: '', valor: 0 }];
             return `
                 <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">🔧 Nova Ordem de Serviço</h3>
-                    
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Cliente*</label>
-                            <select id="osCliente" onchange="carregarDadosClienteOS()">
-                                <option value="">Selecione</option>
-                                ${App.data.clientes.map(c => 
-                                    `<option value="${c.id}" data-veiculo="${c.veiculo}" data-placa="${c.placa}" data-km="${c.kmAtual}">
-                                        ${c.nome} - ${c.veiculo} (${c.placa})
-                                    </option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Veículo</label>
-                            <input type="text" id="osVeiculo" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Placa</label>
-                            <input type="text" id="osPlaca" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>KM Entrada*</label>
-                            <input type="number" id="osKmEntrada" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Data Entrada</label>
-                            <input type="date" id="osDataEntrada" value="${new Date().toISOString().split('T')[0]}">
-                        </div>
+                        <select id="osCliente" onchange="carregarCliente()"><option value="">Cliente</option>${App.data.clientes.map(c => `<option value="${c.id}" data-veic="${c.veic}" data-placa="${c.placa}" data-km="${c.km}">${c.nome}</option>`).join('')}</select>
+                        <input type="text" id="osVeic" placeholder="Veículo" readonly>
+                        <input type="text" id="osPlaca" placeholder="Placa" readonly>
+                        <input type="number" id="osKm" placeholder="KM" readonly>
+                        <input type="date" id="osData" value="${new Date().toISOString().split('T')[0]}">
                     </div>
-
-                    <h4 style="margin: 20px 0 10px;">📝 Serviços Realizados</h4>
-                    <div id="servicosContainer">
-                        ${renderServicosLinhas()}
+                    <h4>Serviços</h4>
+                    <div id="servicosContainer">${App.servicos.map((s,i) => `
+                        <div class="servico-linha">
+                            <input class="servico-descricao" placeholder="Descrição" value="${s.desc}" onchange="atualizarServico(${i}, 'desc', this.value)">
+                            <input class="servico-valor" type="number" placeholder="Valor" value="${s.valor}" onchange="atualizarServico(${i}, 'valor', this.value)">
+                            ${App.servicos.length > 1 ? `<button class="btn-remove" onclick="removerServico(${i})"><i class="fas fa-times"></i></button>` : ''}
+                        </div>`).join('')}
                     </div>
-                    
-                    <button class="btn-add" onclick="adicionarServico()">
-                        <i class="fas fa-plus"></i> Adicionar Serviço
-                    </button>
-
+                    <button class="btn-add" onclick="adicionarServico()"><i class="fas fa-plus"></i> Serviço</button>
                     <div style="background: var(--secondary); color: white; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>Valor Total:</span>
-                            <span style="font-size: 24px; font-weight: bold;" id="osValorTotal">R$ 0,00</span>
-                        </div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total:</span><span style="font-size: 24px; font-weight: bold;" id="osTotal">R$ ${App.servicos.reduce((s,i) => s + (parseFloat(i.valor)||0), 0).toFixed(2)}</span></div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Observações</label>
-                        <textarea id="osObs" rows="3" placeholder="Observações sobre o serviço..."></textarea>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <textarea id="osObs" rows="2" placeholder="Observações"></textarea>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
                         <button class="btn btn-outline" onclick="limparOS()">Limpar</button>
-                        <button class="btn btn-success" onclick="salvarOS()">
-                            <i class="fas fa-save"></i> Abrir OS
-                        </button>
+                        <button class="btn btn-success" onclick="salvarOS()">Salvar OS</button>
                     </div>
                 </div>
             `;
-        }
+        };
 
-        function renderServicosLinhas() {
-            let html = '';
-            window.servicosOS.forEach((servico, index) => {
-                html += `
-                    <div class="servico-linha" id="servico-${index}">
-                        <input type="text" class="servico-descricao" placeholder="Descrição do serviço" value="${servico.descricao}" onchange="atualizarServico(${index}, 'descricao', this.value)">
-                        <input type="number" class="servico-valor" placeholder="Valor R$" value="${servico.valor}" step="0.01" onchange="atualizarServico(${index}, 'valor', this.value)">
-                        ${window.servicosOS.length > 1 ? 
-                            `<button class="btn-remove" onclick="removerServico(${index})"><i class="fas fa-times"></i></button>` : 
-                            ''}
-                    </div>
-                `;
-            });
-            return html;
-        }
+        const adicionarServico = () => { App.servicos.push({ desc: '', valor: 0 }); document.getElementById('servicosContainer').innerHTML = renderServicosLinhas(); };
+        const removerServico = (i) => { App.servicos.splice(i,1); document.getElementById('servicosContainer').innerHTML = renderServicosLinhas(); calcularTotal(); };
+        const renderServicosLinhas = () => App.servicos.map((s,i) => `
+            <div class="servico-linha">
+                <input class="servico-descricao" value="${s.desc}" onchange="atualizarServico(${i}, 'desc', this.value)">
+                <input class="servico-valor" type="number" value="${s.valor}" onchange="atualizarServico(${i}, 'valor', this.value)">
+                ${App.servicos.length > 1 ? `<button class="btn-remove" onclick="removerServico(${i})"><i class="fas fa-times"></i></button>` : ''}
+            </div>`).join('');
+        const atualizarServico = (i, campo, valor) => { App.servicos[i][campo] = campo === 'valor' ? parseFloat(valor)||0 : valor; calcularTotal(); };
+        const calcularTotal = () => document.getElementById('osTotal').textContent = `R$ ${App.servicos.reduce((s,i) => s + (i.valor||0), 0).toFixed(2)}`;
 
-        function adicionarServico() {
-            window.servicosOS.push({ descricao: '', valor: 0 });
-            document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
-        }
+        const carregarCliente = () => {
+            const opt = document.getElementById('osCliente').selectedOptions[0];
+            document.getElementById('osVeic').value = opt?.dataset.veic || '';
+            document.getElementById('osPlaca').value = opt?.dataset.placa || '';
+            document.getElementById('osKm').value = opt?.dataset.km || '';
+        };
 
-        function removerServico(index) {
-            window.servicosOS.splice(index, 1);
-            document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
-            calcularTotalOS();
-        }
-
-        function atualizarServico(index, campo, valor) {
-            if (campo === 'valor') {
-                window.servicosOS[index][campo] = parseFloat(valor) || 0;
-            } else {
-                window.servicosOS[index][campo] = valor;
-            }
-            calcularTotalOS();
-        }
-
-        function calcularTotalOS() {
-            const total = window.servicosOS.reduce((sum, s) => sum + (parseFloat(s.valor) || 0), 0);
-            document.getElementById('osValorTotal').textContent = `R$ ${total.toFixed(2)}`;
-        }
-
-        function carregarDadosClienteOS() {
-            const select = document.getElementById('osCliente');
-            const option = select.options[select.selectedIndex];
-            
-            document.getElementById('osVeiculo').value = option.dataset.veiculo || '';
-            document.getElementById('osPlaca').value = option.dataset.placa || '';
-            document.getElementById('osKmEntrada').value = option.dataset.km || '';
-        }
-
-        function salvarOS() {
+        const salvarOS = () => {
             const clienteId = document.getElementById('osCliente').value;
-            const kmEntrada = parseInt(document.getElementById('osKmEntrada').value);
-            const dataEntrada = document.getElementById('osDataEntrada').value;
-            const obs = document.getElementById('osObs').value;
-            
-            if (!clienteId || !kmEntrada) {
-                showToast('Selecione um cliente!', 'warning');
-                return;
-            }
-            
-            // Filtrar serviços vazios
-            const servicosValidos = window.servicosOS.filter(s => s.descricao.trim() !== '' && s.valor > 0);
-            
-            if (servicosValidos.length === 0) {
-                showToast('Adicione pelo menos um serviço válido!', 'warning');
-                return;
-            }
+            if (!clienteId) return showToast('Selecione um cliente', 'warning');
+            const servicosValidos = App.servicos.filter(s => s.desc.trim() && s.valor > 0);
+            if (!servicosValidos.length) return showToast('Adicione serviços', 'warning');
             
             const cliente = App.data.clientes.find(c => c.id == clienteId);
-            
-            // Gerar número da OS
-            const ano = new Date().getFullYear();
-            const ultimaOS = App.data.os.sort((a, b) => b.id - a.id)[0];
-            const novoNumero = `OS-${ano}-${String((ultimaOS?.id || 0) + 1).padStart(3, '0')}`;
-            
             const novaOS = {
                 id: Date.now(),
-                numero: novoNumero,
+                numero: `OS-${String(App.data.os.length+1).padStart(3,'0')}`,
                 clienteId: parseInt(clienteId),
                 clienteNome: cliente.nome,
-                veiculo: cliente.veiculo,
+                veiculo: cliente.veic,
                 placa: cliente.placa,
-                kmEntrada: kmEntrada,
-                kmSaida: kmEntrada,
-                dataEntrada,
+                kmEntrada: parseInt(document.getElementById('osKm').value),
+                data: document.getElementById('osData').value,
                 status: 'andamento',
-                servicos: servicosValidos,
-                valorTotal: servicosValidos.reduce((s, i) => s + i.valor, 0),
-                observacoes: obs
+                servicos: servicosValidos.map(s => ({ desc: s.desc, valor: s.valor })),
+                total: servicosValidos.reduce((s,i) => s + i.valor, 0),
+                obs: document.getElementById('osObs').value
             };
             
             App.data.os.push(novaOS);
             saveData();
-            
-            showToast('OS aberta com sucesso!', 'success');
+            showToast('OS criada!', 'success');
             limparOS();
-            verificarNotificacoes();
-        }
+        };
 
-        function limparOS() {
+        const limparOS = () => {
             document.getElementById('osCliente').value = '';
-            document.getElementById('osVeiculo').value = '';
+            document.getElementById('osVeic').value = '';
             document.getElementById('osPlaca').value = '';
-            document.getElementById('osKmEntrada').value = '';
+            document.getElementById('osKm').value = '';
             document.getElementById('osObs').value = '';
-            
-            window.servicosOS = [{ descricao: '', valor: 0 }];
+            App.servicos = [{ desc: '', valor: 0 }];
             document.getElementById('servicosContainer').innerHTML = renderServicosLinhas();
-            document.getElementById('osValorTotal').textContent = 'R$ 0,00';
-        }
+            document.getElementById('osTotal').textContent = 'R$ 0.00';
+        };
 
-        function renderOSAtivas() {
-            const osAtivas = App.data.os.filter(os => os.status === 'andamento');
-            
-            if (osAtivas.length === 0) {
-                return '<p style="text-align: center; color: var(--gray);">Nenhuma OS em andamento</p>';
-            }
-            
-            return `
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº OS</th>
-                                <th>Cliente</th>
-                                <th>Veículo</th>
-                                <th>KM</th>
-                                <th>Serviços</th>
-                                <th>Valor</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${osAtivas.map(os => `
-                                <tr>
-                                    <td>${os.numero}</td>
-                                    <td>${os.clienteNome}</td>
-                                    <td>${os.veiculo} (${os.placa})</td>
-                                    <td>${os.kmEntrada} km</td>
-                                    <td>${os.servicos.map(s => s.descricao).join(', ')}</td>
-                                    <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-icon btn-view" onclick="verOS(${os.id})">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-icon btn-success" onclick="concluirOS(${os.id})">
-                                                <i class="fas fa-check"></i> Concluir
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        const renderOSAtivas = () => App.data.os.filter(o => o.status === 'andamento').length ? `
+            <div class="table-container"><table><thead><tr><th>Nº</th><th>Cliente</th><th>Veículo</th><th>Valor</th><th></th></tr></thead>
+            <tbody>${App.data.os.filter(o => o.status === 'andamento').map(o => `<tr><td>${o.numero}</td><td>${o.clienteNome}</td><td>${o.veiculo}</td><td>R$ ${o.total}</td><td><button class="btn-sm btn-success" onclick="concluirOS(${o.id})">Concluir</button></td></tr>`).join('')}</tbody>
+            </table></div>` : '<p>Nenhuma OS ativa</p>';
 
-        function renderOSHistorico() {
-            const osConcluidas = App.data.os.filter(os => os.status === 'concluido');
-            
-            return `
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº OS</th>
-                                <th>Cliente</th>
-                                <th>Data</th>
-                                <th>Serviços</th>
-                                <th>Valor</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${osConcluidas.map(os => `
-                                <tr>
-                                    <td>${os.numero}</td>
-                                    <td>${os.clienteNome}</td>
-                                    <td>${os.dataEntrada}</td>
-                                    <td>${os.servicos.map(s => s.descricao).join(', ')}</td>
-                                    <td>R$ ${os.valorTotal.toFixed(2)}</td>
-                                    <td>
-                                        <button class="btn-icon btn-view" onclick="verOS(${os.id})">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        const renderOSHistorico = () => `<div class="table-container"><table><thead><tr><th>Nº</th><th>Cliente</th><th>Data</th><th>Valor</th></tr></thead>
+            <tbody>${App.data.os.filter(o => o.status === 'concluido').map(o => `<tr><td>${o.numero}</td><td>${o.clienteNome}</td><td>${o.data}</td><td>R$ ${o.total}</td></tr>`).join('')}</tbody>
+            </table></div>`;
 
-        function verOS(id) {
+        const concluirOS = (id) => {
             const os = App.data.os.find(o => o.id === id);
-            if (!os) return;
-            
-            const servicosList = os.servicos.map(s => 
-                `<li>${s.descricao} - R$ ${s.valor.toFixed(2)}</li>`
-            ).join('');
-            
-            const conteudo = `
-                <div style="padding: 10px;">
-                    <h3>OS: ${os.numero}</h3>
-                    <p><strong>Cliente:</strong> ${os.clienteNome}</p>
-                    <p><strong>Veículo:</strong> ${os.veiculo} (${os.placa})</p>
-                    <p><strong>KM Entrada:</strong> ${os.kmEntrada} km</p>
-                    <p><strong>Data Entrada:</strong> ${os.dataEntrada}</p>
-                    <p><strong>Status:</strong> ${os.status}</p>
-                    
-                    <h4 style="margin-top: 15px;">Serviços:</h4>
-                    <ul style="margin-left: 20px;">
-                        ${servicosList}
-                    </ul>
-                    
-                    <p style="margin-top: 15px;"><strong>Valor Total:</strong> R$ ${os.valorTotal.toFixed(2)}</p>
-                    ${os.observacoes ? `<p><strong>Obs:</strong> ${os.observacoes}</p>` : ''}
-                </div>
-            `;
-            
-            openModal('Detalhes da OS', conteudo, () => {});
-        }
-
-        function concluirOS(id) {
-            const os = App.data.os.find(o => o.id === id);
-            if (!os) return;
-            
-            if (confirm('Concluir esta OS?')) {
-                const kmSaida = prompt('KM de saída:', os.kmEntrada);
-                if (kmSaida) {
-                    os.status = 'concluido';
-                    os.dataSaida = new Date().toISOString().split('T')[0];
-                    os.kmSaida = parseInt(kmSaida);
-                    
-                    // Atualizar KM do cliente
-                    const cliente = App.data.clientes.find(c => c.id === os.clienteId);
-                    if (cliente) {
-                        cliente.kmAtual = parseInt(kmSaida);
-                    }
-                    
-                    // Registrar no caixa
-                    App.data.caixa.unshift({
-                        id: Date.now(),
-                        tipo: 'entrada',
-                        descricao: `OS ${os.numero} - ${os.clienteNome}`,
-                        valor: os.valorTotal,
-                        data: os.dataSaida
-                    });
-                    
-                    saveData();
-                    showToast('OS concluída!', 'success');
-                    renderSection('os');
-                    verificarNotificacoes();
-                }
+            if (os && confirm('Concluir OS?')) {
+                os.status = 'concluido';
+                os.dataSaida = new Date().toISOString().split('T')[0];
+                App.data.caixa.unshift({ id: Date.now(), tipo: 'entrada', desc: `OS ${os.numero}`, valor: os.total, data: os.dataSaida });
+                saveData();
+                showToast('OS concluída', 'success');
+                renderSection('os');
+                verificarNotificacoes();
             }
-        }
+        };
 
         // ==================== CAIXA ====================
-        function renderCaixa() {
-            const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0);
-            const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0);
-            
+        const renderCaixa = () => {
+            const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s,i) => s + i.valor, 0);
+            const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s,i) => s + i.valor, 0);
             return `
                 <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">💰 Novo Registro</h3>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Tipo</label>
-                            <select id="tipoCaixa">
-                                <option value="entrada">Entrada (Receita)</option>
-                                <option value="saida">Saída (Despesa)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Descrição</label>
-                            <input type="text" id="descCaixa" placeholder="Ex: OS #001">
-                        </div>
-                        <div class="form-group">
-                            <label>Valor (R$)</label>
-                            <input type="number" id="valorCaixa" step="0.01" placeholder="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label>Data</label>
-                            <input type="date" id="dataCaixa" value="${new Date().toISOString().split('T')[0]}">
-                        </div>
+                        <select id="tipoCaixa"><option value="entrada">Entrada</option><option value="saida">Saída</option></select>
+                        <input type="text" id="descCaixa" placeholder="Descrição">
+                        <input type="number" id="valorCaixa" placeholder="Valor" step="0.01">
+                        <input type="date" id="dataCaixa" value="${new Date().toISOString().split('T')[0]}">
                     </div>
-                    <button class="btn btn-primary" onclick="registrarCaixa()">
-                        <i class="fas fa-save"></i> Registrar
-                    </button>
+                    <button class="btn btn-primary" onclick="registrarCaixa()">Registrar</button>
                 </div>
-
                 <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Tipo</th>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaCaixa">
-                            ${App.data.caixa.sort((a, b) => new Date(b.data) - new Date(a.data)).map(item => `
-                                <tr>
-                                    <td>${item.data}</td>
-                                    <td><span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${item.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span></td>
-                                    <td>${item.descricao}</td>
-                                    <td>R$ ${item.valor.toFixed(2)}</td>
-                                    <td>
-                                        <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                        <tfoot>
-                            <tr style="background: var(--light); font-weight: bold;">
-                                <td colspan="3">Total Entradas:</td>
-                                <td>R$ ${entradas.toFixed(2)}</td>
-                                <td></td>
-                            </tr>
-                            <tr style="background: var(--light); font-weight: bold;">
-                                <td colspan="3">Total Saídas:</td>
-                                <td>R$ ${saidas.toFixed(2)}</td>
-                                <td></td>
-                            </tr>
-                            <tr style="background: var(--secondary); color: white; font-weight: bold;">
-                                <td colspan="3">Saldo:</td>
-                                <td>R$ ${(entradas - saidas).toFixed(2)}</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
+                    <table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
+                    <tbody>${App.data.caixa.sort((a,b) => new Date(b.data)-new Date(a.data)).map(i => `<tr><td>${i.data}</td><td><span class="badge ${i.tipo==='entrada'?'badge-success':'badge-danger'}">${i.tipo}</span></td><td>${i.desc}</td><td>R$ ${i.valor}</td><td><button class="btn-icon btn-delete" onclick="excluirRegistro(${i.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody>
+                    <tfoot><tr><td colspan="3">Entradas: R$ ${entradas.toFixed(2)}</td><td colspan="2">Saídas: R$ ${saidas.toFixed(2)} | Saldo: R$ ${(entradas-saidas).toFixed(2)}</td></tr></tfoot>
                     </table>
                 </div>
             `;
-        }
+        };
 
-        function registrarCaixa() {
+        const registrarCaixa = () => {
             const tipo = document.getElementById('tipoCaixa').value;
             const desc = document.getElementById('descCaixa').value;
             const valor = parseFloat(document.getElementById('valorCaixa').value);
-            const data = document.getElementById('dataCaixa').value;
-
-            if (!desc || !valor) {
-                showToast('Preencha todos os campos!', 'warning');
-                return;
-            }
-
-            App.data.caixa.unshift({
-                id: Date.now(),
-                tipo,
-                descricao: desc,
-                valor,
-                data
-            });
-            
+            if (!desc || !valor) return showToast('Preencha tudo', 'warning');
+            App.data.caixa.unshift({ id: Date.now(), tipo, desc, valor, data: document.getElementById('dataCaixa').value });
             saveData();
             renderSection('caixa');
-            showToast('Registro adicionado!', 'success');
-        }
+            showToast('Registrado', 'success');
+        };
 
-        function excluirRegistro(id) {
-            if (confirm('Excluir este registro?')) {
-                App.data.caixa = App.data.caixa.filter(item => item.id !== id);
-                saveData();
-                renderSection('caixa');
-                showToast('Registro excluído!', 'success');
-            }
-        }
+        const excluirRegistro = (id) => { if (confirm('Excluir?')) { App.data.caixa = App.data.caixa.filter(i => i.id !== id); saveData(); renderSection('caixa'); } };
 
         // ==================== CLIENTES ====================
-        function renderClientes() {
-            return `
-                <div class="tabs">
-                    <div class="tab active" onclick="mostrarSubSecaoCliente('cadastro')">📝 Cadastro</div>
-                    <div class="tab" onclick="mostrarSubSecaoCliente('lista')">📋 Lista</div>
-                </div>
+        const renderClientes = () => `
+            <div class="tabs"><div class="tab active" onclick="mostrarSubCliente('cad')">📝 Cadastro</div><div class="tab" onclick="mostrarSubCliente('lista')">📋 Lista</div></div>
+            <div id="subCliente">${renderCadastroCliente()}</div>
+        `;
 
-                <div id="subSecaoCliente">
-                    ${renderCadastroCliente()}
-                </div>
-            `;
-        }
-
-        function mostrarSubSecaoCliente(secao) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
+        const mostrarSubCliente = (s) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            
-            const subSecao = document.getElementById('subSecaoCliente');
-            
-            if (secao === 'cadastro') {
-                subSecao.innerHTML = renderCadastroCliente();
-            } else {
-                subSecao.innerHTML = renderListaClientes();
-            }
-        }
+            document.getElementById('subCliente').innerHTML = s === 'cad' ? renderCadastroCliente() : renderListaClientes();
+        };
 
-        function renderCadastroCliente() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">👤 Novo Cliente</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nome*</label>
-                            <input type="text" id="nomeCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefone*</label>
-                            <input type="text" id="telCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>Veículo*</label>
-                            <input type="text" id="veicCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>Placa*</label>
-                            <input type="text" id="placaCliente">
-                        </div>
-                        <div class="form-group">
-                            <label>KM Atual*</label>
-                            <input type="number" id="kmCliente">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="cadastrarCliente()">
-                        <i class="fas fa-save"></i> Cadastrar
-                    </button>
+        const renderCadastroCliente = () => `
+            <div class="form-section">
+                <div class="form-grid">
+                    <input type="text" id="nomeCliente" placeholder="Nome">
+                    <input type="text" id="telCliente" placeholder="Telefone">
+                    <input type="text" id="veicCliente" placeholder="Veículo">
+                    <input type="text" id="placaCliente" placeholder="Placa">
+                    <input type="number" id="kmCliente" placeholder="KM Atual">
                 </div>
-            `;
-        }
+                <button class="btn btn-primary" onclick="cadastrarCliente()">Cadastrar</button>
+            </div>
+        `;
 
-        function renderListaClientes() {
-            return `
-                <div class="filter-group" style="margin-bottom: 15px;">
-                    <input type="text" id="buscaCliente" placeholder="🔍 Buscar..." onkeyup="buscarClientes()" style="width: 100%;">
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>Veículo</th>
-                                <th>Placa</th>
-                                <th>KM</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaClientes">
-                            ${App.data.clientes.map(c => `
-                                <tr>
-                                    <td>${c.nome}</td>
-                                    <td>${c.telefone}</td>
-                                    <td>${c.veiculo}</td>
-                                    <td>${c.placa}</td>
-                                    <td>${c.kmAtual} km</td>
-                                    <td>
-                                        <button class="btn-icon btn-view" onclick="verCliente(${c.id})">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon btn-delete" onclick="excluirCliente(${c.id})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        const renderListaClientes = () => `
+            <input type="text" id="buscaCliente" placeholder="Buscar..." onkeyup="buscarClientes()" style="width:100%; padding:10px; margin-bottom:15px;">
+            <div class="table-container"><table><thead><tr><th>Nome</th><th>Telefone</th><th>Veículo</th><th>KM</th><th></th></tr></thead>
+            <tbody id="tabelaClientes">${App.data.clientes.map(c => `<tr><td>${c.nome}</td><td>${c.tel}</td><td>${c.veic}</td><td>${c.km} km</td><td><button class="btn-icon btn-delete" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody>
+            </table></div>
+        `;
 
-        function cadastrarCliente() {
-            const nome = document.getElementById('nomeCliente').value;
-            const tel = document.getElementById('telCliente').value;
-            const veic = document.getElementById('veicCliente').value;
-            const placa = document.getElementById('placaCliente').value;
-            const km = parseInt(document.getElementById('kmCliente').value);
-
-            if (!nome || !tel || !veic || !placa || !km) {
-                showToast('Preencha todos os campos!', 'warning');
-                return;
-            }
-
-            App.data.clientes.push({
-                id: Date.now(),
-                nome,
-                telefone: tel,
-                veiculo: veic,
-                placa: placa.toUpperCase(),
-                kmAtual: km
-            });
-            
+        const cadastrarCliente = () => {
+            const n = document.getElementById('nomeCliente').value, t = document.getElementById('telCliente').value, v = document.getElementById('veicCliente').value, p = document.getElementById('placaCliente').value, k = parseInt(document.getElementById('kmCliente').value);
+            if (!n || !t || !v || !p || !k) return showToast('Preencha tudo', 'warning');
+            App.data.clientes.push({ id: Date.now(), nome: n, tel: t, veic: v, placa: p.toUpperCase(), km: k });
             saveData();
-            showToast('Cliente cadastrado!', 'success');
-            
-            document.getElementById('nomeCliente').value = '';
-            document.getElementById('telCliente').value = '';
-            document.getElementById('veicCliente').value = '';
-            document.getElementById('placaCliente').value = '';
-            document.getElementById('kmCliente').value = '';
-        }
+            showToast('Cliente cadastrado', 'success');
+            ['nomeCliente','telCliente','veicCliente','placaCliente','kmCliente'].forEach(id => document.getElementById(id).value = '');
+        };
 
-        function buscarClientes() {
+        const buscarClientes = () => {
             const termo = document.getElementById('buscaCliente').value.toLowerCase();
-            const filtrados = App.data.clientes.filter(c => 
-                c.nome.toLowerCase().includes(termo) ||
-                c.placa.toLowerCase().includes(termo) ||
-                c.telefone.includes(termo)
-            );
-            
-            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
-                <tr>
-                    <td>${c.nome}</td>
-                    <td>${c.telefone}</td>
-                    <td>${c.veiculo}</td>
-                    <td>${c.placa}</td>
-                    <td>${c.kmAtual} km</td>
-                    <td>
-                        <button class="btn-icon btn-view" onclick="verCliente(${c.id})">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn-icon btn-delete" onclick="excluirCliente(${c.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+            const filtrados = App.data.clientes.filter(c => c.nome.toLowerCase().includes(termo) || c.placa.toLowerCase().includes(termo));
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `<tr><td>${c.nome}</td><td>${c.tel}</td><td>${c.veic}</td><td>${c.km} km</td><td><button class="btn-icon btn-delete" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        };
 
-        function verCliente(id) {
-            const c = App.data.clientes.find(c => c.id === id);
-            const osCliente = App.data.os.filter(os => os.clienteId === id);
-            
-            openModal('Detalhes do Cliente', `
-                <div>
-                    <p><strong>Nome:</strong> ${c.nome}</p>
-                    <p><strong>Telefone:</strong> ${c.telefone}</p>
-                    <p><strong>Veículo:</strong> ${c.veiculo} - ${c.placa}</p>
-                    <p><strong>KM Atual:</strong> ${c.kmAtual} km</p>
-                    <p><strong>Total de OS:</strong> ${osCliente.length}</p>
-                </div>
-            `, () => {});
-        }
-
-        function excluirCliente(id) {
-            if (confirm('Excluir este cliente?')) {
-                App.data.clientes = App.data.clientes.filter(c => c.id !== id);
-                saveData();
-                renderSection('clientes');
-                showToast('Cliente excluído!', 'success');
-            }
-        }
-
-        // ==================== ESTOQUE ====================
-        function renderEstoque() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">➕ Novo Produto</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Produto*</label>
-                            <input type="text" id="nomeProduto">
-                        </div>
-                        <div class="form-group">
-                            <label>Quantidade*</label>
-                            <input type="number" id="qtdProduto">
-                        </div>
-                        <div class="form-group">
-                            <label>Preço*</label>
-                            <input type="number" id="precoProduto" step="0.01">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="cadastrarProduto()">
-                        <i class="fas fa-save"></i> Cadastrar
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produto</th>
-                                <th>Qtd</th>
-                                <th>Preço</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${App.data.estoque.map(p => `
-                                <tr>
-                                    <td>${p.produto}</td>
-                                    <td>${p.quantidade}</td>
-                                    <td>R$ ${p.preco.toFixed(2)}</td>
-                                    <td>
-                                        ${p.quantidade < 10 ? 
-                                            '<span class="badge badge-danger">Baixo</span>' : 
-                                            '<span class="badge badge-success">OK</span>'}
-                                    </td>
-                                    <td>
-                                        <button class="btn-icon btn-delete" onclick="excluirProduto(${p.id})">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function cadastrarProduto() {
-            const produto = document.getElementById('nomeProduto').value;
-            const qtd = parseInt(document.getElementById('qtdProduto').value);
-            const preco = parseFloat(document.getElementById('precoProduto').value);
-
-            if (!produto || !qtd || !preco) {
-                showToast('Preencha todos os campos!', 'warning');
-                return;
-            }
-
-            App.data.estoque.push({
-                id: Date.now(),
-                produto,
-                quantidade: qtd,
-                preco
-            });
-            
-            saveData();
-            renderSection('estoque');
-            showToast('Produto cadastrado!', 'success');
-        }
-
-        function excluirProduto(id) {
-            if (confirm('Excluir este produto?')) {
-                App.data.estoque = App.data.estoque.filter(p => p.id !== id);
-                saveData();
-                renderSection('estoque');
-                showToast('Produto excluído!', 'success');
-            }
-        }
+        const excluirCliente = (id) => { if (confirm('Excluir?')) { App.data.clientes = App.data.clientes.filter(c => c.id !== id); saveData(); renderSection('clientes'); } };
 
         // ==================== NOTIFICAÇÕES ====================
-        function renderNotificacoes() {
-            return `
-                <div class="form-section">
-                    <h3 style="margin-bottom: 15px;">🔔 Todos os Alertas</h3>
-                    <div id="listaNotificacoes">
-                        ${renderListaNotificacoes()}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderListaNotificacoes() {
-            if (App.data.notificacoes.length === 0) {
-                return '<p style="text-align: center; color: var(--gray);">Nenhum alerta no momento</p>';
-            }
-            
-            return `
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Prioridade</th>
-                                <th>Cliente</th>
-                                <th>Mensagem</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${App.data.notificacoes.map(n => `
-                                <tr>
-                                    <td>
-                                        <span class="badge ${n.prioridade === 'alta' ? 'badge-danger' : 'badge-warning'}">
-                                            ${n.prioridade === 'alta' ? 'Urgente' : 'Aviso'}
-                                        </span>
-                                    </td>
-                                    <td>${n.clienteNome}</td>
-                                    <td>${n.mensagem}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        const renderNotificacoes = () => `
+            <div class="form-section">
+                <h3>Alertas</h3>
+                ${App.data.notificacoes.length ? `<div class="table-container"><table><thead><tr><th>Cliente</th><th>Mensagem</th><th>Prioridade</th></tr></thead>
+                <tbody>${App.data.notificacoes.map(n => `<tr><td>${n.clienteNome}</td><td>${n.msg}</td><td><span class="badge ${n.prioridade==='alta'?'badge-danger':'badge-warning'}">${n.prioridade}</span></td></tr>`).join('')}</tbody>
+                </table></div>` : '<p>Sem alertas</p>'}
+            </div>
+        `;
 
         // Modal
-        function openModal(title, content, onConfirm) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalBody').innerHTML = content;
-            document.getElementById('modal').classList.add('active');
-            document.getElementById('modalConfirmBtn').onclick = onConfirm;
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Deseja sair do sistema?')) {
-                showToast('Sessão encerrada!', 'info');
-            }
-        }
+        const openModal = (title, content) => { document.getElementById('modalTitle').textContent = title; document.getElementById('modalBody').innerHTML = content; document.getElementById('modal').classList.add('active'); };
+        const closeModal = () => document.getElementById('modal').classList.remove('active');
+        const logout = () => confirm('Sair?') && showToast('Até logo', 'info');
     </script>
 </body>
 </html>
