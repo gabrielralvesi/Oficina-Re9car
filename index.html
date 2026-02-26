@@ -1,129 +1,1751 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema - RenoveCar Centro Automotivo</title>
+    <title>RenoveCar Pro - Sistema Automotivo</title>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f2f2f2; }
-        header { background: #333; color: #fff; padding: 20px; text-align: center; }
-        nav { background: #555; padding: 10px; display: flex; gap: 15px; }
-        nav a { color: #fff; text-decoration: none; font-weight: bold; }
-        section { padding: 20px; }
-        .card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
-        input, select { padding: 8px; width: 100%; margin: 5px 0 15px; }
-        button { padding: 10px 15px; background: #333; color: #fff; border: none; cursor: pointer; }
-        button:hover { background: #000; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        table, th, td { border: 1px solid #ccc; }
-        th, td { padding: 10px; text-align: left; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --secondary: #1e1e2f;
+            --secondary-light: #2a2a3a;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Principal */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 35px;
+        }
+
+        .logo span {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-left: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-time {
+            font-size: 14px;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        /* Navegação */
+        .nav-menu {
+            background: white;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            color: var(--gray);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Conteúdo Principal */
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Dashboard Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-info h3 {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            font-size: 50px;
+            opacity: 0.3;
+        }
+
+        /* Gráficos */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Formulários */
+        .form-section {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--gray);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Tabelas */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-icon {
+            padding: 6px 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-view {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Filtros */
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border: 1px solid var(--border);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast.info {
+            border-left-color: var(--primary);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1002;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header { flex-direction: column; gap: 15px; }
+            .nav-menu { overflow-x: auto; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>RenoveCar Centro Automotivo</h1>
-    </header><nav>
-    <a href="#caixa">Controle de Caixa</a>
-    <a href="#clientes">Cadastro de Clientes</a>
-    
-    <a href="#vales">Controle de Vales Funcionários</a>
-</nav>
+    <div class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <h1>
+                    <i class="fas fa-car"></i>
+                    RenoveCar Pro
+                    <span>Centro Automotivo</span>
+                </h1>
+            </div>
+            <div class="user-info">
+                <div class="user-badge">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Admin</span>
+                </div>
+                <div class="date-time" id="currentDateTime"></div>
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
 
-<section id="caixa" class="card">
-    <h2>Controle de Caixa</h2>
-    <label>Tipo:</label>
-    <select id="tipoCaixa">
-        <option value="entrada">Entrada</option>
-        <option value="saida">Saída</option>
-    </select>
-    <label>Descrição:</label>
-    <input type="text" id="descCaixa">
-    <label>Valor:</label>
-    <input type="number" id="valorCaixa">
-    <button onclick="registrarCaixa()">Registrar</button>
+        <!-- Navegação -->
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-pie"></i>
+                Dashboard
+            </div>
+            <div class="nav-item" onclick="showSection('caixa')">
+                <i class="fas fa-cash-register"></i>
+                Controle de Caixa
+            </div>
+            <div class="nav-item" onclick="showSection('clientes')">
+                <i class="fas fa-users"></i>
+                Clientes
+            </div>
+            <div class="nav-item" onclick="showSection('funcionarios')">
+                <i class="fas fa-user-tie"></i>
+                Funcionários
+            </div>
+            <div class="nav-item" onclick="showSection('estoque')">
+                <i class="fas fa-boxes"></i>
+                Estoque
+            </div>
+            <div class="nav-item" onclick="showSection('servicos')">
+                <i class="fas fa-tools"></i>
+                Ordens de Serviço
+            </div>
+            <div class="nav-item" onclick="showSection('relatorios')">
+                <i class="fas fa-file-alt"></i>
+                Relatórios
+            </div>
+        </div>
 
-    <table id="tabelaCaixa">
-        <tr><th>Tipo</th><th>Descrição</th><th>Valor</th></tr>
-    </table>
-</section>
+        <!-- Conteúdo Principal -->
+        <div class="content" id="mainContent">
+            <!-- Conteúdo será carregado dinamicamente via JavaScript -->
+        </div>
+    </div>
 
-<section id="clientes" class="card">
-    <h2>Cadastro de Clientes</h2>
-    <label>Nome:</label>
-    <input type="text" id="nomeCliente">
-    <label>Telefone:</label>
-    <input type="text" id="telCliente">
-    <label>Veículo:</label>
-    <input type="text" id="veicCliente">
-    <button onclick="cadastrarCliente()">Cadastrar</button>
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" id="modalConfirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
-    <table id="tabelaClientes">
-        <tr><th>Nome</th><th>Telefone</th><th>Veículo</th></tr>
-    </table>
-</section>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
+    <script>
+        // ==================== SISTEMA PROFISSIONAL RENOVECAR ====================
+        
+        // Estado Global da Aplicação
+        const App = {
+            currentUser: { name: 'Admin', role: 'admin' },
+            currentSection: 'dashboard',
+            data: {
+                caixa: [],
+                clientes: [],
+                funcionarios: [],
+                estoque: [],
+                ordensServico: [],
+                vales: []
+            },
+            charts: {},
+            filters: {}
+        };
 
-<section id="vales" class="card">
-    <h2>Controle de Vales Funcionários</h2>
-    <label>Nome do Funcionário:</label>
-    <input type="text" id="nomeFunc">
-    <label>Tipo:</label>
-    <select id="tipoVale">
-        <option value="entrada">Entrada</option>
-        <option value="saida">Saída</option>
-    </select>
-    <label>Valor:</label>
-    <input type="number" id="valorVale">
-    <button onclick="registrarVale()">Registrar</button>
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+        });
 
-    <table id="tabelaVales">
-        <tr><th>Funcionário</th><th>Tipo</th><th>Valor</th></tr>
-    </table>
-</section>
+        function initApp() {
+            showLoading();
+            loadDataFromStorage();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            renderSection('dashboard');
+            hideLoading();
+        }
 
-<script>
-    function registrarCaixa() {
-        const tipo = document.getElementById('tipoCaixa').value;
-        const desc = document.getElementById('descCaixa').value;
-        const valor = document.getElementById('valorCaixa').value;
-        const tabela = document.getElementById('tabelaCaixa');
-        const linha = tabela.insertRow();
-        linha.insertCell(0).innerText = tipo;
-        linha.insertCell(1).innerText = desc;
-        linha.insertCell(2).innerText = valor;
-    }
+        // ==================== UTILITÁRIOS ====================
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
 
-    function cadastrarCliente() {
-        const nome = document.getElementById('nomeCliente').value;
-        const tel = document.getElementById('telCliente').value;
-        const veic = document.getElementById('veicCliente').value;
-        const tabela = document.getElementById('tabelaClientes');
-        const linha = tabela.insertRow();
-        linha.insertCell(0).innerText = nome;
-        linha.insertCell(1).innerText = tel;
-        linha.insertCell(2).innerText = veic;
-    }
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
 
-    function registrarDespesa() {
-        const tipo = document.getElementById('tipoDespesa').value;
-        const valor = document.getElementById('valorDespesa').value;
-        const tabela = document.getElementById('tabelaDespesas');
-        const linha = tabela.insertRow();
-        linha.insertCell(0).innerText = tipo;
-        linha.insertCell(1).innerText = valor;
-    }
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas ${getToastIcon(type)}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
 
-    function registrarVale() {
-        const nome = document.getElementById('nomeFunc').value;
-        const tipo = document.getElementById('tipoVale').value;
-        const valor = document.getElementById('valorVale').value;
-        const tabela = document.getElementById('tabelaVales');
-        const linha = tabela.insertRow();
-        linha.insertCell(0).innerText = nome;
-        linha.insertCell(1).innerText = tipo;
-        linha.insertCell(2).innerText = valor;
-    }
-</script>
+        function getToastIcon(type) {
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            return icons[type] || icons.info;
+        }
 
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('currentDateTime').textContent = 
+                now.toLocaleDateString('pt-BR', options);
+        }
+
+        // ==================== PERSISTÊNCIA ====================
+        function loadDataFromStorage() {
+            try {
+                const savedData = localStorage.getItem('renovecar_data');
+                if (savedData) {
+                    App.data = JSON.parse(savedData);
+                } else {
+                    // Dados iniciais para demonstração
+                    initializeDemoData();
+                }
+            } catch (error) {
+                showToast('Erro ao carregar dados', 'error');
+                initializeDemoData();
+            }
+        }
+
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('renovecar_data', JSON.stringify(App.data));
+            } catch (error) {
+                showToast('Erro ao salvar dados', 'error');
+            }
+        }
+
+        function initializeDemoData() {
+            App.data = {
+                caixa: [
+                    { id: 1, tipo: 'entrada', descricao: 'Serviço - Troca de Óleo', valor: 150.00, data: '2024-01-15' },
+                    { id: 2, tipo: 'entrada', descricao: 'Venda de Peças', valor: 450.00, data: '2024-01-15' },
+                    { id: 3, tipo: 'saida', descricao: 'Compra de Óleo', valor: 200.00, data: '2024-01-14' },
+                    { id: 4, tipo: 'entrada', descricao: 'Alinhamento', valor: 120.00, data: '2024-01-14' },
+                    { id: 5, tipo: 'saida', descricao: 'Conta de Luz', valor: 350.00, data: '2024-01-13' }
+                ],
+                clientes: [
+                    { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', veiculo: 'Gol 2020', placa: 'ABC-1234' },
+                    { id: 2, nome: 'Maria Santos', telefone: '(11) 98888-8888', veiculo: 'Onix 2022', placa: 'XYZ-5678' },
+                    { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 97777-7777', veiculo: 'Fiesta 2019', placa: 'DEF-9012' }
+                ],
+                funcionarios: [
+                    { id: 1, nome: 'Carlos Mecânico', cargo: 'Mecânico', salario: 2500.00, telefone: '(11) 96666-6666' },
+                    { id: 2, nome: 'Ana Recepcionista', cargo: 'Recepcionista', salario: 1800.00, telefone: '(11) 95555-5555' },
+                    { id: 3, nome: 'João Pintor', cargo: 'Pintor', salario: 2200.00, telefone: '(11) 94444-4444' }
+                ],
+                estoque: [
+                    { id: 1, produto: 'Óleo 5W30', quantidade: 50, preco: 25.00, fornecedor: 'Petrobras' },
+                    { id: 2, produto: 'Filtro de Óleo', quantidade: 30, preco: 15.00, fornecedor: 'Fram' },
+                    { id: 3, produto: 'Pastilha de Freio', quantidade: 20, preco: 80.00, fornecedor: 'Textar' }
+                ],
+                vales: [
+                    { id: 1, funcionario: 'Carlos Mecânico', tipo: 'entrada', valor: 100.00, data: '2024-01-15' },
+                    { id: 2, funcionario: 'Ana Recepcionista', tipo: 'saida', valor: 50.00, data: '2024-01-14' }
+                ],
+                ordensServico: [
+                    { 
+                        id: 1, 
+                        cliente: 'João Silva', 
+                        veiculo: 'Gol 2020',
+                        servicos: ['Troca de Óleo', 'Alinhamento'],
+                        valor: 270.00,
+                        status: 'concluido',
+                        data: '2024-01-15'
+                    }
+                ]
+            };
+        }
+
+        // ==================== NAVEGAÇÃO ====================
+        function showSection(section) {
+            App.currentSection = section;
+            
+            // Atualizar classe ativa
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            renderSection(section);
+        }
+
+        function renderSection(section) {
+            const content = document.getElementById('mainContent');
+            
+            switch(section) {
+                case 'dashboard':
+                    content.innerHTML = renderDashboard();
+                    initializeCharts();
+                    break;
+                case 'caixa':
+                    content.innerHTML = renderCaixa();
+                    break;
+                case 'clientes':
+                    content.innerHTML = renderClientes();
+                    break;
+                case 'funcionarios':
+                    content.innerHTML = renderFuncionarios();
+                    break;
+                case 'estoque':
+                    content.innerHTML = renderEstoque();
+                    break;
+                case 'servicos':
+                    content.innerHTML = renderOrdensServico();
+                    break;
+                case 'relatorios':
+                    content.innerHTML = renderRelatorios();
+                    break;
+            }
+        }
+
+        // ==================== RENDERIZAÇÃO DAS SEÇÕES ====================
+        
+        function renderDashboard() {
+            const entradas = App.data.caixa.filter(i => i.tipo === 'entrada').reduce((s, i) => s + i.valor, 0);
+            const saidas = App.data.caixa.filter(i => i.tipo === 'saida').reduce((s, i) => s + i.valor, 0);
+            const saldo = entradas - saidas;
+            
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Saldo Atual</h3>
+                            <div class="value">R$ ${saldo.toFixed(2)}</div>
+                        </div>
+                        <i class="fas fa-chart-line stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Clientes</h3>
+                            <div class="value">${App.data.clientes.length}</div>
+                        </div>
+                        <i class="fas fa-users stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Serviços Hoje</h3>
+                            <div class="value">${App.data.ordensServico.length}</div>
+                        </div>
+                        <i class="fas fa-tools stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Estoque Baixo</h3>
+                            <div class="value">${App.data.estoque.filter(i => i.quantidade < 10).length}</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Fluxo de Caixa</h3>
+                        <canvas id="fluxoCaixaChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-pie" style="color: var(--primary);"></i> Despesas por Categoria</h3>
+                        <canvas id="despesasChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;">Últimas Movimentações</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${App.data.caixa.slice(0, 5).map(item => `
+                                    <tr>
+                                        <td>${item.data}</td>
+                                        <td>
+                                            <span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">
+                                                ${item.tipo === 'entrada' ? 'Entrada' : 'Saída'}
+                                            </span>
+                                        </td>
+                                        <td>${item.descricao}</td>
+                                        <td>R$ ${item.valor.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCaixa() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> Novo Registro</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="tipoCaixa">
+                                <option value="entrada">Entrada</option>
+                                <option value="saida">Saída</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <input type="text" id="descCaixa" placeholder="Ex: Troca de óleo">
+                        </div>
+                        <div class="form-group">
+                            <label>Valor (R$)</label>
+                            <input type="number" id="valorCaixa" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Data</label>
+                            <input type="date" id="dataCaixa" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="registrarCaixa()">
+                        <i class="fas fa-save"></i> Registrar
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Período</label>
+                        <select id="filtroPeriodo">
+                            <option value="hoje">Hoje</option>
+                            <option value="semana">Esta Semana</option>
+                            <option value="mes">Este Mês</option>
+                            <option value="todos" selected>Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Tipo</label>
+                        <select id="filtroTipo">
+                            <option value="todos">Todos</option>
+                            <option value="entrada">Entradas</option>
+                            <option value="saida">Saídas</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="aplicarFiltrosCaixa()">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCaixa">
+                            ${renderTabelaCaixa()}
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: var(--light); font-weight: bold;">
+                                <td colspan="3">Total Entradas:</td>
+                                <td>R$ ${calcularTotalCaixa('entrada').toFixed(2)}</td>
+                                <td></td>
+                            </tr>
+                            <tr style="background: var(--light); font-weight: bold;">
+                                <td colspan="3">Total Saídas:</td>
+                                <td>R$ ${calcularTotalCaixa('saida').toFixed(2)}</td>
+                                <td></td>
+                            </tr>
+                            <tr style="background: var(--secondary); color: white; font-weight: bold;">
+                                <td colspan="3">Saldo:</td>
+                                <td>R$ ${(calcularTotalCaixa('entrada') - calcularTotalCaixa('saida')).toFixed(2)}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderClientes() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-user-plus"></i> Novo Cliente</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome Completo</label>
+                            <input type="text" id="nomeCliente" placeholder="Nome do cliente">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="text" id="telCliente" placeholder="(11) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="emailCliente" placeholder="cliente@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>CPF</label>
+                            <input type="text" id="cpfCliente" placeholder="000.000.000-00">
+                        </div>
+                        <div class="form-group">
+                            <label>Veículo</label>
+                            <input type="text" id="veicCliente" placeholder="Ex: Gol 2020">
+                        </div>
+                        <div class="form-group">
+                            <label>Placa</label>
+                            <input type="text" id="placaCliente" placeholder="ABC-1234">
+                        </div>
+                        <div class="form-group">
+                            <label>Endereço</label>
+                            <input type="text" id="endCliente" placeholder="Rua, número, bairro">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="cadastrarCliente()">
+                        <i class="fas fa-save"></i> Cadastrar
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <input type="text" id="buscaCliente" placeholder="Buscar cliente..." onkeyup="buscarClientes()">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Telefone</th>
+                                <th>Email</th>
+                                <th>Veículo</th>
+                                <th>Placa</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaClientes">
+                            ${renderTabelaClientes()}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderFuncionarios() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-user-plus"></i> Novo Funcionário</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" id="nomeFuncionario">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="cargoFuncionario">
+                        </div>
+                        <div class="form-group">
+                            <label>Salário</label>
+                            <input type="number" id="salarioFuncionario" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="text" id="telFuncionario">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="cadastrarFuncionario()">
+                        <i class="fas fa-save"></i> Cadastrar
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-money-bill"></i> Controle de Vales</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Funcionário</label>
+                            <select id="funcVale">
+                                ${App.data.funcionarios.map(f => `<option value="${f.nome}">${f.nome}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="tipoVale">
+                                <option value="entrada">Entrada (Adiantamento)</option>
+                                <option value="saida">Saída (Desconto)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Valor</label>
+                            <input type="number" id="valorVale" step="0.01">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="registrarVale()">
+                        <i class="fas fa-save"></i> Registrar Vale
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Funcionário</th>
+                                <th>Cargo</th>
+                                <th>Salário</th>
+                                <th>Vales</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaFuncionarios">
+                            ${renderTabelaFuncionarios()}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderEstoque() {
+            return `
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-box-open"></i> Novo Produto</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Produto</label>
+                            <input type="text" id="nomeProduto">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantidade</label>
+                            <input type="number" id="qtdProduto">
+                        </div>
+                        <div class="form-group">
+                            <label>Preço</label>
+                            <input type="number" id="precoProduto" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Fornecedor</label>
+                            <input type="text" id="fornecedorProduto">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="cadastrarProduto()">
+                        <i class="fas fa-save"></i> Cadastrar
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                                <th>Preço</th>
+                                <th>Fornecedor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaEstoque">
+                            ${renderTabelaEstoque()}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ==================== FUNÇÕES DE RENDERIZAÇÃO DE TABELAS ====================
+        
+        function renderTabelaCaixa() {
+            return App.data.caixa.map(item => `
+                <tr>
+                    <td>${item.data}</td>
+                    <td>
+                        <span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">
+                            ${item.tipo === 'entrada' ? '💰 Entrada' : '💸 Saída'}
+                        </span>
+                    </td>
+                    <td>${item.descricao}</td>
+                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editarRegistro(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTabelaClientes() {
+            return App.data.clientes.map(item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.telefone}</td>
+                    <td>${item.email || '-'}</td>
+                    <td>${item.veiculo}</td>
+                    <td>${item.placa || '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-view" onclick="verHistoricoCliente(${item.id})">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTabelaFuncionarios() {
+            return App.data.funcionarios.map(item => {
+                const vales = App.data.vales
+                    .filter(v => v.funcionario === item.nome)
+                    .reduce((acc, v) => acc + (v.tipo === 'entrada' ? v.valor : -v.valor), 0);
+                
+                return `
+                    <tr>
+                        <td>${item.nome}</td>
+                        <td>${item.cargo}</td>
+                        <td>R$ ${item.salario.toFixed(2)}</td>
+                        <td>R$ ${vales.toFixed(2)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="verValesFuncionario(${item.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editarFuncionario(${item.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="excluirFuncionario(${item.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderTabelaEstoque() {
+            return App.data.estoque.map(item => `
+                <tr>
+                    <td>${item.produto}</td>
+                    <td>${item.quantidade}</td>
+                    <td>R$ ${item.preco.toFixed(2)}</td>
+                    <td>${item.fornecedor}</td>
+                    <td>
+                        ${item.quantidade < 10 ? 
+                            '<span class="badge badge-danger">Estoque Baixo</span>' : 
+                            '<span class="badge badge-success">Normal</span>'}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editarProduto(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirProduto(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== FUNÇÕES DE CÁLCULO ====================
+        
+        function calcularTotalCaixa(tipo) {
+            return App.data.caixa
+                .filter(item => item.tipo === tipo)
+                .reduce((acc, item) => acc + item.valor, 0);
+        }
+
+        // ==================== FUNÇÕES CRUD ====================
+        
+        function registrarCaixa() {
+            const tipo = document.getElementById('tipoCaixa').value;
+            const desc = document.getElementById('descCaixa').value;
+            const valor = parseFloat(document.getElementById('valorCaixa').value);
+            const data = document.getElementById('dataCaixa').value;
+
+            if (!desc || !valor) {
+                showToast('Preencha todos os campos obrigatórios!', 'warning');
+                return;
+            }
+
+            const novoRegistro = {
+                id: Date.now(),
+                tipo,
+                descricao: desc,
+                valor,
+                data
+            };
+
+            App.data.caixa.unshift(novoRegistro);
+            saveDataToStorage();
+            
+            // Atualizar a tabela
+            document.getElementById('tabelaCaixa').innerHTML = renderTabelaCaixa();
+            
+            // Limpar campos
+            document.getElementById('descCaixa').value = '';
+            document.getElementById('valorCaixa').value = '';
+            
+            showToast('Registro adicionado com sucesso!', 'success');
+            
+            // Atualizar dashboard se estiver visível
+            if (App.currentSection === 'dashboard') {
+                renderSection('dashboard');
+            }
+        }
+
+        function cadastrarCliente() {
+            const nome = document.getElementById('nomeCliente').value;
+            const tel = document.getElementById('telCliente').value;
+            const email = document.getElementById('emailCliente').value;
+            const cpf = document.getElementById('cpfCliente').value;
+            const veic = document.getElementById('veicCliente').value;
+            const placa = document.getElementById('placaCliente').value;
+            const end = document.getElementById('endCliente').value;
+
+            if (!nome || !tel) {
+                showToast('Nome e telefone são obrigatórios!', 'warning');
+                return;
+            }
+
+            const novoCliente = {
+                id: Date.now(),
+                nome,
+                telefone: tel,
+                email,
+                cpf,
+                veiculo: veic,
+                placa,
+                endereco: end,
+                dataCadastro: new Date().toISOString()
+            };
+
+            App.data.clientes.push(novoCliente);
+            saveDataToStorage();
+            
+            document.getElementById('tabelaClientes').innerHTML = renderTabelaClientes();
+            
+            // Limpar campos
+            document.getElementById('nomeCliente').value = '';
+            document.getElementById('telCliente').value = '';
+            document.getElementById('emailCliente').value = '';
+            document.getElementById('cpfCliente').value = '';
+            document.getElementById('veicCliente').value = '';
+            document.getElementById('placaCliente').value = '';
+            document.getElementById('endCliente').value = '';
+            
+            showToast('Cliente cadastrado com sucesso!', 'success');
+        }
+
+        function cadastrarFuncionario() {
+            const nome = document.getElementById('nomeFuncionario').value;
+            const cargo = document.getElementById('cargoFuncionario').value;
+            const salario = parseFloat(document.getElementById('salarioFuncionario').value);
+            const tel = document.getElementById('telFuncionario').value;
+
+            if (!nome || !cargo || !salario) {
+                showToast('Preencha todos os campos obrigatórios!', 'warning');
+                return;
+            }
+
+            const novoFuncionario = {
+                id: Date.now(),
+                nome,
+                cargo,
+                salario,
+                telefone: tel,
+                dataContratacao: new Date().toISOString()
+            };
+
+            App.data.funcionarios.push(novoFuncionario);
+            saveDataToStorage();
+            
+            document.getElementById('tabelaFuncionarios').innerHTML = renderTabelaFuncionarios();
+            
+            // Limpar campos
+            document.getElementById('nomeFuncionario').value = '';
+            document.getElementById('cargoFuncionario').value = '';
+            document.getElementById('salarioFuncionario').value = '';
+            document.getElementById('telFuncionario').value = '';
+            
+            showToast('Funcionário cadastrado com sucesso!', 'success');
+        }
+
+        function registrarVale() {
+            const funcionario = document.getElementById('funcVale').value;
+            const tipo = document.getElementById('tipoVale').value;
+            const valor = parseFloat(document.getElementById('valorVale').value);
+
+            if (!funcionario || !valor) {
+                showToast('Preencha todos os campos!', 'warning');
+                return;
+            }
+
+            const novoVale = {
+                id: Date.now(),
+                funcionario,
+                tipo,
+                valor,
+                data: new Date().toISOString().split('T')[0]
+            };
+
+            App.data.vales.push(novoVale);
+            saveDataToStorage();
+            
+            showToast('Vale registrado com sucesso!', 'success');
+            
+            document.getElementById('valorVale').value = '';
+        }
+
+        function cadastrarProduto() {
+            const produto = document.getElementById('nomeProduto').value;
+            const quantidade = parseInt(document.getElementById('qtdProduto').value);
+            const preco = parseFloat(document.getElementById('precoProduto').value);
+            const fornecedor = document.getElementById('fornecedorProduto').value;
+
+            if (!produto || !quantidade || !preco) {
+                showToast('Preencha todos os campos obrigatórios!', 'warning');
+                return;
+            }
+
+            const novoProduto = {
+                id: Date.now(),
+                produto,
+                quantidade,
+                preco,
+                fornecedor
+            };
+
+            App.data.estoque.push(novoProduto);
+            saveDataToStorage();
+            
+            document.getElementById('tabelaEstoque').innerHTML = renderTabelaEstoque();
+            
+            // Limpar campos
+            document.getElementById('nomeProduto').value = '';
+            document.getElementById('qtdProduto').value = '';
+            document.getElementById('precoProduto').value = '';
+            document.getElementById('fornecedorProduto').value = '';
+            
+            showToast('Produto cadastrado com sucesso!', 'success');
+        }
+
+        // ==================== GRÁFICOS ====================
+        
+        function initializeCharts() {
+            // Destruir gráficos existentes
+            if (App.charts.fluxoCaixa) App.charts.fluxoCaixa.destroy();
+            if (App.charts.despesas) App.charts.despesas.destroy();
+
+            // Dados para o gráfico de fluxo de caixa
+            const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+            const entradas = [1200, 1900, 1500, 1800, 2100, 1600, 1400];
+            const saidas = [800, 1100, 900, 1200, 1300, 1000, 900];
+
+            // Gráfico de Fluxo de Caixa
+            const ctxFluxo = document.getElementById('fluxoCaixaChart')?.getContext('2d');
+            if (ctxFluxo) {
+                App.charts.fluxoCaixa = new Chart(ctxFluxo, {
+                    type: 'line',
+                    data: {
+                        labels: dias,
+                        datasets: [{
+                            label: 'Entradas',
+                            data: entradas,
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            tension: 0.4
+                        }, {
+                            label: 'Saídas',
+                            data: saidas,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico de Despesas
+            const ctxDespesas = document.getElementById('despesasChart')?.getContext('2d');
+            if (ctxDespesas) {
+                App.charts.despesas = new Chart(ctxDespesas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Peças', 'Mão de Obra', 'Impostos', 'Aluguel', 'Outros'],
+                        datasets: [{
+                            data: [35, 25, 20, 15, 5],
+                            backgroundColor: [
+                                '#e63946',
+                                '#f39c12',
+                                '#2ecc71',
+                                '#3498db',
+                                '#9b59b6'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ==================== FUNÇÕES DE BUSCA ====================
+        
+        function buscarClientes() {
+            const termo = document.getElementById('buscaCliente').value.toLowerCase();
+            
+            if (!termo) {
+                document.getElementById('tabelaClientes').innerHTML = renderTabelaClientes();
+                return;
+            }
+
+            const filtrados = App.data.clientes.filter(cliente => 
+                cliente.nome.toLowerCase().includes(termo) ||
+                cliente.telefone.includes(termo) ||
+                cliente.veiculo.toLowerCase().includes(termo) ||
+                (cliente.placa && cliente.placa.toLowerCase().includes(termo))
+            );
+
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.telefone}</td>
+                    <td>${item.email || '-'}</td>
+                    <td>${item.veiculo}</td>
+                    <td>${item.placa || '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-view" onclick="verHistoricoCliente(${item.id})">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="btn-icon btn-edit" onclick="editarCliente(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirCliente(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== MODAL ====================
+        
+        function openModal(title, content, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+            
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            confirmBtn.onclick = () => {
+                onConfirm();
+                closeModal();
+            };
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // ==================== AÇÕES DE EXCLUSÃO ====================
+        
+        function excluirRegistro(id) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                App.data.caixa = App.data.caixa.filter(item => item.id !== id);
+                saveDataToStorage();
+                document.getElementById('tabelaCaixa').innerHTML = renderTabelaCaixa();
+                showToast('Registro excluído com sucesso!', 'success');
+            }
+        }
+
+        function excluirCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                App.data.clientes = App.data.clientes.filter(item => item.id !== id);
+                saveDataToStorage();
+                document.getElementById('tabelaClientes').innerHTML = renderTabelaClientes();
+                showToast('Cliente excluído com sucesso!', 'success');
+            }
+        }
+
+        function excluirFuncionario(id) {
+            if (confirm('Tem certeza que deseja excluir este funcionário?')) {
+                App.data.funcionarios = App.data.funcionarios.filter(item => item.id !== id);
+                saveDataToStorage();
+                document.getElementById('tabelaFuncionarios').innerHTML = renderTabelaFuncionarios();
+                showToast('Funcionário excluído com sucesso!', 'success');
+            }
+        }
+
+        function excluirProduto(id) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                App.data.estoque = App.data.estoque.filter(item => item.id !== id);
+                saveDataToStorage();
+                document.getElementById('tabelaEstoque').innerHTML = renderTabelaEstoque();
+                showToast('Produto excluído com sucesso!', 'success');
+            }
+        }
+
+        // ==================== FILTROS ====================
+        
+        function aplicarFiltrosCaixa() {
+            const periodo = document.getElementById('filtroPeriodo').value;
+            const tipo = document.getElementById('filtroTipo').value;
+            
+            let dadosFiltrados = [...App.data.caixa];
+            
+            // Aplicar filtro de período
+            if (periodo !== 'todos') {
+                const hoje = new Date();
+                const dataLimite = new Date();
+                
+                switch(periodo) {
+                    case 'hoje':
+                        dataLimite.setHours(0, 0, 0, 0);
+                        dadosFiltrados = dadosFiltrados.filter(item => 
+                            new Date(item.data) >= dataLimite
+                        );
+                        break;
+                    case 'semana':
+                        dataLimite.setDate(hoje.getDate() - 7);
+                        dadosFiltrados = dadosFiltrados.filter(item => 
+                            new Date(item.data) >= dataLimite
+                        );
+                        break;
+                    case 'mes':
+                        dataLimite.setMonth(hoje.getMonth() - 1);
+                        dadosFiltrados = dadosFiltrados.filter(item => 
+                            new Date(item.data) >= dataLimite
+                        );
+                        break;
+                }
+            }
+            
+            // Aplicar filtro de tipo
+            if (tipo !== 'todos') {
+                dadosFiltrados = dadosFiltrados.filter(item => item.tipo === tipo);
+            }
+            
+            // Renderizar tabela filtrada
+            document.getElementById('tabelaCaixa').innerHTML = dadosFiltrados.map(item => `
+                <tr>
+                    <td>${item.data}</td>
+                    <td>
+                        <span class="badge ${item.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">
+                            ${item.tipo === 'entrada' ? '💰 Entrada' : '💸 Saída'}
+                        </span>
+                    </td>
+                    <td>${item.descricao}</td>
+                    <td>R$ ${item.valor.toFixed(2)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editarRegistro(${item.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="excluirRegistro(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== FUNÇÕES ADICIONAIS ====================
+        
+        function logout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                showToast('Sessão encerrada!', 'info');
+                // Aqui você pode redirecionar para a página de login
+            }
+        }
+
+        // Placeholders para funções que serão implementadas
+        function verHistoricoCliente(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function editarCliente(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function verValesFuncionario(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function editarFuncionario(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function editarProduto(id) {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function renderOrdensServico() {
+            return '<h2>Ordens de Serviço - Em desenvolvimento</h2>';
+        }
+
+        function renderRelatorios() {
+            return '<h2>Relatórios - Em desenvolvimento</h2>';
+        }
+    </script>
+
+    <style>
+        /* Estilos adicionais */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
 </body>
 </html>
