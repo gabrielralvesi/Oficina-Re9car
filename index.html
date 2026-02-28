@@ -28,6 +28,7 @@
             --warning: #f39c12;
             --danger: #e74c3c;
             --info: #3498db;
+            --whatsapp: #25D366;
             --light: #f8f9fa;
             --gray: #6c757d;
             --border: #dee2e6;
@@ -175,6 +176,23 @@
         .stat-icon {
             font-size: 40px;
             opacity: 0.3;
+        }
+
+        /* WhatsApp Button */
+        .btn-whatsapp {
+            background: var(--whatsapp);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
         }
 
         /* Alert Cards */
@@ -330,6 +348,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
         .btn-action {
             padding: 6px 10px;
             border: none;
@@ -346,6 +374,7 @@
         .btn-action.info { background: var(--info); }
         .btn-action.warning { background: var(--warning); }
         .btn-action.primary { background: var(--primary); }
+        .btn-action.whatsapp { background: var(--whatsapp); }
         .btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
 
         /* Tables */
@@ -392,6 +421,7 @@
         .badge-danger { background: #f8d7da; color: #721c24; }
         .badge-warning { background: #fff3cd; color: #856404; }
         .badge-info { background: #d1ecf1; color: #0c5460; }
+        .badge-whatsapp { background: var(--whatsapp); color: white; }
 
         /* Serviços */
         .servico-linha {
@@ -407,6 +437,34 @@
 
         .servico-descricao { flex: 3; }
         .servico-valor { flex: 1; }
+
+        /* Vale Card */
+        .vale-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vale-info h4 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .vale-info p {
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        .vale-saldo {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
 
         /* Modal */
         .modal {
@@ -486,6 +544,7 @@
         .toast.error { border-left-color: var(--danger); }
         .toast.warning { border-left-color: var(--warning); }
         .toast.info { border-left-color: var(--info); }
+        .toast.whatsapp { border-left-color: var(--whatsapp); }
 
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
@@ -587,6 +646,7 @@
             <div class="nav-item" onclick="showSection('os', this)">🔧 OS <span class="badge badge-warning" id="osCount"></span></div>
             <div class="nav-item" onclick="showSection('clientes', this)">👥 Clientes <span class="badge badge-info" id="clientesCount"></span></div>
             <div class="nav-item" onclick="showSection('veiculos', this)">🚗 Veículos <span class="badge badge-info" id="veiculosCount"></span></div>
+            <div class="nav-item" onclick="showSection('funcionarios', this)">👔 Funcionários</div>
             <div class="nav-item" onclick="showSection('agenda', this)">📅 Agenda</div>
             <div class="nav-item" onclick="showSection('financeiro', this)">💰 Financeiro</div>
             <div class="nav-item" onclick="showSection('relatorios', this)">📊 Relatórios</div>
@@ -626,7 +686,7 @@
             KM_MEDIO_DIA: 100,
             ALERTA_KM: 5000,
             ALERTA_DIAS: 90,
-            VERSAO: '2.0.0'
+            VERSAO: '2.1.0'
         };
 
         // ==================== ESTADO DA APLICAÇÃO ====================
@@ -639,12 +699,15 @@
                 email: 'contato@renovecar.com',
                 telefone: '(11) 99999-9999',
                 endereco: 'Rua da Oficina, 123',
-                cnpj: '12.345.678/0001-90'
+                cnpj: '12.345.678/0001-90',
+                whatsapp: '5511999999999' // Número para WhatsApp
             },
             data: {
                 os: [],
                 clientes: [],
                 veiculos: [],
+                funcionarios: [],
+                vales: [],
                 agenda: [],
                 financeiro: []
             }
@@ -692,23 +755,34 @@
                 }
             ],
             clientes: [
-                { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', email: 'joao@email.com', endereco: 'Rua A, 123', cpf: '123.456.789-00' },
-                { id: 2, nome: 'Maria Santos', telefone: '(11) 98888-8888', email: 'maria@email.com', endereco: 'Av B, 456', cpf: '987.654.321-00' },
-                { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 97777-7777', email: 'pedro@email.com', endereco: 'Rua C, 789', cpf: '456.789.123-00' }
+                { id: 1, nome: 'João Silva', telefone: '(11) 99999-9999', whatsapp: '5511999999999', email: 'joao@email.com', endereco: 'Rua A, 123', cpf: '123.456.789-00' },
+                { id: 2, nome: 'Maria Santos', telefone: '(11) 98888-8888', whatsapp: '5511988888888', email: 'maria@email.com', endereco: 'Av B, 456', cpf: '987.654.321-00' },
+                { id: 3, nome: 'Pedro Oliveira', telefone: '(11) 97777-7777', whatsapp: '5511977777777', email: 'pedro@email.com', endereco: 'Rua C, 789', cpf: '456.789.123-00' }
             ],
             veiculos: [
                 { id: 1, clienteId: 1, clienteNome: 'João Silva', modelo: 'Gol 2020', placa: 'ABC-1234', km: 45230, cor: 'Prata', ano: 2020, combustivel: 'Flex' },
                 { id: 2, clienteId: 2, clienteNome: 'Maria Santos', modelo: 'Onix 2022', placa: 'XYZ-5678', km: 15320, cor: 'Branco', ano: 2022, combustivel: 'Flex' },
                 { id: 3, clienteId: 3, clienteNome: 'Pedro Oliveira', modelo: 'Fiesta 2019', placa: 'DEF-9012', km: 67890, cor: 'Preto', ano: 2019, combustivel: 'Gasolina' }
             ],
+            funcionarios: [
+                { id: 1, nome: 'Carlos Mecânico', cargo: 'Mecânico Sênior', telefone: '(11) 96666-6666', salario: 3500, dataAdmissao: '2023-01-10', saldoVales: 0 },
+                { id: 2, nome: 'Ana Recepcionista', cargo: 'Recepcionista', telefone: '(11) 95555-5555', salario: 1800, dataAdmissao: '2023-02-15', saldoVales: 0 },
+                { id: 3, nome: 'João Pintor', cargo: 'Pintor', telefone: '(11) 94444-4444', salario: 2500, dataAdmissao: '2023-03-20', saldoVales: 0 }
+            ],
+            vales: [
+                { id: 1, funcionarioId: 1, funcionarioNome: 'Carlos Mecânico', valor: 200, data: '2024-01-10', descricao: 'Adiantamento salarial', status: 'pendente' },
+                { id: 2, funcionarioId: 2, funcionarioNome: 'Ana Recepcionista', valor: 100, data: '2024-01-12', descricao: 'Vale transporte', status: 'pago' }
+            ],
             agenda: [
-                { id: 1, clienteId: 1, clienteNome: 'João Silva', data: '2024-01-20', hora: '09:00', servico: 'Revisão Geral', status: 'agendado' },
-                { id: 2, clienteId: 2, clienteNome: 'Maria Santos', data: '2024-01-20', hora: '14:00', servico: 'Troca de Óleo', status: 'confirmado' }
+                { id: 1, clienteId: 1, clienteNome: 'João Silva', telefone: '(11) 99999-9999', whatsapp: '5511999999999', data: '2024-01-20', hora: '09:00', servico: 'Revisão Geral', status: 'agendado', lembreteEnviado: false },
+                { id: 2, clienteId: 2, clienteNome: 'Maria Santos', telefone: '(11) 98888-8888', whatsapp: '5511988888888', data: '2024-01-20', hora: '14:00', servico: 'Troca de Óleo', status: 'confirmado', lembreteEnviado: true },
+                { id: 3, clienteId: 3, clienteNome: 'Pedro Oliveira', telefone: '(11) 97777-7777', whatsapp: '5511977777777', data: '2024-01-21', hora: '10:30', servico: 'Alinhamento', status: 'agendado', lembreteEnviado: false }
             ],
             financeiro: [
                 { id: 1, tipo: 'entrada', descricao: 'OS-001 - João Silva', valor: 270, data: '2024-01-15', categoria: 'Serviços', formaPagamento: 'Dinheiro' },
                 { id: 2, tipo: 'entrada', descricao: 'OS-002 - Maria Santos', valor: 180, data: '2024-01-16', categoria: 'Serviços', formaPagamento: 'Cartão' },
-                { id: 3, tipo: 'saida', descricao: 'Compra de Óleos', valor: 450, data: '2024-01-13', categoria: 'Estoque', formaPagamento: 'PIX' }
+                { id: 3, tipo: 'saida', descricao: 'Compra de Óleos', valor: 450, data: '2024-01-13', categoria: 'Estoque', formaPagamento: 'PIX' },
+                { id: 4, tipo: 'vale', descricao: 'Vale - Carlos Mecânico', valor: 200, data: '2024-01-10', funcionarioId: 1, funcionarioNome: 'Carlos Mecânico', status: 'pendente' }
             ]
         };
 
@@ -727,8 +801,14 @@
         const showToast = (message, type = 'info') => {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
-            toast.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
+            const icons = { 
+                success: 'fa-check-circle', 
+                error: 'fa-exclamation-circle', 
+                warning: 'fa-exclamation-triangle', 
+                info: 'fa-info-circle',
+                whatsapp: 'fa-whatsapp'
+            };
+            toast.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${message}`;
             document.getElementById('toastContainer').appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         };
@@ -739,6 +819,19 @@
 
         const formatarData = (data) => {
             return new Date(data).toLocaleDateString('pt-BR');
+        };
+
+        const formatarTelefoneWhatsApp = (telefone) => {
+            // Remove caracteres não numéricos
+            return telefone.replace(/\D/g, '');
+        };
+
+        const enviarWhatsApp = (numero, mensagem) => {
+            const numeroFormatado = formatarTelefoneWhatsApp(numero);
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            const url = `https://wa.me/${numeroFormatado}?text=${mensagemCodificada}`;
+            window.open(url, '_blank');
+            showToast('Mensagem preparada!', 'whatsapp');
         };
 
         const updateDateTime = () => {
@@ -765,6 +858,15 @@
                 } else {
                     App.data = dadosIniciais;
                 }
+                
+                // Atualizar saldo de vales dos funcionários
+                App.data.funcionarios.forEach(f => {
+                    const valesPendentes = App.data.vales
+                        .filter(v => v.funcionarioId === f.id && v.status === 'pendente')
+                        .reduce((s, v) => s + v.valor, 0);
+                    f.saldoVales = valesPendentes;
+                });
+                
                 gerarAlertas();
                 updateCounters();
             } catch (e) {
@@ -780,6 +882,15 @@
                 dataBackup: new Date().toISOString()
             };
             localStorage.setItem('renovecar_pro', JSON.stringify(backup));
+            
+            // Atualizar saldo de vales
+            App.data.funcionarios.forEach(f => {
+                const valesPendentes = App.data.vales
+                    .filter(v => v.funcionarioId === f.id && v.status === 'pendente')
+                    .reduce((s, v) => s + v.valor, 0);
+                f.saldoVales = valesPendentes;
+            });
+            
             gerarAlertas();
             updateCounters();
             showToast('Dados salvos!', 'success');
@@ -790,7 +901,22 @@
             App.alertas = [];
             const hoje = new Date();
             
-            // 1. Alertas por KM (manutenção preventiva)
+            // 1. Alertas de agendamentos para hoje
+            const hojeStr = hoje.toISOString().split('T')[0];
+            App.data.agenda.filter(a => a.data === hojeStr && a.status === 'agendado' && !a.lembreteEnviado).forEach(a => {
+                App.alertas.push({
+                    id: Date.now() + Math.random(),
+                    tipo: 'agenda',
+                    cliente: a.clienteNome,
+                    telefone: a.telefone,
+                    whatsapp: a.whatsapp,
+                    mensagem: `Agendamento hoje às ${a.hora}: ${a.servico}`,
+                    prioridade: 'alta',
+                    acao: 'enviarLembrete'
+                });
+            });
+
+            // 2. Alertas de revisão por KM
             App.data.veiculos.forEach(v => {
                 const ultimaOS = App.data.os
                     .filter(o => o.veiculoId === v.id && o.status === 'concluido')
@@ -800,26 +926,30 @@
                     const kmPercorrido = v.km - ultimaOS.km;
                     const diasDesdeOS = Math.floor((hoje - new Date(ultimaOS.data)) / (1000 * 60 * 60 * 24));
                     
-                    // Alerta por KM
                     if (kmPercorrido > CONFIG.ALERTA_KM) {
+                        const cliente = App.data.clientes.find(c => c.id === v.clienteId);
                         App.alertas.push({
                             id: Date.now() + Math.random(),
                             tipo: 'km',
                             veiculo: `${v.modelo} - ${v.placa}`,
                             cliente: v.clienteNome,
+                            telefone: cliente?.telefone,
+                            whatsapp: cliente?.whatsapp,
                             mensagem: `Veículo rodou ${kmPercorrido}km desde última revisão`,
                             prioridade: kmPercorrido > CONFIG.ALERTA_KM + 2000 ? 'alta' : 'media',
                             acao: 'agendar'
                         });
                     }
                     
-                    // Alerta por tempo
                     if (diasDesdeOS > CONFIG.ALERTA_DIAS) {
+                        const cliente = App.data.clientes.find(c => c.id === v.clienteId);
                         App.alertas.push({
                             id: Date.now() + Math.random(),
                             tipo: 'tempo',
                             veiculo: `${v.modelo} - ${v.placa}`,
                             cliente: v.clienteNome,
+                            telefone: cliente?.telefone,
+                            whatsapp: cliente?.whatsapp,
                             mensagem: `Última revisão há ${diasDesdeOS} dias`,
                             prioridade: diasDesdeOS > CONFIG.ALERTA_DIAS + 30 ? 'alta' : 'media',
                             acao: 'agendar'
@@ -828,21 +958,20 @@
                 }
             });
 
-            // 2. Alertas de agendamentos para hoje
-            const hojeStr = hoje.toISOString().split('T')[0];
-            App.data.agenda.filter(a => a.data === hojeStr && a.status === 'agendado').forEach(a => {
+            // 3. Alertas de vales pendentes
+            App.data.vales.filter(v => v.status === 'pendente').forEach(v => {
                 App.alertas.push({
                     id: Date.now() + Math.random(),
-                    tipo: 'agenda',
-                    cliente: a.clienteNome,
-                    mensagem: `Agendamento hoje às ${a.hora}: ${a.servico}`,
-                    prioridade: 'alta',
-                    acao: 'confirmar'
+                    tipo: 'vale',
+                    funcionario: v.funcionarioNome,
+                    mensagem: `Vale pendente: ${v.funcionarioNome} - ${formatarMoeda(v.valor)}`,
+                    prioridade: 'media',
+                    acao: 'pagar'
                 });
             });
 
-            // 3. Alertas de contas a pagar vencidas
-            App.data.financeiro.filter(f => f.tipo === 'saida' && new Date(f.data) < hoje).forEach(f => {
+            // 4. Alertas de contas a pagar
+            App.data.financeiro.filter(f => f.tipo === 'saida' && new Date(f.data) < hoje && f.status !== 'pago').forEach(f => {
                 App.alertas.push({
                     id: Date.now() + Math.random(),
                     tipo: 'financeiro',
@@ -852,24 +981,120 @@
                 });
             });
 
-            // 4. Alertas de estoque baixo (simulado)
-            const estoqueBaixo = ['Óleo 5W30', 'Filtro de Óleo', 'Pastilha de Freio'];
-            estoqueBaixo.forEach(item => {
-                App.alertas.push({
-                    id: Date.now() + Math.random(),
-                    tipo: 'estoque',
-                    mensagem: `Estoque baixo: ${item}`,
-                    prioridade: 'media',
-                    acao: 'comprar'
-                });
-            });
-
             // Ordenar por prioridade
             App.alertas.sort((a, b) => {
                 if (a.prioridade === 'alta' && b.prioridade !== 'alta') return -1;
                 if (a.prioridade !== 'alta' && b.prioridade === 'alta') return 1;
                 return 0;
             });
+        };
+
+        // ==================== FUNÇÕES DE WHATSAPP ====================
+        const enviarLembreteWhatsApp = (agendaId) => {
+            const agenda = App.data.agenda.find(a => a.id === agendaId);
+            if (!agenda) return;
+            
+            const dataFormatada = formatarData(agenda.data);
+            const mensagem = `Olá ${agenda.clienteNome}! 👋\n\n` +
+                `Passando para lembrar do seu agendamento na RenoveCar Centro Automotivo:\n\n` +
+                `📅 Data: ${dataFormatada}\n` +
+                `⏰ Horário: ${agenda.hora}\n` +
+                `🔧 Serviço: ${agenda.servico}\n\n` +
+                `Qualquer dúvida, estamos à disposição!\n` +
+                `📍 ${App.configuracoes.endereco}\n` +
+                `📞 ${App.configuracoes.telefone}`;
+            
+            if (agenda.whatsapp) {
+                enviarWhatsApp(agenda.whatsapp, mensagem);
+                agenda.lembreteEnviado = true;
+                salvarDados();
+                showToast('Lembrete enviado!', 'whatsapp');
+            } else {
+                showToast('Cliente não possui WhatsApp cadastrado', 'warning');
+            }
+        };
+
+        const enviarLembreteTodos = () => {
+            const hoje = new Date().toISOString().split('T')[0];
+            const agendamentosHoje = App.data.agenda.filter(a => a.data === hoje && a.status === 'agendado' && !a.lembreteEnviado);
+            
+            if (agendamentosHoje.length === 0) {
+                showToast('Nenhum lembrete pendente para hoje', 'info');
+                return;
+            }
+            
+            agendamentosHoje.forEach(a => {
+                if (a.whatsapp) {
+                    const dataFormatada = formatarData(a.data);
+                    const mensagem = `Olá ${a.clienteNome}! 👋\n\n` +
+                        `Lembrete do seu agendamento hoje:\n\n` +
+                        `⏰ Horário: ${a.hora}\n` +
+                        `🔧 Serviço: ${a.servico}\n\n` +
+                        `Aguardamos você! 🚗`;
+                    
+                    enviarWhatsApp(a.whatsapp, mensagem);
+                    a.lembreteEnviado = true;
+                }
+            });
+            
+            salvarDados();
+            showToast(`${agendamentosHoje.length} lembretes enviados!`, 'whatsapp');
+        };
+
+        // ==================== FUNÇÕES DE VALES ====================
+        const registrarVale = (funcionarioId, valor, descricao) => {
+            const funcionario = App.data.funcionarios.find(f => f.id === funcionarioId);
+            if (!funcionario) return;
+            
+            const novoVale = {
+                id: Date.now(),
+                funcionarioId,
+                funcionarioNome: funcionario.nome,
+                valor,
+                data: new Date().toISOString().split('T')[0],
+                descricao,
+                status: 'pendente'
+            };
+            
+            App.data.vales.push(novoVale);
+            
+            // Registrar no financeiro
+            App.data.financeiro.push({
+                id: Date.now(),
+                tipo: 'vale',
+                descricao: `Vale - ${funcionario.nome}`,
+                valor,
+                data: novoVale.data,
+                categoria: 'Vales',
+                funcionarioId,
+                funcionarioNome: funcionario.nome,
+                status: 'pendente'
+            });
+            
+            funcionario.saldoVales = (funcionario.saldoVales || 0) + valor;
+            
+            salvarDados();
+            showToast('Vale registrado!', 'success');
+        };
+
+        const pagarVale = (valeId) => {
+            const vale = App.data.vales.find(v => v.id === valeId);
+            if (!vale) return;
+            
+            vale.status = 'pago';
+            
+            const financeiro = App.data.financeiro.find(f => f.funcionarioId === vale.funcionarioId && f.status === 'pendente');
+            if (financeiro) {
+                financeiro.status = 'pago';
+            }
+            
+            const funcionario = App.data.funcionarios.find(f => f.id === vale.funcionarioId);
+            if (funcionario) {
+                funcionario.saldoVales = (funcionario.saldoVales || 0) - vale.valor;
+            }
+            
+            salvarDados();
+            showToast('Vale pago!', 'success');
         };
 
         // ==================== NAVEGAÇÃO ====================
@@ -892,6 +1117,7 @@
                 os: renderOS,
                 clientes: renderClientes,
                 veiculos: renderVeiculos,
+                funcionarios: renderFuncionarios,
                 agenda: renderAgenda,
                 financeiro: renderFinanceiro,
                 relatorios: renderRelatorios,
@@ -911,16 +1137,14 @@
                 .reduce((s, f) => s + f.valor, 0);
             
             const saidas = App.data.financeiro
-                .filter(f => f.tipo === 'saida' && new Date(f.data).getMonth() === mes && new Date(f.data).getFullYear() === ano)
+                .filter(f => (f.tipo === 'saida' || f.tipo === 'vale') && new Date(f.data).getMonth() === mes && new Date(f.data).getFullYear() === ano)
                 .reduce((s, f) => s + f.valor, 0);
             
-            const osMes = App.data.os.filter(o => new Date(o.data).getMonth() === mes && new Date(o.data).getFullYear() === ano).length;
-            const osConcluidas = App.data.os.filter(o => o.status === 'concluido').length;
-            const taxaSucesso = App.data.os.length ? ((osConcluidas / App.data.os.length) * 100).toFixed(1) : 0;
+            const valesPendentes = App.data.vales.filter(v => v.status === 'pendente').reduce((s, v) => s + v.valor, 0);
             
             return `
                 <div class="stats-grid">
-                    <div class="stat-card" onclick="showSection('financeiro', document.querySelectorAll('.nav-item')[5])">
+                    <div class="stat-card" onclick="showSection('financeiro', document.querySelectorAll('.nav-item')[6])">
                         <div>
                             <h3>Faturamento Mês</h3>
                             <div class="value">${formatarMoeda(entradas)}</div>
@@ -928,29 +1152,29 @@
                         </div>
                         <i class="fas fa-chart-line stat-icon"></i>
                     </div>
-                    <div class="stat-card" onclick="showSection('os', document.querySelectorAll('.nav-item')[1])">
+                    <div class="stat-card" onclick="showSection('funcionarios', document.querySelectorAll('.nav-item')[4])">
                         <div>
-                            <h3>OS Mês</h3>
-                            <div class="value">${osMes}</div>
-                            <small>Taxa Sucesso: ${taxaSucesso}%</small>
+                            <h3>Vales Pendentes</h3>
+                            <div class="value">${formatarMoeda(valesPendentes)}</div>
+                            <small>${App.data.vales.filter(v => v.status === 'pendente').length} vales</small>
                         </div>
-                        <i class="fas fa-clipboard-list stat-icon"></i>
+                        <i class="fas fa-hand-holding-usd stat-icon"></i>
                     </div>
-                    <div class="stat-card" onclick="showSection('clientes', document.querySelectorAll('.nav-item')[2])">
+                    <div class="stat-card" onclick="showSection('agenda', document.querySelectorAll('.nav-item')[5])">
                         <div>
-                            <h3>Clientes</h3>
-                            <div class="value">${App.data.clientes.length}</div>
-                            <small>Ativos este mês: ${App.data.os.filter(o => new Date(o.data).getMonth() === mes).length}</small>
+                            <h3>Agenda Hoje</h3>
+                            <div class="value">${App.data.agenda.filter(a => a.data === new Date().toISOString().split('T')[0]).length}</div>
+                            <small>${App.data.agenda.filter(a => a.data === new Date().toISOString().split('T')[0] && !a.lembreteEnviado).length} sem lembrete</small>
+                        </div>
+                        <i class="fas fa-calendar-day stat-icon"></i>
+                    </div>
+                    <div class="stat-card" onclick="showSection('funcionarios', document.querySelectorAll('.nav-item')[4])">
+                        <div>
+                            <h3>Funcionários</h3>
+                            <div class="value">${App.data.funcionarios.length}</div>
+                            <small>Ativos</small>
                         </div>
                         <i class="fas fa-users stat-icon"></i>
-                    </div>
-                    <div class="stat-card" onclick="showSection('veiculos', document.querySelectorAll('.nav-item')[3])">
-                        <div>
-                            <h3>Veículos</h3>
-                            <div class="value">${App.data.veiculos.length}</div>
-                            <small>KM média: ${Math.round(App.data.veiculos.reduce((s,v) => s + v.km, 0) / App.data.veiculos.length)} km</small>
-                        </div>
-                        <i class="fas fa-car stat-icon"></i>
                     </div>
                 </div>
 
@@ -960,11 +1184,11 @@
                         ${App.alertas.filter(a => a.prioridade === 'alta').slice(0, 3).map(a => `
                             <div class="alert-card danger">
                                 <div>
-                                    <h4>${a.cliente || 'Sistema'}</h4>
+                                    <h4>${a.cliente || a.funcionario || 'Sistema'}</h4>
                                     <p>${a.mensagem}</p>
                                 </div>
-                                <button class="btn-action success" onclick="resolverAlerta('${a.tipo}')">
-                                    ${a.acao === 'agendar' ? 'Agendar' : a.acao === 'confirmar' ? 'Confirmar' : 'Resolver'}
+                                <button class="btn-action ${a.tipo === 'agenda' ? 'whatsapp' : 'success'}" onclick="resolverAlerta('${a.tipo}', ${a.id})">
+                                    ${a.acao === 'enviarLembrete' ? '📱 Enviar' : a.acao === 'pagar' ? '💵 Pagar' : '✅ OK'}
                                 </button>
                             </div>
                         `).join('')}
@@ -978,53 +1202,53 @@
                         <canvas id="faturamentoChart"></canvas>
                     </div>
                     <div class="chart-card">
-                        <h3>🥧 Serviços Realizados</h3>
-                        <canvas id="servicosChart"></canvas>
+                        <h3>🥧 Distribuição de Vales</h3>
+                        <canvas id="valesChart"></canvas>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>📋 Últimas OS</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>📋 Agendamentos de Hoje</h3>
+                        <button class="btn-action whatsapp" onclick="enviarLembreteTodos()">
+                            <i class="fab fa-whatsapp"></i> Enviar Lembretes
+                        </button>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Nº</th>
                                     <th>Cliente</th>
-                                    <th>Veículo</th>
-                                    <th>Data</th>
-                                    <th>Valor</th>
+                                    <th>Hora</th>
+                                    <th>Serviço</th>
                                     <th>Status</th>
+                                    <th>Lembrete</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${App.data.os.slice(0, 5).map(o => `
+                                ${App.data.agenda.filter(a => a.data === new Date().toISOString().split('T')[0]).map(a => `
                                     <tr>
-                                        <td>${o.numero}</td>
-                                        <td>${o.clienteNome}</td>
-                                        <td>${o.veiculo}</td>
-                                        <td>${formatarData(o.data)}</td>
-                                        <td>${formatarMoeda(o.valor)}</td>
-                                        <td><span class="badge ${o.status === 'concluido' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
+                                        <td>${a.clienteNome}</td>
+                                        <td>${a.hora}</td>
+                                        <td>${a.servico}</td>
+                                        <td><span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+                                        <td>${a.lembreteEnviado ? '<span class="badge badge-success">Enviado</span>' : '<span class="badge badge-warning">Pendente</span>'}</td>
                                         <td>
-                                            <button class="btn-action info" onclick="verOS(${o.id})"><i class="fas fa-eye"></i></button>
-                                            <button class="btn-action success" onclick="imprimirOS(${o.id})"><i class="fas fa-print"></i></button>
+                                            <button class="btn-action whatsapp" onclick="enviarLembreteWhatsApp(${a.id})" ${!a.whatsapp ? 'disabled' : ''}>
+                                                <i class="fab fa-whatsapp"></i>
+                                            </button>
+                                            <button class="btn-action success" onclick="confirmarAgendamento(${a.id})">
+                                                <i class="fas fa-check"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 `).join('')}
+                                ${App.data.agenda.filter(a => a.data === new Date().toISOString().split('T')[0]).length === 0 ? 
+                                    '<tr><td colspan="6" style="text-align: center;">Nenhum agendamento para hoje</td></tr>' : ''}
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;" class="no-print">
-                    <button class="btn btn-primary" onclick="gerarBackup()">
-                        <i class="fas fa-download"></i> Backup
-                    </button>
-                    <button class="btn btn-success" onclick="gerarRelatorioCompleto()">
-                        <i class="fas fa-file-pdf"></i> Relatório PDF
-                    </button>
                 </div>
             `;
         };
@@ -1032,7 +1256,7 @@
         const initCharts = () => {
             // Destruir gráficos existentes
             Chart.helpers.each(Chart.instances, (instance) => {
-                if (instance.canvas.id === 'faturamentoChart' || instance.canvas.id === 'servicosChart') {
+                if (instance.canvas.id === 'faturamentoChart' || instance.canvas.id === 'valesChart') {
                     instance.destroy();
                 }
             });
@@ -1066,18 +1290,16 @@
                 });
             }
 
-            // Gráfico de Serviços
-            const ctx2 = document.getElementById('servicosChart')?.getContext('2d');
+            // Gráfico de Vales
+            const ctx2 = document.getElementById('valesChart')?.getContext('2d');
             if (ctx2) {
-                const servicosCount = {};
-                App.data.os.forEach(os => {
-                    os.servicos.forEach(s => {
-                        servicosCount[s.desc] = (servicosCount[s.desc] || 0) + 1;
-                    });
+                const valesPorFuncionario = {};
+                App.data.vales.filter(v => v.status === 'pendente').forEach(v => {
+                    valesPorFuncionario[v.funcionarioNome] = (valesPorFuncionario[v.funcionarioNome] || 0) + v.valor;
                 });
-
-                const labels = Object.keys(servicosCount).length ? Object.keys(servicosCount) : ['Troca de Óleo', 'Freios', 'Alinhamento'];
-                const dados = Object.values(servicosCount).length ? Object.values(servicosCount) : [45, 25, 15];
+                
+                const labels = Object.keys(valesPorFuncionario).length ? Object.keys(valesPorFuncionario) : ['Sem vales'];
+                const dados = Object.values(valesPorFuncionario).length ? Object.values(valesPorFuncionario) : [1];
 
                 new Chart(ctx2, {
                     type: 'doughnut',
@@ -1134,7 +1356,7 @@
                             <label>Cliente *</label>
                             <select id="osCliente" onchange="carregarVeiculosCliente()">
                                 <option value="">Selecione</option>
-                                ${App.data.clientes.map(c => `<option value="${c.id}" data-telefone="${c.telefone}">${c.nome}</option>`).join('')}
+                                ${App.data.clientes.map(c => `<option value="${c.id}" data-telefone="${c.telefone}" data-whatsapp="${c.whatsapp}">${c.nome}</option>`).join('')}
                             </select>
                         </div>
                         <div class="form-group">
@@ -1284,7 +1506,6 @@
             const veiculo = App.data.veiculos.find(v => v.id == veiculoId);
 
             if (App.editId) {
-                // Editar OS existente
                 const index = App.data.os.findIndex(o => o.id === App.editId);
                 if (index !== -1) {
                     App.data.os[index] = {
@@ -1304,7 +1525,6 @@
                     showToast('OS atualizada com sucesso!', 'success');
                 }
             } else {
-                // Nova OS
                 const novaOS = {
                     id: Date.now(),
                     numero: `OS-${String(App.data.os.length + 1).padStart(3, '0')}`,
@@ -1503,66 +1723,6 @@
             }
         };
 
-        const imprimirOS = (id) => {
-            const os = App.data.os.find(o => o.id === id);
-            const servicos = os.servicos.map(s => `<tr><td>${s.desc}</td><td>${formatarMoeda(s.valor)}</td></tr>`).join('');
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>OS ${os.numero}</title>
-                    <style>
-                        body { font-family: Arial; padding: 40px; }
-                        .header { text-align: center; margin-bottom: 30px; }
-                        .header h1 { color: #e63946; margin: 0; }
-                        .info { margin: 20px 0; }
-                        .info p { margin: 5px 0; }
-                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th { background: #1e1e2f; color: white; padding: 10px; text-align: left; }
-                        td { padding: 10px; border-bottom: 1px solid #dee2e6; }
-                        .total { font-size: 18px; font-weight: bold; text-align: right; margin-top: 20px; }
-                        .footer { margin-top: 40px; text-align: center; color: #6c757d; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>RenoveCar Pro</h1>
-                        <h3>Ordem de Serviço ${os.numero}</h3>
-                    </div>
-                    
-                    <div class="info">
-                        <p><strong>Cliente:</strong> ${os.clienteNome}</p>
-                        <p><strong>Telefone:</strong> ${os.clienteTelefone || '-'}</p>
-                        <p><strong>Veículo:</strong> ${os.veiculo} - ${os.placa}</p>
-                        <p><strong>KM:</strong> ${os.km} km</p>
-                        <p><strong>Data:</strong> ${formatarData(os.data)}</p>
-                    </div>
-                    
-                    <table>
-                        <tr>
-                            <th>Serviço</th>
-                            <th>Valor</th>
-                        </tr>
-                        ${servicos}
-                    </table>
-                    
-                    <div class="total">
-                        Total: ${formatarMoeda(os.valor)}
-                    </div>
-                    
-                    ${os.observacoes ? `<p><strong>Observações:</strong> ${os.observacoes}</p>` : ''}
-                    
-                    <div class="footer">
-                        <p>Documento gerado em ${new Date().toLocaleString()}</p>
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-        };
-
         // ==================== CLIENTES ====================
         const renderClientes = () => {
             return `
@@ -1591,27 +1751,26 @@
                             <tr>
                                 <th>Nome</th>
                                 <th>Telefone</th>
+                                <th>WhatsApp</th>
                                 <th>Email</th>
-                                <th>CPF/CNPJ</th>
                                 <th>Veículos</th>
-                                <th>Última OS</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaClientes">
                             ${App.data.clientes.map(c => {
-                                const ultimaOS = App.data.os
-                                    .filter(o => o.clienteId === c.id)
-                                    .sort((a,b) => new Date(b.data) - new Date(a.data))[0];
-                                
                                 return `
                                     <tr>
                                         <td>${c.nome}</td>
                                         <td>${c.telefone}</td>
+                                        <td>
+                                            ${c.whatsapp ? 
+                                                `<button class="btn-action whatsapp" onclick="enviarWhatsApp('${c.whatsapp}', 'Olá ${c.nome}! Tudo bem?')">
+                                                    <i class="fab fa-whatsapp"></i>
+                                                </button>` : '-'}
+                                        </td>
                                         <td>${c.email || '-'}</td>
-                                        <td>${c.cpf || '-'}</td>
                                         <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
-                                        <td>${ultimaOS ? formatarData(ultimaOS.data) : '-'}</td>
                                         <td>
                                             <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
                                             <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
@@ -1641,6 +1800,10 @@
                             <input type="text" id="clienteTelefone" value="${App.editCliente?.telefone || ''}" placeholder="(11) 99999-9999">
                         </div>
                         <div class="form-group">
+                            <label>WhatsApp</label>
+                            <input type="text" id="clienteWhatsApp" value="${App.editCliente?.whatsapp || ''}" placeholder="5511999999999">
+                        </div>
+                        <div class="form-group">
                             <label>Email</label>
                             <input type="email" id="clienteEmail" value="${App.editCliente?.email || ''}">
                         </div>
@@ -1651,10 +1814,6 @@
                         <div class="form-group">
                             <label>Endereço</label>
                             <input type="text" id="clienteEndereco" value="${App.editCliente?.endereco || ''}">
-                        </div>
-                        <div class="form-group">
-                            <label>Data de Nascimento</label>
-                            <input type="date" id="clienteNascimento" value="${App.editCliente?.nascimento || ''}">
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -1669,36 +1828,36 @@
             const filtrados = App.data.clientes.filter(c => 
                 c.nome.toLowerCase().includes(termo.toLowerCase()) ||
                 c.telefone.includes(termo) ||
+                (c.whatsapp && c.whatsapp.includes(termo)) ||
                 (c.email && c.email.toLowerCase().includes(termo.toLowerCase()))
             );
             
-            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => {
-                const ultimaOS = App.data.os
-                    .filter(o => o.clienteId === c.id)
-                    .sort((a,b) => new Date(b.data) - new Date(a.data))[0];
-                
-                return `
-                    <tr>
-                        <td>${c.nome}</td>
-                        <td>${c.telefone}</td>
-                        <td>${c.email || '-'}</td>
-                        <td>${c.cpf || '-'}</td>
-                        <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
-                        <td>${ultimaOS ? formatarData(ultimaOS.data) : '-'}</td>
-                        <td>
-                            <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-action success" onclick="novaOSCliente(${c.id})"><i class="fas fa-plus"></i></button>
-                            <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            document.getElementById('tabelaClientes').innerHTML = filtrados.map(c => `
+                <tr>
+                    <td>${c.nome}</td>
+                    <td>${c.telefone}</td>
+                    <td>
+                        ${c.whatsapp ? 
+                            `<button class="btn-action whatsapp" onclick="enviarWhatsApp('${c.whatsapp}', 'Olá ${c.nome}! Tudo bem?')">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>` : '-'}
+                    </td>
+                    <td>${c.email || '-'}</td>
+                    <td>${App.data.veiculos.filter(v => v.clienteId === c.id).length}</td>
+                    <td>
+                        <button class="btn-action info" onclick="verCliente(${c.id})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action warning" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action success" onclick="novaOSCliente(${c.id})"><i class="fas fa-plus"></i></button>
+                        <button class="btn-action danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
         };
 
         const salvarCliente = () => {
             const nome = document.getElementById('clienteNome').value;
             const telefone = document.getElementById('clienteTelefone').value;
+            const whatsapp = document.getElementById('clienteWhatsApp').value;
             
             if (!nome || !telefone) {
                 showToast('Nome e telefone são obrigatórios', 'warning');
@@ -1712,10 +1871,10 @@
                         ...App.data.clientes[index],
                         nome,
                         telefone,
+                        whatsapp,
                         email: document.getElementById('clienteEmail').value,
                         cpf: document.getElementById('clienteCpf').value,
-                        endereco: document.getElementById('clienteEndereco').value,
-                        nascimento: document.getElementById('clienteNascimento').value
+                        endereco: document.getElementById('clienteEndereco').value
                     };
                     showToast('Cliente atualizado!', 'success');
                 }
@@ -1724,10 +1883,10 @@
                     id: Date.now(),
                     nome,
                     telefone,
+                    whatsapp,
                     email: document.getElementById('clienteEmail').value,
                     cpf: document.getElementById('clienteCpf').value,
                     endereco: document.getElementById('clienteEndereco').value,
-                    nascimento: document.getElementById('clienteNascimento').value,
                     dataCadastro: new Date().toISOString().split('T')[0]
                 });
                 showToast('Cliente cadastrado!', 'success');
@@ -1750,10 +1909,10 @@
                 `
                     <div style="line-height: 1.8;">
                         <p><strong>Telefone:</strong> ${c.telefone}</p>
+                        <p><strong>WhatsApp:</strong> ${c.whatsapp || '-'}</p>
                         <p><strong>Email:</strong> ${c.email || '-'}</p>
                         <p><strong>CPF/CNPJ:</strong> ${c.cpf || '-'}</p>
                         <p><strong>Endereço:</strong> ${c.endereco || '-'}</p>
-                        <p><strong>Cadastro:</strong> ${c.dataCadastro ? formatarData(c.dataCadastro) : '-'}</p>
                         
                         <h4 style="margin: 15px 0 5px;">🚗 Veículos (${veiculos.length})</h4>
                         <ul style="margin-left: 20px;">
@@ -2009,7 +2168,6 @@
                         <p><strong>Ano:</strong> ${v.ano || '-'}</p>
                         <p><strong>Cor:</strong> ${v.cor || '-'}</p>
                         <p><strong>Combustível:</strong> ${v.combustivel || '-'}</p>
-                        <p><strong>Cadastro:</strong> ${v.dataCadastro ? formatarData(v.dataCadastro) : '-'}</p>
                         
                         <h4 style="margin: 15px 0 5px;">📋 Histórico de OS (${os.length})</h4>
                         <ul style="margin-left: 20px;">
@@ -2046,6 +2204,244 @@
             }
         };
 
+        // ==================== FUNCIONÁRIOS E VALES ====================
+        const renderFuncionarios = () => {
+            return `
+                <div class="tabs no-print">
+                    <div class="tab active" onclick="mostrarSubFuncionario('lista')">👔 Funcionários</div>
+                    <div class="tab" onclick="mostrarSubFuncionario('vales')">💰 Vales</div>
+                    <div class="tab" onclick="mostrarSubFuncionario('novo')">➕ Novo Funcionário</div>
+                </div>
+                <div id="subFuncionario">${renderListaFuncionarios()}</div>
+            `;
+        };
+
+        const mostrarSubFuncionario = (secao) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const div = document.getElementById('subFuncionario');
+            if (secao === 'lista') div.innerHTML = renderListaFuncionarios();
+            else if (secao === 'vales') div.innerHTML = renderVales();
+            else div.innerHTML = renderNovoFuncionario();
+        };
+
+        const renderListaFuncionarios = () => {
+            return `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Telefone</th>
+                                <th>Salário</th>
+                                <th>Saldo Vales</th>
+                                <th>Admissão</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.funcionarios.map(f => `
+                                <tr>
+                                    <td>${f.nome}</td>
+                                    <td>${f.cargo}</td>
+                                    <td>${f.telefone}</td>
+                                    <td>${formatarMoeda(f.salario)}</td>
+                                    <td>
+                                        <span class="badge ${f.saldoVales > 0 ? 'badge-warning' : 'badge-success'}">
+                                            ${formatarMoeda(f.saldoVales || 0)}
+                                        </span>
+                                    </td>
+                                    <td>${formatarData(f.dataAdmissao)}</td>
+                                    <td>
+                                        <button class="btn-action success" onclick="abrirModalVale(${f.id}, '${f.nome}')">
+                                            <i class="fas fa-hand-holding-usd"></i> Vale
+                                        </button>
+                                        <button class="btn-action info" onclick="verFuncionario(${f.id})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const renderNovoFuncionario = () => {
+            return `
+                <div class="form-section">
+                    <h3>➕ Novo Funcionário</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome *</label>
+                            <input type="text" id="funcNome">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo *</label>
+                            <input type="text" id="funcCargo">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="text" id="funcTelefone">
+                        </div>
+                        <div class="form-group">
+                            <label>Salário *</label>
+                            <input type="number" id="funcSalario" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Admissão</label>
+                            <input type="date" id="funcData" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-action warning" onclick="mostrarSubFuncionario('lista')">Cancelar</button>
+                        <button class="btn-action success" onclick="salvarFuncionario()">Salvar</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const renderVales = () => {
+            const valesPendentes = App.data.vales.filter(v => v.status === 'pendente');
+            const totalPendente = valesPendentes.reduce((s, v) => s + v.valor, 0);
+            
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card" style="background: var(--warning);">
+                        <div>
+                            <h3>Vales Pendentes</h3>
+                            <div class="value">${valesPendentes.length}</div>
+                        </div>
+                        <i class="fas fa-clock stat-icon"></i>
+                    </div>
+                    <div class="stat-card" style="background: var(--primary);">
+                        <div>
+                            <h3>Total Pendente</h3>
+                            <div class="value">${formatarMoeda(totalPendente)}</div>
+                        </div>
+                        <i class="fas fa-hand-holding-usd stat-icon"></i>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Funcionário</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${App.data.vales.sort((a,b) => new Date(b.data) - new Date(a.data)).map(v => `
+                                <tr>
+                                    <td>${formatarData(v.data)}</td>
+                                    <td>${v.funcionarioNome}</td>
+                                    <td>${v.descricao || '-'}</td>
+                                    <td>${formatarMoeda(v.valor)}</td>
+                                    <td>
+                                        <span class="badge ${v.status === 'pendente' ? 'badge-warning' : 'badge-success'}">
+                                            ${v.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        ${v.status === 'pendente' ? 
+                                            `<button class="btn-action success" onclick="pagarVale(${v.id})">
+                                                <i class="fas fa-check"></i> Pagar
+                                            </button>` : 
+                                            '<span class="badge badge-success">Pago</span>'}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const salvarFuncionario = () => {
+            const nome = document.getElementById('funcNome').value;
+            const cargo = document.getElementById('funcCargo').value;
+            const salario = parseFloat(document.getElementById('funcSalario').value);
+            
+            if (!nome || !cargo || !salario) {
+                showToast('Preencha os campos obrigatórios', 'warning');
+                return;
+            }
+
+            App.data.funcionarios.push({
+                id: Date.now(),
+                nome,
+                cargo,
+                telefone: document.getElementById('funcTelefone').value,
+                salario,
+                dataAdmissao: document.getElementById('funcData').value,
+                saldoVales: 0
+            });
+
+            salvarDados();
+            showToast('Funcionário cadastrado!', 'success');
+            mostrarSubFuncionario('lista');
+        };
+
+        const abrirModalVale = (funcionarioId, funcionarioNome) => {
+            openModal(
+                `Registrar Vale - ${funcionarioNome}`,
+                `
+                    <div class="form-group">
+                        <label>Valor do Vale</label>
+                        <input type="number" id="valeValor" step="0.01" placeholder="0,00">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" id="valeDesc" placeholder="Ex: Adiantamento salarial">
+                    </div>
+                `,
+                () => {
+                    const valor = parseFloat(document.getElementById('valeValor').value);
+                    const desc = document.getElementById('valeDesc').value;
+                    
+                    if (!valor || valor <= 0) {
+                        showToast('Valor inválido', 'warning');
+                        return;
+                    }
+                    
+                    registrarVale(funcionarioId, valor, desc);
+                    closeModal();
+                    mostrarSubFuncionario('vales');
+                }
+            );
+        };
+
+        const verFuncionario = (id) => {
+            const f = App.data.funcionarios.find(f => f.id === id);
+            const vales = App.data.vales.filter(v => v.funcionarioId === id);
+            
+            openModal(
+                f.nome,
+                `
+                    <div style="line-height: 1.8;">
+                        <p><strong>Cargo:</strong> ${f.cargo}</p>
+                        <p><strong>Telefone:</strong> ${f.telefone || '-'}</p>
+                        <p><strong>Salário:</strong> ${formatarMoeda(f.salario)}</p>
+                        <p><strong>Admissão:</strong> ${formatarData(f.dataAdmissao)}</p>
+                        <p><strong>Saldo Vales:</strong> ${formatarMoeda(f.saldoVales || 0)}</p>
+                        
+                        <h4 style="margin: 15px 0 5px;">💰 Histórico de Vales</h4>
+                        <ul style="margin-left: 20px;">
+                            ${vales.map(v => `<li>${formatarData(v.data)} - ${formatarMoeda(v.valor)} (${v.status})</li>`).join('')}
+                        </ul>
+                    </div>
+                `,
+                closeModal
+            );
+        };
+
         // ==================== AGENDA ====================
         const renderAgenda = () => {
             return `
@@ -2073,16 +2469,29 @@
             
             return `
                 <div class="form-section">
-                    <h3>📅 Agendamentos de Hoje</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>📅 Agendamentos de Hoje</h3>
+                        <button class="btn-action whatsapp" onclick="enviarLembreteTodos()">
+                            <i class="fab fa-whatsapp"></i> Enviar Todos
+                        </button>
+                    </div>
+                    
                     ${agendamentos.length ? agendamentos.map(a => `
                         <div class="alert-card ${a.status === 'confirmado' ? 'success' : 'warning'}" style="margin-bottom: 10px;">
                             <div>
                                 <h4>${a.clienteNome} - ${a.hora}</h4>
                                 <p>${a.servico}</p>
+                                <small>WhatsApp: ${a.whatsapp || 'Não cadastrado'}</small>
                             </div>
                             <div>
                                 <span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span>
-                                <button class="btn-action success" onclick="confirmarAgendamento(${a.id})"><i class="fas fa-check"></i></button>
+                                <button class="btn-action whatsapp" onclick="enviarLembreteWhatsApp(${a.id})" ${!a.whatsapp ? 'disabled' : ''}>
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                                <button class="btn-action success" onclick="confirmarAgendamento(${a.id})">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                ${!a.lembreteEnviado ? '<span class="badge badge-warning">Pendente</span>' : ''}
                             </div>
                         </div>
                     `).join('') : '<p style="text-align: center; padding: 20px;">Nenhum agendamento para hoje</p>'}
@@ -2114,7 +2523,6 @@
             }
             html += '</div>';
             
-            // Listar agendamentos da semana
             const agendamentosSemana = App.data.agenda
                 .filter(a => {
                     const dataAgenda = new Date(a.data);
@@ -2135,7 +2543,9 @@
                                         <th>Hora</th>
                                         <th>Cliente</th>
                                         <th>Serviço</th>
+                                        <th>WhatsApp</th>
                                         <th>Status</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2145,7 +2555,18 @@
                                             <td>${a.hora}</td>
                                             <td>${a.clienteNome}</td>
                                             <td>${a.servico}</td>
+                                            <td>
+                                                ${a.whatsapp ? 
+                                                    `<button class="btn-action whatsapp" onclick="enviarWhatsApp('${a.whatsapp}', 'Olá ${a.clienteNome}! Lembrete do seu agendamento dia ${formatarData(a.data)} às ${a.hora}')">
+                                                        <i class="fab fa-whatsapp"></i>
+                                                    </button>` : '-'}
+                                            </td>
                                             <td><span class="badge ${a.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+                                            <td>
+                                                <button class="btn-action success" onclick="confirmarAgendamento(${a.id})">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -2167,7 +2588,7 @@
                             <label>Cliente *</label>
                             <select id="agendaCliente">
                                 <option value="">Selecione</option>
-                                ${App.data.clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('')}
+                                ${App.data.clientes.map(c => `<option value="${c.id}" data-whatsapp="${c.whatsapp}" data-telefone="${c.telefone}">${c.nome}</option>`).join('')}
                             </select>
                         </div>
                         <div class="form-group">
@@ -2182,14 +2603,16 @@
                             <label>Serviço *</label>
                             <input type="text" id="agendaServico" placeholder="Ex: Revisão Geral">
                         </div>
-                        <div class="form-group">
-                            <label>Observações</label>
-                            <input type="text" id="agendaObs" placeholder="Observações">
-                        </div>
                     </div>
-                    <button class="btn btn-success" onclick="salvarAgendamento()">
-                        <i class="fas fa-save"></i> Agendar
-                    </button>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-action success" onclick="salvarAgendamento()">
+                            <i class="fas fa-save"></i> Agendar
+                        </button>
+                        <button class="btn-action whatsapp" onclick="agendarEEnviarWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Agendar e Enviar
+                        </button>
+                    </div>
                 </div>
             `;
         };
@@ -2199,7 +2622,6 @@
             const data = document.getElementById('agendaData').value;
             const hora = document.getElementById('agendaHora').value;
             const servico = document.getElementById('agendaServico').value;
-            const obs = document.getElementById('agendaObs').value;
 
             if (!clienteId || !data || !hora || !servico) {
                 showToast('Preencha todos os campos obrigatórios', 'warning');
@@ -2212,17 +2634,40 @@
                 id: Date.now(),
                 clienteId: parseInt(clienteId),
                 clienteNome: cliente.nome,
+                telefone: cliente.telefone,
+                whatsapp: cliente.whatsapp,
                 data,
                 hora,
                 servico,
-                observacoes: obs,
                 status: 'agendado',
+                lembreteEnviado: false,
                 dataCriacao: new Date().toISOString()
             });
 
             salvarDados();
             showToast('Agendamento realizado!', 'success');
             mostrarSubAgenda('hoje');
+            
+            return App.data.agenda[App.data.agenda.length - 1];
+        };
+
+        const agendarEEnviarWhatsApp = () => {
+            const novoAgendamento = salvarAgendamento();
+            if (novoAgendamento && novoAgendamento.whatsapp) {
+                const dataFormatada = formatarData(novoAgendamento.data);
+                const mensagem = `Olá ${novoAgendamento.clienteNome}! 👋\n\n` +
+                    `Seu agendamento foi confirmado:\n\n` +
+                    `📅 Data: ${dataFormatada}\n` +
+                    `⏰ Horário: ${novoAgendamento.hora}\n` +
+                    `🔧 Serviço: ${novoAgendamento.servico}\n\n` +
+                    `Qualquer dúvida, estamos à disposição!\n` +
+                    `📍 ${App.configuracoes.endereco}\n` +
+                    `📞 ${App.configuracoes.telefone}`;
+                
+                enviarWhatsApp(novoAgendamento.whatsapp, mensagem);
+                novoAgendamento.lembreteEnviado = true;
+                salvarDados();
+            }
         };
 
         const confirmarAgendamento = (id) => {
@@ -2239,7 +2684,8 @@
         const renderFinanceiro = () => {
             const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada').reduce((s, f) => s + f.valor, 0);
             const saidas = App.data.financeiro.filter(f => f.tipo === 'saida').reduce((s, f) => s + f.valor, 0);
-            const saldo = entradas - saidas;
+            const vales = App.data.financeiro.filter(f => f.tipo === 'vale' && f.status === 'pendente').reduce((s, f) => s + f.valor, 0);
+            const saldo = entradas - saidas - vales;
             
             return `
                 <div class="stats-grid">
@@ -2259,6 +2705,13 @@
                     </div>
                     <div class="stat-card">
                         <div>
+                            <h3>Vales Pend.</h3>
+                            <div class="value">${formatarMoeda(vales)}</div>
+                        </div>
+                        <i class="fas fa-hand-holding-usd stat-icon"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div>
                             <h3>Saldo</h3>
                             <div class="value">${formatarMoeda(saldo)}</div>
                         </div>
@@ -2268,6 +2721,7 @@
 
                 <div class="tabs no-print">
                     <div class="tab active" onclick="mostrarSubFinanceiro('lista')">📋 Movimentações</div>
+                    <div class="tab" onclick="mostrarSubFinanceiro('vales')">💰 Vales</div>
                     <div class="tab" onclick="mostrarSubFinanceiro('novo')">➕ Nova</div>
                 </div>
                 <div id="subFinanceiro">${renderListaFinanceiro()}</div>
@@ -2279,12 +2733,14 @@
             event.currentTarget.classList.add('active');
             const div = document.getElementById('subFinanceiro');
             if (secao === 'lista') div.innerHTML = renderListaFinanceiro();
+            else if (secao === 'vales') div.innerHTML = renderValesFinanceiro();
             else div.innerHTML = renderNovaMovimentacao();
         };
 
         const renderListaFinanceiro = () => {
             const entradas = App.data.financeiro.filter(f => f.tipo === 'entrada').reduce((s, f) => s + f.valor, 0);
             const saidas = App.data.financeiro.filter(f => f.tipo === 'saida').reduce((s, f) => s + f.valor, 0);
+            const vales = App.data.financeiro.filter(f => f.tipo === 'vale' && f.status === 'pendente').reduce((s, f) => s + f.valor, 0);
             
             return `
                 <div class="table-container">
@@ -2295,8 +2751,8 @@
                                 <th>Tipo</th>
                                 <th>Descrição</th>
                                 <th>Categoria</th>
-                                <th>Forma Pag.</th>
                                 <th>Valor</th>
+                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -2304,27 +2760,52 @@
                             ${App.data.financeiro.sort((a,b) => new Date(b.data) - new Date(a.data)).map(f => `
                                 <tr>
                                     <td>${formatarData(f.data)}</td>
-                                    <td><span class="badge ${f.tipo === 'entrada' ? 'badge-success' : 'badge-danger'}">${f.tipo === 'entrada' ? '💰 Entrada' : '💸 Saída'}</span></td>
+                                    <td>
+                                        <span class="badge ${
+                                            f.tipo === 'entrada' ? 'badge-success' : 
+                                            f.tipo === 'saida' ? 'badge-danger' : 
+                                            'badge-warning'
+                                        }">
+                                            ${f.tipo === 'entrada' ? '💰 Entrada' : 
+                                              f.tipo === 'saida' ? '💸 Saída' : 
+                                              '💳 Vale'}
+                                        </span>
+                                    </td>
                                     <td>${f.descricao}</td>
                                     <td>${f.categoria || '-'}</td>
-                                    <td>${f.formaPagamento || '-'}</td>
                                     <td>${formatarMoeda(f.valor)}</td>
                                     <td>
-                                        <button class="btn-action danger" onclick="excluirFinanceiro(${f.id})"><i class="fas fa-trash"></i></button>
+                                        ${f.status ? 
+                                            `<span class="badge ${f.status === 'pago' ? 'badge-success' : 'badge-warning'}">${f.status}</span>` : 
+                                            '<span class="badge badge-success">Concluído</span>'}
+                                    </td>
+                                    <td>
+                                        ${f.tipo === 'vale' && f.status === 'pendente' ? 
+                                            `<button class="btn-action success" onclick="pagarVale(${f.funcionarioId ? App.data.vales.find(v => v.funcionarioId === f.funcionarioId)?.id : null})">
+                                                <i class="fas fa-check"></i> Pagar
+                                            </button>` : 
+                                            f.tipo !== 'vale' ? 
+                                            `<button class="btn-action danger" onclick="excluirFinanceiro(${f.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>` : ''}
                                     </td>
                                 </tr>
                             `).join('')}
                         </tbody>
                         <tfoot>
                             <tr style="background: var(--light); font-weight: bold;">
-                                <td colspan="5">Totais</td>
-                                <td>Entradas: ${formatarMoeda(entradas)} | Saídas: ${formatarMoeda(saidas)} | Saldo: ${formatarMoeda(entradas - saidas)}</td>
-                                <td></td>
+                                <td colspan="4">Totais</td>
+                                <td>Entradas: ${formatarMoeda(entradas)} | Saídas: ${formatarMoeda(saidas)} | Vales: ${formatarMoeda(vales)} | Saldo: ${formatarMoeda(entradas - saidas - vales)}</td>
+                                <td colspan="2"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             `;
+        };
+
+        const renderValesFinanceiro = () => {
+            return renderVales(); // Reutiliza a função de vales
         };
 
         const renderNovaMovimentacao = () => {
@@ -2363,17 +2844,6 @@
                                 <option value="Impostos">Impostos</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Forma de Pagamento</label>
-                            <select id="finForma">
-                                <option value="">Selecione</option>
-                                <option value="Dinheiro">Dinheiro</option>
-                                <option value="Cartão">Cartão</option>
-                                <option value="PIX">PIX</option>
-                                <option value="Boleto">Boleto</option>
-                                <option value="Transferência">Transferência</option>
-                            </select>
-                        </div>
                     </div>
                     <button class="btn btn-success" onclick="salvarFinanceiro()">
                         <i class="fas fa-save"></i> Registrar
@@ -2387,7 +2857,6 @@
             const desc = document.getElementById('finDesc').value;
             const valor = parseFloat(document.getElementById('finValor').value);
             const categoria = document.getElementById('finCategoria').value;
-            const forma = document.getElementById('finForma').value;
 
             if (!desc || !valor) {
                 showToast('Preencha descrição e valor', 'warning');
@@ -2401,7 +2870,7 @@
                 valor,
                 data: document.getElementById('finData').value,
                 categoria: categoria || null,
-                formaPagamento: forma || null
+                status: 'concluido'
             });
 
             salvarDados();
@@ -2429,26 +2898,20 @@
                             <select id="relTipo">
                                 <option value="os">📋 Ordens de Serviço</option>
                                 <option value="financeiro">💰 Financeiro</option>
+                                <option value="vales">💳 Vales</option>
                                 <option value="clientes">👥 Clientes</option>
-                                <option value="veiculos">🚗 Veículos</option>
+                                <option value="agenda">📅 Agenda</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Período</label>
                             <select id="relPeriodo">
+                                <option value="hoje">Hoje</option>
                                 <option value="mes">Este Mês</option>
                                 <option value="mesPassado">Mês Passado</option>
                                 <option value="ano">Este Ano</option>
-                                <option value="personalizado">Personalizado</option>
+                                <option value="todos">Todos</option>
                             </select>
-                        </div>
-                        <div class="form-group" id="relDataInicioGroup" style="display: none;">
-                            <label>Data Início</label>
-                            <input type="date" id="relDataInicio">
-                        </div>
-                        <div class="form-group" id="relDataFimGroup" style="display: none;">
-                            <label>Data Fim</label>
-                            <input type="date" id="relDataFim">
                         </div>
                     </div>
                     
@@ -2459,8 +2922,8 @@
                         <button class="btn btn-success" onclick="gerarRelatorioPDF()">
                             <i class="fas fa-file-pdf"></i> Exportar PDF
                         </button>
-                        <button class="btn btn-info" onclick="gerarRelatorioExcel()">
-                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        <button class="btn btn-whatsapp" onclick="enviarRelatorioWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Compartilhar
                         </button>
                     </div>
                     
@@ -2485,21 +2948,37 @@
             } else if (tipo === 'financeiro') {
                 dados = App.data.financeiro;
                 titulo = 'Relatório Financeiro';
-            } else if (tipo === 'clientes') {
+            } else if (tipo === 'vales') {
+                dados = App.data.vales;
+                titulo = 'Relatório de Vales';
+            } else if (tipo === 'agenda') {
+                dados = App.data.agenda;
+                titulo = 'Relatório de Agenda';
+            } else {
                 dados = App.data.clientes;
                 titulo = 'Relatório de Clientes';
-            } else {
-                dados = App.data.veiculos;
-                titulo = 'Relatório de Veículos';
             }
 
             // Filtrar por período
             const hoje = new Date();
-            if (periodo === 'mes') {
+            if (periodo === 'hoje') {
+                const hojeStr = hoje.toISOString().split('T')[0];
+                dados = dados.filter(d => (d.data || d.dataCriacao || '') === hojeStr);
+            } else if (periodo === 'mes') {
                 const mes = hoje.getMonth();
                 const ano = hoje.getFullYear();
-                dados = dados.filter(d => new Date(d.data || d.dataCadastro || '').getMonth() === mes && 
-                                          new Date(d.data || d.dataCadastro || '').getFullYear() === ano);
+                dados = dados.filter(d => {
+                    const data = new Date(d.data || d.dataCriacao || '');
+                    return data.getMonth() === mes && data.getFullYear() === ano;
+                });
+            } else if (periodo === 'mesPassado') {
+                const mes = hoje.getMonth() - 1;
+                const ano = mes < 0 ? hoje.getFullYear() - 1 : hoje.getFullYear();
+                const mesCorrigido = mes < 0 ? 11 : mes;
+                dados = dados.filter(d => {
+                    const data = new Date(d.data || d.dataCriacao || '');
+                    return data.getMonth() === mesCorrigido && data.getFullYear() === ano;
+                });
             }
 
             document.getElementById('relatorioTitulo').textContent = titulo;
@@ -2535,7 +3014,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4"><strong>Total:</strong></td>
-                                <td><strong>${formatarMoeda(dados.reduce((s, d) => s + d.valor, 0))}</strong></td>
+                                <td><strong>${formatarMoeda(dados.reduce((s, d) => s + (d.valor || 0), 0))}</strong></td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -2544,6 +3023,7 @@
             } else if (tipo === 'financeiro') {
                 const entradas = dados.filter(d => d.tipo === 'entrada').reduce((s, d) => s + d.valor, 0);
                 const saidas = dados.filter(d => d.tipo === 'saida').reduce((s, d) => s + d.valor, 0);
+                const vales = dados.filter(d => d.tipo === 'vale').reduce((s, d) => s + d.valor, 0);
                 
                 html += `
                     <table>
@@ -2552,7 +3032,6 @@
                                 <th>Data</th>
                                 <th>Tipo</th>
                                 <th>Descrição</th>
-                                <th>Categoria</th>
                                 <th>Valor</th>
                             </tr>
                         </thead>
@@ -2562,20 +3041,69 @@
                                     <td>${formatarData(d.data)}</td>
                                     <td>${d.tipo}</td>
                                     <td>${d.descricao}</td>
-                                    <td>${d.categoria || '-'}</td>
                                     <td>${formatarMoeda(d.valor)}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4"><strong>Entradas:</strong> ${formatarMoeda(entradas)}</td>
+                                <td colspan="3"><strong>Entradas:</strong> ${formatarMoeda(entradas)}</td>
                                 <td><strong>Saídas:</strong> ${formatarMoeda(saidas)}</td>
                             </tr>
                             <tr>
-                                <td colspan="5"><strong>Saldo:</strong> ${formatarMoeda(entradas - saidas)}</td>
+                                <td colspan="4"><strong>Saldo:</strong> ${formatarMoeda(entradas - saidas - vales)}</td>
                             </tr>
                         </tfoot>
+                    </table>
+                `;
+            } else if (tipo === 'vales') {
+                html += `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Funcionário</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${dados.map(d => `
+                                <tr>
+                                    <td>${formatarData(d.data)}</td>
+                                    <td>${d.funcionarioNome}</td>
+                                    <td>${d.descricao || '-'}</td>
+                                    <td>${formatarMoeda(d.valor)}</td>
+                                    <td><span class="badge ${d.status === 'pendente' ? 'badge-warning' : 'badge-success'}">${d.status}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else if (tipo === 'agenda') {
+                html += `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Cliente</th>
+                                <th>Serviço</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${dados.map(d => `
+                                <tr>
+                                    <td>${formatarData(d.data)}</td>
+                                    <td>${d.hora}</td>
+                                    <td>${d.clienteNome}</td>
+                                    <td>${d.servico}</td>
+                                    <td><span class="badge ${d.status === 'confirmado' ? 'badge-success' : 'badge-warning'}">${d.status}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
                     </table>
                 `;
             }
@@ -2587,6 +3115,11 @@
         const gerarRelatorioPDF = () => {
             const elemento = document.getElementById('relatorioConteudo');
             const titulo = document.getElementById('relatorioTitulo').textContent;
+            
+            if (!elemento.innerHTML) {
+                showToast('Gere um relatório primeiro', 'warning');
+                return;
+            }
             
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
@@ -2600,8 +3133,15 @@
             showToast('PDF gerado!', 'success');
         };
 
-        const gerarRelatorioExcel = () => {
-            showToast('Exportação Excel em desenvolvimento', 'info');
+        const enviarRelatorioWhatsApp = () => {
+            const numero = App.configuracoes.whatsapp;
+            if (!numero) {
+                showToast('Configure o WhatsApp da empresa', 'warning');
+                return;
+            }
+            
+            const mensagem = `Relatório gerado no RenoveCar Pro em ${new Date().toLocaleString()}`;
+            enviarWhatsApp(numero, mensagem);
         };
 
         // ==================== ALERTAS ====================
@@ -2615,14 +3155,20 @@
                     ${App.alertas.map(a => `
                         <div class="alert-card ${a.prioridade === 'alta' ? 'danger' : 'warning'}">
                             <div>
-                                <h4>${a.cliente || 'Sistema'}</h4>
+                                <h4>${a.cliente || a.funcionario || 'Sistema'}</h4>
                                 <p>${a.mensagem}</p>
-                                <small>${a.tipo === 'km' ? '📏 Por KM' : a.tipo === 'tempo' ? '⏰ Por Tempo' : a.tipo}</small>
+                                <small>${a.tipo === 'agenda' ? '📅 Agenda' : 
+                                         a.tipo === 'km' ? '📏 KM' : 
+                                         a.tipo === 'vale' ? '💰 Vale' : 
+                                         a.tipo}</small>
                             </div>
                             <div>
                                 <span class="alert-badge">${a.prioridade === 'alta' ? '!' : 'i'}</span>
-                                <button class="btn-action success" onclick="resolverAlerta('${a.tipo}')">
-                                    ${a.acao === 'agendar' ? 'Agendar' : 'OK'}
+                                <button class="btn-action ${a.tipo === 'agenda' ? 'whatsapp' : 'success'}" onclick="resolverAlerta('${a.tipo}', '${a.id}')">
+                                    ${a.acao === 'enviarLembrete' ? '📱 Enviar' : 
+                                      a.acao === 'pagar' ? '💵 Pagar' : 
+                                      a.acao === 'agendar' ? '📅 Agendar' : 
+                                      '✅ OK'}
                                 </button>
                             </div>
                         </div>
@@ -2640,15 +3186,24 @@
             `;
         };
 
-        const resolverAlerta = (tipo) => {
+        const resolverAlerta = (tipo, id) => {
             if (tipo === 'agenda') {
-                showSection('agenda', document.querySelectorAll('.nav-item')[4]);
+                const alerta = App.alertas.find(a => a.id == id);
+                if (alerta && alerta.whatsapp) {
+                    enviarWhatsApp(alerta.whatsapp, alerta.mensagem);
+                    showToast('Lembrete enviado!', 'whatsapp');
+                }
+            } else if (tipo === 'vale') {
+                showSection('funcionarios', document.querySelectorAll('.nav-item')[4]);
+                setTimeout(() => mostrarSubFuncionario('vales'), 500);
             } else if (tipo === 'km' || tipo === 'tempo') {
                 showSection('os', document.querySelectorAll('.nav-item')[1]);
-            } else {
-                showToast('Alerta resolvido!', 'success');
             }
-            gerarAlertas();
+            
+            // Remover alerta
+            App.alertas = App.alertas.filter(a => a.id != id);
+            updateCounters();
+            renderSection('alertas');
         };
 
         const ignorarTodosAlertas = () => {
@@ -2675,6 +3230,10 @@
                         <div class="form-group">
                             <label>Telefone</label>
                             <input type="text" id="configTelefone" value="${App.configuracoes.telefone}">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp</label>
+                            <input type="text" id="configWhatsApp" value="${App.configuracoes.whatsapp || ''}" placeholder="5511999999999">
                         </div>
                         <div class="form-group">
                             <label>Endereço</label>
@@ -2724,17 +3283,17 @@
                         </div>
                         <div class="stat-card" style="background: var(--warning);">
                             <div>
-                                <h3>Veículos</h3>
-                                <div class="value">${App.data.veiculos.length}</div>
+                                <h3>Funcionários</h3>
+                                <div class="value">${App.data.funcionarios.length}</div>
                             </div>
-                            <i class="fas fa-car stat-icon"></i>
+                            <i class="fas fa-user-tie stat-icon"></i>
                         </div>
                         <div class="stat-card" style="background: var(--primary);">
                             <div>
-                                <h3>Financeiro</h3>
-                                <div class="value">${App.data.financeiro.length}</div>
+                                <h3>Vales Pend.</h3>
+                                <div class="value">${App.data.vales.filter(v => v.status === 'pendente').length}</div>
                             </div>
-                            <i class="fas fa-chart-line stat-icon"></i>
+                            <i class="fas fa-hand-holding-usd stat-icon"></i>
                         </div>
                     </div>
                     
@@ -2749,6 +3308,7 @@
                 empresa: document.getElementById('configEmpresa').value,
                 email: document.getElementById('configEmail').value,
                 telefone: document.getElementById('configTelefone').value,
+                whatsapp: document.getElementById('configWhatsApp').value,
                 endereco: document.getElementById('configEndereco').value,
                 cnpj: document.getElementById('configCnpj').value
             };
@@ -2809,6 +3369,8 @@
                         os: [],
                         clientes: [],
                         veiculos: [],
+                        funcionarios: [],
+                        vales: [],
                         agenda: [],
                         financeiro: []
                     };
@@ -2817,15 +3379,6 @@
                     renderSection('dashboard');
                 }
             }
-        };
-
-        const gerarRelatorioCompleto = () => {
-            showSection('relatorios', document.querySelectorAll('.nav-item')[6]);
-            setTimeout(() => {
-                document.getElementById('relTipo').value = 'os';
-                document.getElementById('relPeriodo').value = 'mes';
-                gerarRelatorioTela();
-            }, 500);
         };
 
         // ==================== MODAL ====================
